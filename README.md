@@ -57,5 +57,5 @@ Based on
 * [MCCI Arduino LoRaWAN Library](https://github.com/mcci-catena/arduino-lorawan) by Terry Moore, MCCI
 * [Lora-Serialization](https://github.com/thesolarnomad/lora-serialization) by Joscha Feth (forked)
 * [ESP32AnalogRead](https://github.com/madhephaestus/ESP32AnalogRead) by Kevin Harrington (madhephaestus)
-* [OneWire](https://github.com/PaulStoffregen/OneWire) - for Arduino by Paul Stoffregen
+* [OneWire](https://github.com/PaulStoffregen/OneWire) for Arduino by Paul Stoffregen
 * [DallasTemperature / Arduino-Temperature-Control-Library](https://github.com/milesburton/Arduino-Temperature-Control-Library) by Miles Burton 
