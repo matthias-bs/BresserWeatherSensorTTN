@@ -11,6 +11,24 @@ The RFM95W radio transceiver is used in FSK mode to receive weather sensor data 
 * OneWire Temperature Sensor integration (optional)
 * ESP32 Analog Digital Converter integration (optional)
 
+## Library Dependencies (Tested Versions)
+
+| Library | Version | r: required /<br>o: optional | Installation |
+| ------- | ------- | --------------- | ------------ |
+| MCCI Arduino Development Kit ADK |  0.2.2 | r | - |
+| MCCI LoRaWAN LMIC library        |  4.1.1 | r | - |
+| MCCI Arduino LoRaWAN Library     |  0.9.2 | r | - |
+| RadioLib                         |  5.2.0 | r | - |
+| LoRa_Serialization               | LATEST | r | https://github.com/matthias-bs/lora-serialization<br>forked from https://github.com/thesolarnomad/lora-serialization LATEST<br>=> included with BresserWeatherSensorTTN/src |
+| BresserWeatherSensorReceiver     |  0.0.3 | r | https://github.com/matthias-bs/BresserWeatherSensorReceiver<br>=> add directory to BresserWeatherSensorTTN/src                                          |
+| ESP32AnalogRead                  |  0.2.0 | o | - |
+| OneWire                          |  2.3.7 | o | - |
+| DallasTemperature                |  3.9.0 | o | - |
+| ATC MiThermometer Library        |  0.0.1 | o | - |
+
+Installation: "-" means normal Arduino IDE Library Installer 
+
+
 ## References
 
 Based on
