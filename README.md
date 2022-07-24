@@ -26,8 +26,10 @@ The RFM95W radio transceiver is used in FSK mode to receive weather sensor data 
 ### Power Supply
 Mains adapter or Li-Ion battery (with or without solar charger) - depending on desired operation time and duty cycle.
 
+## Software Build Setup
+TBD
 
-## Library Dependencies (Tested Versions)
+### Library Dependencies (Tested Versions)
 
 | Library | Version | r: required /<br>o: optional | Installation |
 | ------- | ------- | --------------- | ------------ |
@@ -44,9 +46,36 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 
 Installation: "-" means normal Arduino IDE Library Installer 
 
-## Hardware
+## The Things Network MQTT Integration
 
-* ESP32 
+### The Things Network Decoder
+
+Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing:
+paste [ttn_decoder_fp_v5.js](ttn_decoder_fp_v5.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Uplink" on The Things Network Console.
+The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly.
+
+### TTN-MQTT-Integration
+
+How to receive and decode the payload with an MQTT client -
+see https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2
+
+V3 topic:
+
+`v3/<ttn app id><at symbol>ttn/devices/<ttn device id>/up`
+
+  
+v3 message key field jsonpaths:
+  
+```
+<ttn device id> = .end_device_ids.device_id
+<ttn app id> = .end_device_ids.application_ids.application_id  // (not including the <at symbol>ttn in the topic)
+<payload> = .uplink_message.frm_payload
+```  
+
+
+JSON-Path with Uplink-Decoder (see [ttn_decoder_fp_v5.js](ttn_decoder_fp_v5.js))
+
+`.uplink_message.decoded_payload.bytes.<variable>`
 
 ## References
 
