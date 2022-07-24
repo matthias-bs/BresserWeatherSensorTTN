@@ -52,7 +52,7 @@ Installation: "-" means normal Arduino IDE Library Installer
 
 Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing:
 paste [ttn_decoder_fp_v5.js](ttn_decoder_fp_v5.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Uplink" on The Things Network Console.
-The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly.
+The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (see [ttn_decoder_fp_v5.js line 179ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/ddd31a492c2f7360aebf46bc1e2455fcd78e1da9/ttn_decoder_fp_v5.js#L179)).
 
 ### TTN-MQTT-Integration
 
