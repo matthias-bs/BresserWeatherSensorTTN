@@ -1,0 +1,3 @@
+Add directory "BresserWeatherSensorReceiver" from https://github.com/matthias-bs/BresserWeatherSensorReceiver here and customize src/WeatherSensorCfg.h!
+
+This is a workaround for https://github.com/matthias-bs/BresserWeatherSensorReceiver/issues/1
