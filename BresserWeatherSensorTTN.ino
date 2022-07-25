@@ -17,7 +17,7 @@
 // RadioLib by Jan Gromeš (https://github.com/jgromes/RadioLib)
 // MCCI LoRaWAN LMIC library by Thomas Telkamp and Matthijs Kooijman / Terry Moore, MCCI (https://github.com/mcci-catena/arduino-lmic)
 // MCCI Arduino LoRaWAN Library by Terry Moore, MCCI (https://github.com/mcci-catena/arduino-lorawan)
-// Lora-Serialization by Joscha Feth (with modifications)
+// Lora-Serialization by Joscha Feth (https://github.com/thesolarnomad/lora-serialization)
 // ESP32AnalogRead by Kevin Harrington (madhephaestus) (https://github.com/madhephaestus/ESP32AnalogRead)
 // OneWire - for Arduino by Paul Stoffregen (https://github.com/PaulStoffregen/OneWire)
 // DallasTemperature / Arduino-Temperature-Control-Library by Miles Burton (https://github.com/milesburton/Arduino-Temperature-Control-Library) 
@@ -29,14 +29,11 @@
 // MCCI LoRaWAN LMIC library            4.1.1
 // MCCI Arduino LoRaWAN Library         0.9.2
 // RadioLib                             5.2.0
+// LoRa_Serialization                   3.1.0
 // ESP32AnalogRead                      0.2.0 (optional)
 // OneWire                              2.3.7 (optional)
 // DallasTemperature                    3.9.0 (optional)
 // ATC MiThermometer Library            0.0.1 (optional)
-// LoRa_Serialization
-//               https://github.com/matthias-bs/lora-serialization,
-//   forked from https://github.com/thesolarnomad/lora-serialization LATEST
-//   => included with BresserWeatherSensorTTN/src
 //
 // BresserWeatherSensorReceiver         0.0.3
 //   https://github.com/matthias-bs/BresserWeatherSensorReceiver
@@ -72,6 +69,8 @@
 // History:
 //
 // 20220620 Created
+// 20220725 Changed from fork to original LoRa_Serialization repository
+//          https://github.com/thesolarnomad/lora-serialization 
 //
 // ToDo:
 // - add monthly/daily/hourly precipitation values
@@ -160,8 +159,8 @@
     #include <ATC_MiThermometer.h>
 #endif
 
-// forked from "Lora Serialization" by Joscha Feth
-#include "src/LoRa_Serialization/src/LoraMessage.h"
+// LoRa_Serialization
+#include <LoraMessage.h>
 
 // Pin mapping for ESP32
 // SPI2 is used on ESP32 per default! (e.g. see https://github.com/espressif/arduino-esp32/tree/master/variants/doitESP32devkitV1)
