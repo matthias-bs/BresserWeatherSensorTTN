@@ -21,13 +21,13 @@
   "dependencies": {
     "BresserWeatherSensorReceiver": "matthias-bs/BresserWeatherSensorReceiver#semver:^0.0.3",
     "arduino-lmic": "mcci-catena/arduino-lmic#semver:^4.1.1",
-    "mcci-catena/arduino-lorawan": "^0.9.2",
-    "mcci-catena/Catena-mcciadk": "^0.2.2",
-    "jgromes/RadioLib": "^5.3.0",
-    "thesolarnomad/lora-serialization": "^3.1.0",
-    "madhephaestus/ESP32AnalogRead": "^0.2.0",
-    "PaulStoffregen/OneWire": "^2.3.7",
+    "arduino-lorawan": "mcci-catena/arduino-lorawan#semver:^0.9.2",
+    "Catena-mcciadk": "mcci-catena/Catena-mcciadk#semver:^0.2.2",
+    "RadioLib": "jgromes/RadioLib#semver:^5.3.0",
+    "lora-serialization": "thesolarnomad/lora-serialization#semver:^3.1.0",
+    "ESP32AnalogRead": "madhephaestus/ESP32AnalogRead#semver:^0.2.0",
+    "OneWire": "PaulStoffregen/OneWire#semver:^2.3.7",
     "Arduino-Temperature-Control-Library": "milesburton/Arduino-Temperature-Control-Library#semver:^3.9.1",
-    "matthias-bs/ESP32_ATC_MiThermometer_Library": "^0.0.1"
+    "ESP32_ATC_MiThermometer_Library": "matthias-bs/ESP32_ATC_MiThermometer_Library#semver:^0.0.1"
   }
 }
