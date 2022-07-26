@@ -1,0 +1,33 @@
+{
+  "name": "BresserWeatherSensorTTN",
+  "version": "0.0.1",
+  "description": "Bresser 5-in-1/6-in-1 868 MHz Weather Sensor Radio Receiver; provides data via LoRaWAN to The Things Network",
+  "main": "BresserWeatherSensorTTN.ino",
+  "frameworks": "arduino",
+  "platforms": "ESP32",
+  "directories": {
+    "src": "src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matthias-bs/BresserWeatherSensorTTN.git"
+  },
+  "author": "Matthias Prinke",
+  "license": "MIT license",
+  "bugs": {
+    "url": "https://github.com/matthias-bs/BresserWeatherSensorTTN/issues"
+  },
+  "homepage": "https://github.com/matthias-bs/BresserWeatherSensorTTN#README",
+  "dependencies": {
+    "matthias-bs/BresserWeatherSensorReceiver": "^0.0.3",
+    "mcci-catena/arduino-lmic": "^4.1.1",
+    "mcci-catena/arduino-lorawan": "^0.9.2",
+    "mcci-catena/Catena-mcciadk": "^0.2.2",
+    "jgromes/RadioLib": "^5.3.0",
+    "thesolarnomad/lora-serialization": "^3.1.0",
+    "madhephaestus/ESP32AnalogRead": "^0.2.0",
+    "PaulStoffregen/OneWire": "^2.3.7",
+    "milesburton/Arduino-Temperature-Control-Library": "^3.9.1",
+    "matthias-bs/ESP32_ATC_MiThermometer_Library": "^0.0.1"
+  }
+}
