@@ -17,7 +17,7 @@ The RFM95W radio transceiver is used in FSK mode to receive weather sensor data 
 ### ESP32 Module
 [DFRobot FireBeetle ESP32 IoT](https://www.dfrobot.com/product-1590.html) (DFR0478) recomended due to its good low power design (but other boards will work, too)
 
-### RFM95W- or SX1276-based Radio Transceiver Ḿodule
+### RFM95W- or SX1276-based Radio Transceiver Module
 
 * [Adafruit RFM95W LoRa Radio Transceiver Breakout](https://www.adafruit.com/product/3072) (ADA3072) - 868/915 MHz version (868 MHz is used for both LoRaWAN and Bresser Weather Sensor in Europe)
 * RF connector (u.FL or SMA as desired)
