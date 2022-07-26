@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/matthias-bs/BresserWeatherSensorTTN#README",
   "dependencies": {
-    "matthias-bs/BresserWeatherSensorReceiver": "^0.0.3",
+    "BresserWeatherSensorReceiver": "matthias-bs/BresserWeatherSensorReceiver#semver:^0.0.3",
     "mcci-catena/arduino-lmic": "^4.1.1",
     "mcci-catena/arduino-lorawan": "^0.9.2",
     "mcci-catena/Catena-mcciadk": "^0.2.2",
