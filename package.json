@@ -21,7 +21,7 @@
   "dependencies": {
     "BresserWeatherSensorReceiver": "matthias-bs/BresserWeatherSensorReceiver#semver:^0.0.3",
     "arduino-lmic": "mcci-catena/arduino-lmic#semver:^4.1.1",
-    "arduino-lorawan": "mcci-catena/arduino-lorawan#semver:^0.9.2",
+    "arduino-lorawan": "mcci-catena/arduino-lorawan#semver:^1.0.0",
     "Catena-mcciadk": "mcci-catena/Catena-mcciadk#semver:^0.2.2",
     "RadioLib": "jgromes/RadioLib#semver:^5.3.0",
     "lora-serialization": "thesolarnomad/lora-serialization#semver:^3.1.0",
