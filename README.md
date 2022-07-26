@@ -29,22 +29,24 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 ## Software Build Setup
 TBD
 
-### Library Dependencies (Tested Versions)
+### Library Dependencies
 
-| Library                          | Version | r: required /<br>o: optional | Installation |
-| -------------------------------- | ------- | ---------------------------- | ------------ |
-| MCCI Arduino Development Kit ADK |   0.2.2 | r                            | - |
-| MCCI LoRaWAN LMIC library        |   4.1.1 | r                            | - |
-| MCCI Arduino LoRaWAN Library     |   0.9.2 | r                            | - |
-| RadioLib                         |   5.2.0 | r                            | - |
-| LoRa_Serialization               |   3.1.0 | r                            | - |
-| BresserWeatherSensorReceiver     |   0.0.3 | r                            | https://github.com/matthias-bs/BresserWeatherSensorReceiver<br>=> add directory to BresserWeatherSensorTTN/src                                          |
-| ESP32AnalogRead                  |   0.2.0 | o                            | - |
-| OneWire                          |   2.3.7 | o                            | - |
-| DallasTemperature                |   3.9.0 | o                            | - |
-| ATC MiThermometer Library        |   0.0.1 | o                            | - |
+| Library                          | r: required /<br>o: optional | Installation |
+| -------------------------------- | ---------------------------- | ------------ |
+| MCCI Arduino Development Kit ADK | r                            | - |
+| MCCI LoRaWAN LMIC library        | r                            | - |
+| MCCI Arduino LoRaWAN Library     | r                            | - |
+| RadioLib                         | r                            | - |
+| LoRa_Serialization               | r                            | - |
+| BresserWeatherSensorReceiver     | r                            | https://github.com/matthias-bs/BresserWeatherSensorReceiver<br>=> add directory to BresserWeatherSensorTTN/src                                          |
+| ESP32AnalogRead                  | o                            | - |
+| OneWire                          | o                            | - |
+| DallasTemperature                | o                            | - |
+| ATC MiThermometer Library        | o                            | - |
 
 Installation: "-" means normal Arduino IDE Library Installer 
+
+See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies) for required/tested versions.
 
 ## The Things Network MQTT Integration
 
