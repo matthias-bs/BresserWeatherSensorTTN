@@ -4,12 +4,12 @@ Bresser 5-in-1/6-in-1 868 MHz Weather Sensor Radio Receiver based on ESP32 and R
 The RFM95W radio transceiver is used in FSK mode to receive weather sensor data and in LoRaWAN mode to connect to The Things Network.
 
 ## Features
-* Single 868 MHz radio transceiver for both sensor data reception and LoRaWAN connection
-* Low power design (using ESP32 deep sleep mode)
-* Fast LoRaWAN joining after deep sleep (using ESP32 RTC RAM)
-* ATC MiThermometer Bluetooth Low Energy Thernmometer/Hygrometer integration (optional)
-* OneWire Temperature Sensor integration (optional)
-* ESP32 Analog Digital Converter integration (optional)
+* Single 868 MHz Radio Transceiver for both Sensor Data Reception and LoRaWAN Connection
+* Low Power Design (using ESP32 Deep Sleep Mode)
+* Fast LoRaWAN Joining after Deep Sleep (using ESP32 RTC RAM)
+* ATC MiThermometer Bluetooth Low Energy Thermometer/Hygrometer Integration (optional)
+* OneWire Temperature Sensor Integration (optional)
+* ESP32 Analog Digital Converter Integration (optional)
 
 ## Hardware
 (Hardware design coming soon...)
