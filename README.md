@@ -12,7 +12,7 @@ The RFM95W radio transceiver is used in FSK mode to receive weather sensor data 
 * ESP32 Analog Digital Converter Integration (optional)
 
 ## Hardware
-(Hardware design coming soon...)
+Please see my [LoRaWAN_Node](https://github.com/matthias-bs/LoRaWAN_Node) project.
 
 ### ESP32 Module
 [DFRobot FireBeetle ESP32 IoT](https://www.dfrobot.com/product-1590.html) (DFR0478) recomended due to its good low power design (but other boards will work, too)
