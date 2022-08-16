@@ -35,7 +35,7 @@
 // DallasTemperature                    3.9.0 (optional)
 // ATC MiThermometer Library            0.0.1 (optional)
 //
-// BresserWeatherSensorReceiver         0.0.3
+// BresserWeatherSensorReceiver         0.2.0
 //   https://github.com/matthias-bs/BresserWeatherSensorReceiver
 //   => add directory to BresserWeatherSensorTTN/src
 //
@@ -69,12 +69,11 @@
 // History:
 //
 // 20220620 Created
-// 20220725 Changed from fork to original LoRa_Serialization repository
-//          https://github.com/thesolarnomad/lora-serialization 
+// 20220816 Added support of multiple Bresser 868 MHz sensors; 
+//          e.g. weather sensor and soil temperature/moisture sensor
 //
 // ToDo:
 // - add monthly/daily/hourly precipitation values
-// - add Bresser soil moisture sensor integration (option)
 //
 // Notes:
 // - After a successful transmission, the controller can go into deep sleep
@@ -103,7 +102,7 @@
 //
 
 // Enable debug mode (debug messages via serial port)
-//#define _BWS_DEBUG_MODE_
+#define _BWS_DEBUG_MODE_
 
 // Enable TTN debug mode - this generates dummy weather data and skips weather sensor reception 
 //#define TTN_DEBUG
@@ -124,7 +123,7 @@
 #define SLEEP_TIMEOUT_JOINED 600
 
 // Timeout for weather sensor data reception (seconds)
-#define WEATHERSENSOR_TIMEOUT 60
+#define WEATHERSENSOR_TIMEOUT 120
 
 // Enable transmission of weather sensor ID
 //#define SENSORID_EN
@@ -138,6 +137,10 @@
 // Enable BLE temperature/humidity measurement
 // Note: BLE requires a lot of program memory!
 #define MITHERMOMETER_EN
+
+// Enable Bresser Soil Temperature/Moisture Sensor
+#define SOILSENSOR_EN
+
 //-----------------------------------------------------------------------------
 
 #ifdef ONEWIRE_EN
@@ -150,9 +153,9 @@
     #include <ESP32AnalogRead.h>
 #endif
 
-// BresserWeatherSensorLib
-#include "src/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h"
-#include "src/BresserWeatherSensorReceiver/src/WeatherSensor.h"
+// BresserWeatherSensorReceiver
+#include "WeatherSensorCfg.h"
+#include "WeatherSensor.h"
 
 #ifdef MITHERMOMETER_EN
     // BLE Temperature/Humidity Sensor
@@ -209,7 +212,7 @@ const uint8_t PAYLOAD_SIZE = 36;
     const int bleScanTime = 10;
 
     // List of known sensors' BLE addresses
-    std::vector<std::string> knownBLEAddresses = {"a4:c1:38:bf:e1:bc"};
+    std::vector<std::string> knownBLEAddresses = {"a4:c1:38:b8:1f:7f"};
 #endif
 
 #define DEBUG_PORT Serial
@@ -788,11 +791,12 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
     
     #ifndef TTN_DEBUG
         weatherSensor.begin();
-        weatherSensor.getData(WEATHERSENSOR_TIMEOUT * 1000, true);
+        //bool decode_ok = weatherSensor.getData(WEATHERSENSOR_TIMEOUT * 1000, DATA_TYPE | DATA_COMPLETE, SENSOR_TYPE_WEATHER);
+        bool decode_ok = weatherSensor.getData(WEATHERSENSOR_TIMEOUT * 1000, DATA_ALL_SLOTS);
     #else
-        weatherSensor.genMessage();
+        bool decode_ok = weatherSensor.genMessage(0 /* slot */, 0x01234567 /* ID */, 1 /* type */, 0 /* channel */);
     #endif
-    if (weatherSensor.data_ok) {
+    if (decode_ok) {
         DEBUG_PRINTF("Receiving Weather Sensor Data o.k.\n");
     } else {
         DEBUG_PRINTF("Receiving Weather Sensor Data failed.\n");
@@ -934,14 +938,29 @@ cSensor::doUplink(void) {
         // Get sensor data - run BLE scan for <bleScanTime>
         miThermometer.getData(bleScanTime);
     #endif
+    int ws = weatherSensor.findType(SENSOR_TYPE_WEATHER);
+    int s1 = weatherSensor.findType(SENSOR_TYPE_SOIL, 1);
     
     DEBUG_PRINTF("--- Uplink Data ---\n");
-    DEBUG_PRINTF("Air Temperature:   % 3.1f °C\n", weatherSensor.temp_c);
-    DEBUG_PRINTF("Humidity:           %2d   %%\n", weatherSensor.humidity);
-    DEBUG_PRINTF("Rain Gauge:      %7.1f mm\n",     weatherSensor.rain_mm);
-    DEBUG_PRINTF("Wind Speed (avg.):   %3.1f m/s\n",   weatherSensor.wind_avg_meter_sec);
-    DEBUG_PRINTF("Wind Speed (max.):   %3.1f m/s\n",   weatherSensor.wind_gust_meter_sec);
-    DEBUG_PRINTF("Wind Direction:     %4.1f °\n",     weatherSensor.wind_direction_deg);
+    if (ws > -1) {
+      DEBUG_PRINTF("Air Temperature:   % 3.1f °C\n",   weatherSensor.sensor[ws].temp_c);
+      DEBUG_PRINTF("Humidity:           %2d   %%\n",   weatherSensor.sensor[ws].humidity);
+      DEBUG_PRINTF("Rain Gauge:      %7.1f mm\n",      weatherSensor.sensor[ws].rain_mm);
+      DEBUG_PRINTF("Wind Speed (avg.):   %3.1f m/s\n", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1);
+      DEBUG_PRINTF("Wind Speed (max.):   %3.1f m/s\n", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1);
+      DEBUG_PRINTF("Wind Direction:     %4.1f °\n",    weatherSensor.sensor[ws].wind_direction_deg_fp1);
+    } else {
+      DEBUG_PRINTF("-- Weather Sensor Failure\n");
+    }
+
+    #ifdef SOILSENSOR_EN
+      if (s1 > -1) {
+        DEBUG_PRINTF("Soil Temperature 1: % 3.1f °C\n",  weatherSensor.sensor[s1].temp_c);
+        DEBUG_PRINTF("Soil Moisture 1:     %2d   %%\n",  weatherSensor.sensor[s1].moisture);      
+      } else {
+        DEBUG_PRINTF("-- Soil Sensor 1 Failure\n");
+      }
+    #endif
     if (water_temp_c != DEVICE_DISCONNECTED_C) {
         DEBUG_PRINTF("Water Temperature: % 2.1f °C\n",  water_temp_c);
     } else {
@@ -972,25 +991,48 @@ cSensor::doUplink(void) {
     
     LoraEncoder encoder(loraData);
     #ifdef SENSORID_EN
-        encoder.writeUint32(weatherSensor.sensor_id);
+        if (ws > -1) {
+          encoder.writeUint32(weatherSensor.sensor[ws].sensor_id);
+        } else {
+          encoder.writeUint32(0);
+        }
     #endif
-    encoder.writeBitmap(false, false, false, false, 
+    encoder.writeBitmap(false, false, 
                         runtimeExpired,
                         mithermometer_valid,
-                        weatherSensor.data_ok,
-                        weatherSensor.battery_ok);
-    encoder.writeTemperature(weatherSensor.temp_c);
-    encoder.writeUint8(weatherSensor.humidity);
-    #ifdef ENCODE_AS_FLOAT
-        encoder.writeRawFloat(weatherSensor.wind_gust_meter_sec);
-        encoder.writeRawFloat(weatherSensor.wind_avg_meter_sec);
-        encoder.writeRawFloat(weatherSensor.wind_direction_deg);
-    #else
-        encoder.writeUint16(weatherSensor.wind_gust_meter_sec_fp1);
-        encoder.writeUint16(weatherSensor.wind_avg_meter_sec_fp1);
-        encoder.writeUint16(weatherSensor.wind_direction_deg_fp1);
-    #endif
-    encoder.writeRawFloat(weatherSensor.rain_mm);
+                        (s1 > -1) ? weatherSensor.sensor[s1].valid : false,
+                        (s1 > -1) ? weatherSensor.sensor[s1].battery_ok : false,
+                        (ws > -1) ? weatherSensor.sensor[ws].valid : false,
+                        (ws > -1) ? weatherSensor.sensor[ws].battery_ok : false);
+    if (ws > -1) {
+        // weather sensor data available
+        encoder.writeTemperature(weatherSensor.sensor[ws].temp_c);
+        encoder.writeUint8(weatherSensor.sensor[ws].humidity);
+        #ifdef ENCODE_AS_FLOAT
+            encoder.writeRawFloat(weatherSensor.sensor[ws].wind_gust_meter_sec);
+            encoder.writeRawFloat(weatherSensor.sensor[ws].wind_avg_meter_sec);
+            encoder.writeRawFloat(weatherSensor.sensor[ws].wind_direction_deg);
+        #else
+            encoder.writeUint16(weatherSensor.sensor[ws].wind_gust_meter_sec_fp1);
+            encoder.writeUint16(weatherSensor.sensor[ws].wind_avg_meter_sec_fp1);
+            encoder.writeUint16(weatherSensor.sensor[ws].wind_direction_deg_fp1);
+        #endif
+        encoder.writeRawFloat(weatherSensor.sensor[ws].rain_mm);
+    } else {
+        // fill with suspicious dummy values
+        encoder.writeTemperature(-30);
+        encoder.writeUint8(0);
+        #ifdef ENCODE_AS_FLOAT
+            encoder.writeRawFloat(0);
+            encoder.writeRawFloat(0);
+            encoder.writeRawFloat(0);
+        #else
+            encoder.writeUint16(0);
+            encoder.writeUint16(0);
+            encoder.writeUint16(0);
+        #endif
+        encoder.writeRawFloat(0);
+    }
     #ifdef ADC_EN
         encoder.writeUint16(supply_voltage);
     #endif
@@ -1007,6 +1049,19 @@ cSensor::doUplink(void) {
         // BLE Tempoerature/Humidity Sensor: delete results fromBLEScan buffer to release memory
         miThermometer.clearScanResults();
     #endif    
+    
+    #ifdef SOILSENSOR_EN
+        if (s1 > -1) {
+            // soil sensor data available
+            encoder.writeTemperature(weatherSensor.sensor[s1].temp_c);
+            encoder.writeUint8(weatherSensor.sensor[s1].humidity);
+        } else {
+            // fill with suspicious dummy values
+            encoder.writeTemperature(-30);
+            encoder.writeUint8(0);      
+        }
+    #endif
+    
     //encoder.writeRawFloat(radio.getRSSI()); // FIXME: Integer should be sufficient
 
     this->m_fBusy = true;
