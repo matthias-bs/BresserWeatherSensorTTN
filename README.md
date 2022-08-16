@@ -55,7 +55,7 @@ See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/networ
 
 Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing:
 paste [ttn_decoder_fp_v6.js](ttn_decoder_fp_v6.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Uplink" on The Things Network Console.
-The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [ttn_decoder_fp_v5.js line 179ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/ddd31a492c2f7360aebf46bc1e2455fcd78e1da9/ttn_decoder_fp_v5.js#L179)).
+The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [ttn_decoder_fp_v6.js line 176ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f619c65d3c4df3991029d46554dc78ba7096d24f/ttn_decoder_fp_v6.js#L176)).
 
 ### TTN-MQTT-Integration
 
