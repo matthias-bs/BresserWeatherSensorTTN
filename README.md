@@ -5,7 +5,7 @@ The RFM95W radio transceiver is used in FSK mode to receive weather sensor data 
 
 ## Features
 * Single 868 MHz Radio Transceiver for both Sensor Data Reception and LoRaWAN Connection
-* Supports multiple 868 MHz sensors (e.g. Weather Sensor and Soil Moisture Sensor or Indoor Thermometer/Hygrometer)
+* Supports multiple 868 MHz Sensors (e.g. Weather Sensor and Soil Moisture Sensor or Indoor Thermometer/Hygrometer)
 * Low Power Design (using ESP32 Deep Sleep Mode)
 * Fast LoRaWAN Joining after Deep Sleep (using ESP32 RTC RAM)
 * ATC MiThermometer Bluetooth Low Energy Thermometer/Hygrometer Integration (optional)
