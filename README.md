@@ -5,6 +5,7 @@ The RFM95W radio transceiver is used in FSK mode to receive weather sensor data 
 
 ## Features
 * Single 868 MHz Radio Transceiver for both Sensor Data Reception and LoRaWAN Connection
+* Supports multiple 868 MHz sensors (e.g. Weather Sensor and Soil Moisture Sensor or Indoor Thermometer/Hygrometer)
 * Low Power Design (using ESP32 Deep Sleep Mode)
 * Fast LoRaWAN Joining after Deep Sleep (using ESP32 RTC RAM)
 * ATC MiThermometer Bluetooth Low Energy Thermometer/Hygrometer Integration (optional)
@@ -53,7 +54,7 @@ See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/networ
 ### The Things Network Decoder
 
 Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing:
-paste [ttn_decoder_fp_v5.js](ttn_decoder_fp_v5.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Uplink" on The Things Network Console.
+paste [ttn_decoder_fp_v6.js](ttn_decoder_fp_v6.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Uplink" on The Things Network Console.
 The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [ttn_decoder_fp_v5.js line 179ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/ddd31a492c2f7360aebf46bc1e2455fcd78e1da9/ttn_decoder_fp_v5.js#L179)).
 
 ### TTN-MQTT-Integration
@@ -75,7 +76,7 @@ v3 message key field jsonpaths:
 ```  
 
 
-JSON-Path with Uplink-Decoder (see [ttn_decoder_fp_v5.js](ttn_decoder_fp_v5.js))
+JSON-Path with Uplink-Decoder (see [ttn_decoder_fp_v6.js](ttn_decoder_fp_v6.js))
 
 `.uplink_message.decoded_payload.bytes.<variable>`
 
