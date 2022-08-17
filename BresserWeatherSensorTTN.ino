@@ -792,7 +792,7 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
     
     #ifndef TTN_DEBUG
         weatherSensor.begin();
-        //bool decode_ok = weatherSensor.getData(WEATHERSENSOR_TIMEOUT * 1000, DATA_TYPE | DATA_COMPLETE, SENSOR_TYPE_WEATHER);
+        //bool decode_ok = weatherSensor.getData(WEATHERSENSOR_TIMEOUT * 1000, DATA_TYPE | DATA_COMPLETE, SENSOR_TYPE_WEATHER1);
         bool decode_ok = weatherSensor.getData(WEATHERSENSOR_TIMEOUT * 1000, DATA_ALL_SLOTS);
     #else
         bool decode_ok = weatherSensor.genMessage(0 /* slot */, 0x01234567 /* ID */, 1 /* type */, 0 /* channel */);
@@ -939,17 +939,24 @@ cSensor::doUplink(void) {
         // Get sensor data - run BLE scan for <bleScanTime>
         miThermometer.getData(bleScanTime);
     #endif
-    int ws = weatherSensor.findType(SENSOR_TYPE_WEATHER);
+    
+    // Try to find SENSOR_TYPE_WEATHER0
+    int ws = weatherSensor.findType(SENSOR_TYPE_WEATHER0);
+    if (ws < 0) {
+      // Try to find SENSOR_TYPE_WEATHER1
+      ws = weatherSensor.findType(SENSOR_TYPE_WEATHER1);
+    }
+    
     int s1 = weatherSensor.findType(SENSOR_TYPE_SOIL, 1);
     
     DEBUG_PRINTF("--- Uplink Data ---\n");
     if (ws > -1) {
-      DEBUG_PRINTF("Air Temperature:   % 3.1f °C\n",   weatherSensor.sensor[ws].temp_c);
-      DEBUG_PRINTF("Humidity:           %2d   %%\n",   weatherSensor.sensor[ws].humidity);
-      DEBUG_PRINTF("Rain Gauge:      %7.1f mm\n",      weatherSensor.sensor[ws].rain_mm);
-      DEBUG_PRINTF("Wind Speed (avg.):   %3.1f m/s\n", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1);
-      DEBUG_PRINTF("Wind Speed (max.):   %3.1f m/s\n", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1);
-      DEBUG_PRINTF("Wind Direction:     %4.1f °\n",    weatherSensor.sensor[ws].wind_direction_deg_fp1);
+      DEBUG_PRINTF("Air Temperature:    % 3.1f °C\n",   weatherSensor.sensor[ws].temp_c);
+      DEBUG_PRINTF("Humidity:            %2d   %%\n",   weatherSensor.sensor[ws].humidity);
+      DEBUG_PRINTF("Rain Gauge:       %7.1f mm\n",      weatherSensor.sensor[ws].rain_mm);
+      DEBUG_PRINTF("Wind Speed (avg.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1);
+      DEBUG_PRINTF("Wind Speed (max.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1);
+      DEBUG_PRINTF("Wind Direction:      %4.1f °\n",    weatherSensor.sensor[ws].wind_direction_deg_fp1);
     } else {
       DEBUG_PRINTF("-- Weather Sensor Failure\n");
     }
@@ -963,27 +970,27 @@ cSensor::doUplink(void) {
       }
     #endif
     if (water_temp_c != DEVICE_DISCONNECTED_C) {
-        DEBUG_PRINTF("Water Temperature: % 2.1f °C\n",  water_temp_c);
+        DEBUG_PRINTF("Water Temperature:  % 2.1f °C\n",  water_temp_c);
     } else {
         DEBUG_PRINTF("Water Temperature:   --.- °C\n");
         water_temp_c = -30.0;
     }
     #ifdef ADC_EN
-        DEBUG_PRINTF("Supply  Voltage:  %4d   mV\n",       supply_voltage);
+        DEBUG_PRINTF("Supply  Voltage:   %4d   mV\n",       supply_voltage);
     #endif
     #ifdef PIN_ADC3_IN
-        DEBUG_PRINTF("Battery Voltage:  %4d   mV\n",       battery_voltage);
+        DEBUG_PRINTF("Battery Voltage:   %4d   mV\n",       battery_voltage);
     #endif
     #ifdef MITHERMOMETER_EN
         if (miThermometer.data[0].valid) {
             mithermometer_valid = true;
             indoor_temp_c   = miThermometer.data[0].temperature/100.0;
             indoor_humidity = miThermometer.data[0].humidity/100.0;
-            DEBUG_PRINTF("Indoor Air Temp.:  % 3.1f °C\n", miThermometer.data[0].temperature/100.0);
-            DEBUG_PRINTF("Indoor Humidity:    %3.1f %%\n", miThermometer.data[0].humidity/100.0);
+            DEBUG_PRINTF("Indoor Air Temp.:   % 3.1f °C\n", miThermometer.data[0].temperature/100.0);
+            DEBUG_PRINTF("Indoor Humidity:     %3.1f %%\n", miThermometer.data[0].humidity/100.0);
         } else {
-            DEBUG_PRINTF("Indoor Air Temp.:   --.- °C\n");
-            DEBUG_PRINTF("Indoor Humidity:    --   %%\n");
+            DEBUG_PRINTF("Indoor Air Temp.:    --.- °C\n");
+            DEBUG_PRINTF("Indoor Humidity:     --   %%\n");
             indoor_temp_c   = -30;
             indoor_humidity = 0;
         }
@@ -1063,7 +1070,7 @@ cSensor::doUplink(void) {
         }
     #endif
     
-    //encoder.writeRawFloat(radio.getRSSI()); // FIXME: Integer should be sufficient
+    //encoder.writeRawFloat(radio.getRSSI()); // NOTE: int8_t would be more efficient
 
     this->m_fBusy = true;
     
