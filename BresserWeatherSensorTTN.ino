@@ -76,6 +76,9 @@
 // - add monthly/daily/hourly precipitation values
 //
 // Notes:
+// - Mapping of radio module is done in two places:
+//   - MCCI Arduino LoRaWAN Library:         this file (see below)
+//   - BresserWeatherSensorReceiver Library: WeatherSensorCfg.h
 // - After a successful transmission, the controller can go into deep sleep
 // - If joining the network or transmitting uplink data fails,
 //   the controller can go into deep sleep
@@ -95,53 +98,11 @@
 #include <Arduino_LoRaWAN_network.h>
 #include <Arduino_LoRaWAN_EventLog.h>
 #include <arduino_lmic.h>
+#include "BresserWeatherSensorTTNCfg.h"
 
-//-----------------------------------------------------------------------------
-//
-// User Configuration
-//
-
-// Enable debug mode (debug messages via serial port)
-#define _BWS_DEBUG_MODE_
-
-// Enable TTN debug mode - this generates dummy weather data and skips weather sensor reception 
-//#define TTN_DEBUG
-
-// Enable sleep mode - sleep after successful transmission to TTN (recommended!)
-#define SLEEP_EN
-
-// If SLEEP_EN is defined, MCU will sleep for SLEEP_INTERVAL seconds after succesful transmission
-#define SLEEP_INTERVAL 360
-
-// Force deep sleep after a certain time, even if transmission was not completed
-#define FORCE_SLEEP
-
-// During initialization (not joined), force deep sleep after SLEEP_TIMEOUT_INITIAL (if enabled)
-#define SLEEP_TIMEOUT_INITIAL 1800
-
-// If already joined, force deep sleep after SLEEP_TIMEOUT_JOINED seconds (if enabled)
-#define SLEEP_TIMEOUT_JOINED 600
-
-// Timeout for weather sensor data reception (seconds)
-#define WEATHERSENSOR_TIMEOUT 120
-
-// Enable transmission of weather sensor ID
-//#define SENSORID_EN
-
-// Enable battery / supply voltage measurement
-#define ADC_EN
-
-// Enable OneWire temperature measurement
-#define ONEWIRE_EN
-
-// Enable BLE temperature/humidity measurement
-// Note: BLE requires a lot of program memory!
-#define MITHERMOMETER_EN
-
-// Enable Bresser Soil Temperature/Moisture Sensor
-#define SOILSENSOR_EN
-
-//-----------------------------------------------------------------------------
+#ifndef SLEEP_EN
+    #warning "SLEEP_EN is not defined, but the weather sensors are only read once during (re-)start! You have been warned!"
+#endif
 
 #ifdef ONEWIRE_EN
     // Dallas/Maxim OneWire Temperature Sensor
@@ -165,7 +126,8 @@
 // LoRa_Serialization
 #include <LoraMessage.h>
 
-// Pin mapping for ESP32
+// Pin mapping for ESP32 (MCCI Arduino LoRaWAN Library)
+// Note: Pin mapping for BresserWeatherSensorReceiver is done in WeatherSensorCfg.h!
 // SPI2 is used on ESP32 per default! (e.g. see https://github.com/espressif/arduino-esp32/tree/master/variants/doitESP32devkitV1)
 #define PIN_LMIC_NSS      14
 #define PIN_LMIC_RST      12
@@ -173,31 +135,6 @@
 #define PIN_LMIC_DIO1     16
 #define PIN_LMIC_DIO2     17
 
-#ifdef ADC_EN
-    #define PIN_ADC_IN        A0
-    //#define PIN_ADC_IN        34
-#endif
-
-//#define PIN_ADC0_IN         36
-//#define PIN_ADC1_IN         39
-//#define PIN_ADC2_IN         34
-#define PIN_ADC3_IN         A3
-
-#ifdef PIN_ADC3_IN
-    // Voltage divider R1 / (R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)
-    const float ADC3_DIV         = 0.5;       
-    const uint8_t ADC3_SAMPLES   = 10;
-#endif
-
-#ifdef ONEWIRE_EN
-    #define PIN_ONEWIRE_BUS   5
-#endif
-
-#ifdef ADC_EN
-    // Voltage divider R1 / (R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)
-    const float UBATT_DIV         = 0.5;       
-    const uint8_t UBATT_SAMPLES   = 10;
-#endif
 
 // Uplink message payload size
 // The maximum allowed for all data rates is 51 bytes.
@@ -207,14 +144,6 @@ const uint8_t PAYLOAD_SIZE = 51;
 #define MAGIC1 (('m' << 24) | ('g' < 16) | ('c' << 8) | '1')
 #define MAGIC2 (('m' << 24) | ('g' < 16) | ('c' << 8) | '2')
 #define EXTRA_INFO_MEM_SIZE 64
-
-#ifdef MITHERMOMETER_EN
-    // BLE scan time in seconds
-    const int bleScanTime = 10;
-
-    // List of known sensors' BLE addresses
-    std::vector<std::string> knownBLEAddresses = {"a4:c1:38:b8:1f:7f"};
-#endif
 
 #define DEBUG_PORT Serial
 #if defined(_BWS_DEBUG_MODE_)
@@ -890,6 +819,21 @@ cSensor::getTemperature(void)
 //
 // Prepare uplink data for transmission
 //
+// Note:
+// Currently Weather Sensor Data can only be received during initialization if the radio transceiver
+// is shared between BresserWeatherSensorReceiver and LoRaWAN library.
+// Therefore the node must perform a restart (from deep-sleep) after each succesful uplink.
+//
+// The required procedure to update the Weather Sensor Data (if radio receiver shared with LoRaWAN)
+// without deep sleep mode and restart would be:
+// 1. Save radio registers modified by LoRaWAN
+// 2. Re-initialize radio for sensor data reception (FSK mode)
+// 3. Receive data
+// 4. Restore radio registers modified by LoRaWAN
+//
+// ToDo:
+// Which registers are actually shared between FSK and LoRaWAN mode?
+// Is there any additional state to be preserved?
 void
 cSensor::doUplink(void) {
     // if busy uplinking, just skip
@@ -903,21 +847,9 @@ cSensor::doUplink(void) {
         return;
     }
     
-    // Note:
-    // Currently Weather Sensor Data can only be received during initialization if
-    // the radio transceiver is shared between the BresserWeatherSensorLib and the LoRaWAN library.
-    // Therefore the node must perform a reset after each succesful uplink.
     //
-    // The required procedure to update the Weather Sensor Data (if radio receiver shared with LoRaWAN) would be:
-    // 1. Save radio registers modified by LoRaWAN
-    // 2. Re-initialize radio for sensor
-    // 3. Receive data
-    // 4. Restore radio registers modified by LoRaWAN
+    // Read auxiliary sensor data
     //
-    // ToDo:
-    // Which registers are actually shared between FSK and LoRaWAN mode?
-    // Is there any additional state to be preserved?
-    
     #ifdef ONEWIRE_EN
         float     water_temp_c        = getTemperature();
     #endif
@@ -931,7 +863,6 @@ cSensor::doUplink(void) {
     #ifdef MITHERMOMETER_EN
         float     indoor_temp_c;
         float     indoor_humidity;
-        
     
         // Set sensor data invalid
         miThermometer.resetData();
@@ -939,6 +870,10 @@ cSensor::doUplink(void) {
         // Get sensor data - run BLE scan for <bleScanTime>
         miThermometer.getData(bleScanTime);
     #endif
+
+    //
+    // Find Bresser sensor data in array 
+    //
     
     // Try to find SENSOR_TYPE_WEATHER0
     int ws = weatherSensor.findType(SENSOR_TYPE_WEATHER0);
@@ -947,9 +882,12 @@ cSensor::doUplink(void) {
       ws = weatherSensor.findType(SENSOR_TYPE_WEATHER1);
     }
     
+    // Try to find SENSOR_TYPE_SOIL
     int s1 = weatherSensor.findType(SENSOR_TYPE_SOIL, 1);
-    
+
     DEBUG_PRINTF("--- Uplink Data ---\n");
+    
+    // Debug output for weather sensor data
     if (ws > -1) {
       DEBUG_PRINTF("Air Temperature:    % 3.1f °C\n",   weatherSensor.sensor[ws].temp_c);
       DEBUG_PRINTF("Humidity:            %2d   %%\n",   weatherSensor.sensor[ws].humidity);
@@ -961,6 +899,7 @@ cSensor::doUplink(void) {
       DEBUG_PRINTF("-- Weather Sensor Failure\n");
     }
 
+    // Debug output for soil sensor data
     #ifdef SOILSENSOR_EN
       if (s1 > -1) {
         DEBUG_PRINTF("Soil Temperature 1: % 3.1f °C\n",  weatherSensor.sensor[s1].temp_c);
@@ -969,6 +908,8 @@ cSensor::doUplink(void) {
         DEBUG_PRINTF("-- Soil Sensor 1 Failure\n");
       }
     #endif
+
+    // Debug output for auxiliary sensors/voltages
     if (water_temp_c != DEVICE_DISCONNECTED_C) {
         DEBUG_PRINTF("Water Temperature:  % 2.1f °C\n",  water_temp_c);
     } else {
@@ -996,7 +937,10 @@ cSensor::doUplink(void) {
         }
     #endif
     DEBUG_PRINTF("\n");
-    
+
+    //
+    // Encode sensor data as byte array for LoRaWAN transmission
+    //
     LoraEncoder encoder(loraData);
     #ifdef SENSORID_EN
         if (ws > -1) {
@@ -1005,6 +949,8 @@ cSensor::doUplink(void) {
           encoder.writeUint32(0);
         }
     #endif
+
+    // Status flags
     encoder.writeBitmap(false, false, 
                         runtimeExpired,
                         mithermometer_valid,
@@ -1012,6 +958,8 @@ cSensor::doUplink(void) {
                         (s1 > -1) ? weatherSensor.sensor[s1].battery_ok : false,
                         (ws > -1) ? weatherSensor.sensor[ws].valid : false,
                         (ws > -1) ? weatherSensor.sensor[ws].battery_ok : false);
+    
+    // Weather sensor data
     if (ws > -1) {
         // weather sensor data available
         encoder.writeTemperature(weatherSensor.sensor[ws].temp_c);
@@ -1041,6 +989,8 @@ cSensor::doUplink(void) {
         #endif
         encoder.writeRawFloat(0);
     }
+
+    // Voltages / auxiliary sensor data
     #ifdef ADC_EN
         encoder.writeUint16(supply_voltage);
     #endif
@@ -1057,7 +1007,8 @@ cSensor::doUplink(void) {
         // BLE Tempoerature/Humidity Sensor: delete results fromBLEScan buffer to release memory
         miThermometer.clearScanResults();
     #endif    
-    
+
+    // Soil sensor data
     #ifdef SOILSENSOR_EN
         if (s1 > -1) {
             // soil sensor data available
@@ -1069,11 +1020,12 @@ cSensor::doUplink(void) {
             encoder.writeUint8(0);      
         }
     #endif
-    
+
     //encoder.writeRawFloat(radio.getRSSI()); // NOTE: int8_t would be more efficient
 
     this->m_fBusy = true;
-    
+
+    // Schedule transmission
     if (! myLoRaWAN.SendBuffer(
         loraData, sizeof(loraData),
         // this is the completion function:
