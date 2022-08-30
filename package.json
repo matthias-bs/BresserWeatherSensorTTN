@@ -25,6 +25,8 @@
     "Catena-mcciadk": "mcci-catena/Catena-mcciadk.git#v0.2.2",
     "RadioLib": "jgromes/RadioLib#semver:^5.3.0",
     "lora-serialization": "thesolarnomad/lora-serialization#semver:^3.1.0",
+    "ESP32Time": "fbiego/ESP32Time#semver:^2.0.0",
+    "Timezone": "JChristensen/Timezone#semver:^1.2.4",
     "ESP32AnalogRead": "madhephaestus/ESP32AnalogRead#semver:^0.2.0",
     "OneWire": "PaulStoffregen/OneWire#semver:^2.3.7",
     "Arduino-Temperature-Control-Library": "milesburton/Arduino-Temperature-Control-Library#semver:^3.9.1",
