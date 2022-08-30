@@ -18,6 +18,8 @@
 // MCCI LoRaWAN LMIC library by Thomas Telkamp and Matthijs Kooijman / Terry Moore, MCCI (https://github.com/mcci-catena/arduino-lmic)
 // MCCI Arduino LoRaWAN Library by Terry Moore, MCCI (https://github.com/mcci-catena/arduino-lorawan)
 // Lora-Serialization by Joscha Feth (https://github.com/thesolarnomad/lora-serialization)
+// ESP32Time by Felix Biego (https://github.com/fbiego/ESP32Time)
+// Arduino Timezone Library by Jack Cristensen (https://github.com/JChristensen/Timezone)
 // ESP32AnalogRead by Kevin Harrington (madhephaestus) (https://github.com/madhephaestus/ESP32AnalogRead)
 // OneWire - for Arduino by Paul Stoffregen (https://github.com/PaulStoffregen/OneWire)
 // DallasTemperature / Arduino-Temperature-Control-Library by Miles Burton (https://github.com/milesburton/Arduino-Temperature-Control-Library) 
@@ -30,6 +32,8 @@
 // MCCI Arduino LoRaWAN Library         0.9.2
 // RadioLib                             5.2.0
 // LoRa_Serialization                   3.1.0
+// ESP32Time                            2.0.0
+// Timezone                             1.2.4
 // ESP32AnalogRead                      0.2.0 (optional)
 // OneWire                              2.3.7 (optional)
 // DallasTemperature                    3.9.0 (optional)
@@ -71,6 +75,7 @@
 // 20220620 Created
 // 20220816 Added support of multiple Bresser 868 MHz sensors; 
 //          e.g. weather sensor and soil temperature/moisture sensor
+// 20220825 Added time keeping with RTC and synchronization to network time
 //
 // ToDo:
 // - add monthly/daily/hourly precipitation values
@@ -90,6 +95,10 @@
 //   network session; this speeds up the connection after a restart
 //   significantly
 // - The ESP32's Bluetooth LE interface is used to access sensor data (option)
+// - To enable Network Time Requests:
+//   in MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h:
+//   #define LMIC_ENABLE_DeviceTimeReq 1
+// - settimeofday()/gettimeofday() must be used to access the ESP32's RTC time
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -98,7 +107,14 @@
 #include <Arduino_LoRaWAN_network.h>
 #include <Arduino_LoRaWAN_EventLog.h>
 #include <arduino_lmic.h>
+#include <ESP32Time.h>
+#include <Timezone.h>
 #include "BresserWeatherSensorTTNCfg.h"
+//#include "RainGauge.h" // Work in progress
+
+#if (not(LMIC_ENABLE_DeviceTimeReq))
+    #warning "LMIC_ENABLE_DeviceTimeReq is not set in lmic_project_config.h - will not be able to retrieve network time!"
+#endif
 
 #ifndef SLEEP_EN
     #warning "SLEEP_EN is not defined, but the weather sensors are only read once during (re-)start! You have been warned!"
@@ -155,6 +171,7 @@ const uint8_t PAYLOAD_SIZE = 51;
   #define DEBUG_PRINTF_TS(...) {}
 #endif
 
+void printDateTime(void);
     
 /****************************************************************************\
 |
@@ -167,6 +184,9 @@ public:
     cMyLoRaWAN() {};
     using Super = Arduino_LoRaWAN_ttn;
     void setup();
+    void requestNetworkTime(void);
+    void printSessionInfo(const SessionInfo &Info);
+    void printSessionState(const SessionState &State);
     
 protected:
     // you'll need to provide implementation for this.
@@ -204,6 +224,7 @@ public:
     bool uplinkRequest(void) {
         m_fUplinkRequest = true;
     };
+    
     ///
     /// \brief set up the sensor object
     ///
@@ -267,11 +288,12 @@ const cMyLoRaWAN::lmic_pinmap myPinMap = {
 // their value is retained after a Sleep Reset.
 RTC_DATA_ATTR uint32_t                        magicFlag1;
 RTC_DATA_ATTR Arduino_LoRaWAN::SessionState   rtcSavedSessionState;
-RTC_DATA_ATTR uint32_t      magicFlag2;
+RTC_DATA_ATTR uint32_t                        magicFlag2;
 RTC_DATA_ATTR Arduino_LoRaWAN::SessionInfo    rtcSavedSessionInfo;
 RTC_DATA_ATTR size_t                          rtcSavedNExtraInfo;
 RTC_DATA_ATTR uint8_t                         rtcSavedExtraInfo[EXTRA_INFO_MEM_SIZE];
-RTC_DATA_ATTR bool                            runtimeExpired = 0;
+RTC_DATA_ATTR bool                            runtimeExpired = false;
+RTC_DATA_ATTR time_t                          rtcLastClockSync = 0;
 
 #ifdef ADC_EN
     // ESP32 ADC with calibration
@@ -312,8 +334,21 @@ WeatherSensor weatherSensor;
 // Uplink payload buffer
 static uint8_t loraData[PAYLOAD_SIZE];
 
+// Sleep request (set in NetTxComplete();
+bool sleepReq = false;
+
 // Force sleep mode after <sleepTimeout> has been reached (if FORCE_SLEEP is defined) 
 ostime_t sleepTimeout;
+
+// Seconds since the UTC epoch
+uint32_t userUTCTime;
+
+// RTC sync request - 
+// set (if due) in setup() / cleared in UserRequestNetworkTimeCb()
+bool rtcSyncReq = false;
+
+// Real time clock
+ESP32Time rtc;
 
 /****************************************************************************\
 |
@@ -376,6 +411,15 @@ void setup() {
     sleepTimeout = sec2osticks(SLEEP_TIMEOUT_INITIAL);
 
     DEBUG_PRINTF_TS("setup()\n");
+    
+#ifdef _BWS_DEBUG_MODE_
+        printDateTime();
+#endif
+    // Check if clock was never synchronized or sync interval has expired 
+    if ((rtcLastClockSync == 0) || ((rtc.getLocalEpoch() - rtcLastClockSync) > (CLOCK_SYNC_INTERVAL * 60))) {
+        DEBUG_PRINTF("RTC sync required\n");
+        rtcSyncReq = true;
+    }
 
     // set up the log; do this first.
     myEventLog.setup();
@@ -388,7 +432,7 @@ void setup() {
     // set up lorawan.
     myLoRaWAN.setup();
     DEBUG_PRINTF("myLoRaWAN.setup() - done\n");
-
+    
     mySensor.uplinkRequest();
 }
 
@@ -403,6 +447,14 @@ void loop() {
     myLoRaWAN.loop();
     mySensor.loop();
     myEventLog.loop();
+
+    #ifdef SLEEP_EN
+        if (sleepReq & !rtcSyncReq) {
+            DEBUG_PRINTF("Shutdown()\n");
+            myLoRaWAN.Shutdown();
+            ESP.deepSleep(SLEEP_INTERVAL * 1000000);
+        }
+    #endif
 
     #ifdef FORCE_SLEEP
         if (os_getTime() > sleepTimeout) {
@@ -490,24 +542,24 @@ cMyLoRaWAN::NetJoin(
     void) {
     DEBUG_PRINTF_TS("NetJoin()\n");
     sleepTimeout = os_getTime() + sec2osticks(SLEEP_TIMEOUT_JOINED);
+    if (rtcSyncReq) {
+        // Allow additional time for completing Network Time Request
+        sleepTimeout += os_getTime() + sec2osticks(SLEEP_TIMEOUT_EXTRA);
+    }
 }
 
 // This method is called after transmission has been completed.
 // If enabled, the controller goes into deep sleep mode now.
 void
-cMyLoRaWAN::NetTxComplete(
-    void) {
+cMyLoRaWAN::NetTxComplete(void) {
     DEBUG_PRINTF_TS("NetTxComplete()\n");
-    #ifdef SLEEP_EN
-        DEBUG_PRINTF("Shutdown()\n");
-        myLoRaWAN.Shutdown();
-        ESP.deepSleep(SLEEP_INTERVAL * 1000000);
-    #endif
+    sleepReq = true;
 }
 
 #ifdef _BWS_DEBUG_MODE_
 // Print session info for debugging
-void printSessionInfo(const cMyLoRaWAN::SessionInfo &Info)
+void 
+cMyLoRaWAN::printSessionInfo(const SessionInfo &Info)
 {
     Serial.printf("Tag:\t\t%d\n", Info.V1.Tag);
     Serial.printf("Size:\t\t%d\n", Info.V1.Size);
@@ -528,7 +580,8 @@ void printSessionInfo(const cMyLoRaWAN::SessionInfo &Info)
 }
 
 // Print session state for debugging
-void printSessionState(const cMyLoRaWAN::SessionState &State)
+void 
+cMyLoRaWAN::printSessionState(const SessionState &State)
 {
     Serial.printf("Tag:\t\t%d\n", State.V1.Tag);
     Serial.printf("Size:\t\t%d\n", State.V1.Size);
@@ -692,6 +745,73 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
     return true;
 }
 
+// Print date and time (i.e. local time)
+void printDateTime(void) {
+        struct tm timeinfo;
+        char tbuf[26];
+        
+        time_t tlocal = euCentral.toLocal(rtc.getLocalEpoch()); 
+        localtime_r(&tlocal, &timeinfo);
+        strftime(tbuf, 25, "%Y-%m-%d %H:%M:%S", &timeinfo);
+        DEBUG_PRINTF("%s\n", tbuf);
+}
+
+// Callback function for setting RTC from LoRaWAN network time
+void UserRequestNetworkTimeCb(void *pVoidUserUTCTime, int flagSuccess) {
+    // Explicit conversion from void* to uint32_t* to avoid compiler errors
+    uint32_t *pUserUTCTime = (uint32_t *) pVoidUserUTCTime;
+
+    // A struct that will be populated by LMIC_getNetworkTimeReference.
+    // It contains the following fields:
+    //  - tLocal: the value returned by os_GetTime() when the time
+    //            request was sent to the gateway, and
+    //  - tNetwork: the seconds between the GPS epoch and the time
+    //              the gateway received the time request
+    lmic_time_reference_t lmicTimeReference;
+
+    if (flagSuccess != 1) {
+        DEBUG_PRINTF_TS("UserRequestNetworkTimeCb: didn't succeed\n");
+        return;
+    }
+
+    // Populate "lmic_time_reference"
+    flagSuccess = LMIC_getNetworkTimeReference(&lmicTimeReference);
+    if (flagSuccess != 1) {
+        DEBUG_PRINTF_TS("UserRequestNetworkTimeCb: LMIC_getNetworkTimeReference didn't succeed\n");
+        return;
+    }
+
+    // Update userUTCTime, considering the difference between the GPS and UTC
+    // epoch, and the leap seconds
+    *pUserUTCTime = lmicTimeReference.tNetwork + 315964800;
+
+    // Add the delay between the instant the time was transmitted and
+    // the current time
+
+    // Current time, in ticks
+    ostime_t ticksNow = os_getTime();
+    // Time when the request was sent, in ticks
+    ostime_t ticksRequestSent = lmicTimeReference.tLocal;
+    uint32_t requestDelaySec = osticks2ms(ticksNow - ticksRequestSent) / 1000;
+    *pUserUTCTime += requestDelaySec;
+
+    // Update the system time with the time read from the network
+    rtc.setTime(*pUserUTCTime);
+    
+    // Save clock sync timestamp and clear flag 
+    rtcLastClockSync = rtc.getLocalEpoch();
+    rtcSyncReq = false;
+    DEBUG_PRINTF_TS("RTC sync completed\n");
+
+#ifdef _BWS_DEBUG_MODE_
+        printDateTime();
+#endif
+}
+
+void
+cMyLoRaWAN::requestNetworkTime(void) {
+    LMIC_requestNetworkTime(UserRequestNetworkTimeCb, &userUTCTime);
+}
 
 /****************************************************************************\
 |
@@ -846,6 +966,12 @@ cSensor::doUplink(void) {
         DEBUG_PRINTF_TS("doUplink(): other operation in progress\n");    
         return;
     }
+
+    //
+    // Request time and date
+    //
+    if (rtcSyncReq)
+        myLoRaWAN.requestNetworkTime();
     
     //
     // Read auxiliary sensor data

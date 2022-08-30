@@ -53,6 +53,10 @@
 // If SLEEP_EN is defined, MCU will sleep for SLEEP_INTERVAL seconds after succesful transmission
 #define SLEEP_INTERVAL 360
 
+// RTC to network time sync interval (in minutes)
+//#define CLOCK_SYNC_INTERVAL 24 * 60
+#define CLOCK_SYNC_INTERVAL 15
+
 // Force deep sleep after a certain time, even if transmission was not completed
 #define FORCE_SLEEP
 
@@ -61,6 +65,9 @@
 
 // If already joined, force deep sleep after SLEEP_TIMEOUT_JOINED seconds (if enabled)
 #define SLEEP_TIMEOUT_JOINED 600
+
+// Additional timeout to be applied after joining if Network Time Request pending
+#define SLEEP_TIMEOUT_EXTRA 300
 
 // Timeout for weather sensor data reception (seconds)
 #define WEATHERSENSOR_TIMEOUT 120
@@ -128,7 +135,6 @@
     const uint8_t UBATT_SAMPLES   = 10;
 #endif
 
-
 #ifdef MITHERMOMETER_EN
     // BLE scan time in seconds
     const int bleScanTime = 10;
@@ -136,3 +142,9 @@
     // List of known sensors' BLE addresses
     std::vector<std::string> knownBLEAddresses = {"a4:c1:38:b8:1f:7f"};
 #endif
+
+// Central European Summer Time - begins last Sunday in March   at 1:00 UTC
+TimeChangeRule euCEST = {"CEST", Last, Sun, Mar, 1, 120};  //UTC + 2 hours
+// Central European Time        - begins last Sunday in October at 1:00 UTC
+TimeChangeRule euCET  = {"EST",  Last, Sun, Oct, 1,  60};  //UTC + 1 hours
+Timezone euCentral(euCEST, euCET);
