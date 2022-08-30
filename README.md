@@ -39,6 +39,8 @@ TBD
 | MCCI Arduino LoRaWAN Library     | r                            | - |
 | RadioLib                         | r                            | - |
 | LoRa_Serialization               | r                            | - |
+| ESP32Time                        | r                            | - |
+| Timezone                         | r                            | - |
 | BresserWeatherSensorReceiver     | r                            | https://github.com/matthias-bs/BresserWeatherSensorReceiver<br>=> add directory to BresserWeatherSensorTTN/src                                          |
 | ESP32AnalogRead                  | o                            | - |
 | OneWire                          | o                            | - |
