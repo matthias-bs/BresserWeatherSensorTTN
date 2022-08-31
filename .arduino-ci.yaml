@@ -1,17 +1,31 @@
 compile:
   libraries:
+    - BresserWeatherSensorReceiver
     - MCCI Arduino LoRaWAN Library
     - MCCI LoRaWAN LMIC library
     - MCCI Arduino Development Kit ADK
     - LoRa Serialization
+    - ESP32Time
+    - Timezone
+    - ESP32AnalogRead
+    - OneWire
+    - DallasTemperature
+    - ATC MiThermometer Library
   platforms:
     - esp32
 
 unittest:
   libraries:
+    - BresserWeatherSensorReceiver
     - MCCI Arduino LoRaWAN Library
     - MCCI LoRaWAN LMIC library
     - MCCI Arduino Development Kit ADK
     - LoRa Serialization
+    - ESP32Time
+    - Timezone
+    - ESP32AnalogRead
+    - OneWire
+    - DallasTemperature
+    - ATC MiThermometer Library
   platforms:
     - esp32
