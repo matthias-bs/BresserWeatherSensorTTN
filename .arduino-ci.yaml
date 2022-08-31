@@ -1,0 +1,17 @@
+compile:
+  libraries:
+    - MCCI Arduino LoRaWAN Library
+    - MCCI LoRaWAN LMIC library
+    - MCCI Arduino Development Kit ADK
+    - LoRa Serialization
+  platforms:
+    - esp32
+
+unittest:
+  libraries:
+    - MCCI Arduino LoRaWAN Library
+    - MCCI LoRaWAN LMIC library
+    - MCCI Arduino Development Kit ADK
+    - LoRa Serialization
+  platforms:
+    - esp32
