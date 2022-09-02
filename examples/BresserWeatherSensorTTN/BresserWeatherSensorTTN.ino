@@ -131,8 +131,7 @@
 #endif
 
 // BresserWeatherSensorReceiver
-#include "WeatherSensorCfg.h"
-#include "WeatherSensor.h"
+#include <WeatherSensor.h>
 
 #ifdef MITHERMOMETER_EN
     // BLE Temperature/Humidity Sensor
