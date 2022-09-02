@@ -79,7 +79,7 @@ jobs:
             "Timezone@1.2.4"
             "ESP32AnalogRead@0.2.0"
             "OneWire@2.3.7"
-            "DallasTemperature@3.9.1"
+            "DallasTemperature@3.11.0"
             "ESP32_ATC_MiThermometer_Library@0.1.0")
           for i in "${required_libs[@]}"
           do
