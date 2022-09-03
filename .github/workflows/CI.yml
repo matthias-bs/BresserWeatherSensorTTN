@@ -77,7 +77,8 @@ jobs:
             "ESP32AnalogRead@0.2.0"
             "OneWire@2.3.7"
             "DallasTemperature@3.9.0"
-            "ATC MiThermometer Library@0.0.1")
+            "ATC MiThermometer Library@0.0.1"
+            "MQTT")
           for i in "${required_libs[@]}"
           do
             arduino-cli lib install "$i"
