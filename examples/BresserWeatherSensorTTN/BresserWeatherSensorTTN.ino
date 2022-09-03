@@ -282,6 +282,7 @@ const cMyLoRaWAN::lmic_pinmap myPinMap = {
      .rxtx_rx_active = 0,
      .rssi_cal = 0,
      .spi_freq = 8000000,
+     .pConfig = NULL
 };
 
 // The following variables are stored in the ESP32's RTC RAM -
