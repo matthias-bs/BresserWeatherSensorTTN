@@ -41,6 +41,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <vector>
+#include <string>
+
 // Enable debug mode (debug messages via serial port)
 #define _BWS_DEBUG_MODE_
 

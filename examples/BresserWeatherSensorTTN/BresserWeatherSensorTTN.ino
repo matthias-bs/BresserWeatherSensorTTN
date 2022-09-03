@@ -131,7 +131,8 @@
 #endif
 
 // BresserWeatherSensorReceiver
-#include <WeatherSensor.h>
+//#include "WeatherSensorCfg.h"
+#include "WeatherSensor.h"
 
 #ifdef MITHERMOMETER_EN
     // BLE Temperature/Humidity Sensor
@@ -220,7 +221,7 @@ public:
     float getTemperature(void);
     uint16_t getVoltage(void);
     uint16_t getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider);
-    bool uplinkRequest(void) {
+    void uplinkRequest(void) {
         m_fUplinkRequest = true;
     };
     
@@ -932,6 +933,7 @@ cSensor::getTemperature(void)
             DEBUG_PRINTF("Error: Could not read temperature data\n");
         }
     #endif
+    return tempC;
 }
 #endif
     
@@ -1017,9 +1019,9 @@ cSensor::doUplink(void) {
       DEBUG_PRINTF("Air Temperature:    % 3.1f °C\n",   weatherSensor.sensor[ws].temp_c);
       DEBUG_PRINTF("Humidity:            %2d   %%\n",   weatherSensor.sensor[ws].humidity);
       DEBUG_PRINTF("Rain Gauge:       %7.1f mm\n",      weatherSensor.sensor[ws].rain_mm);
-      DEBUG_PRINTF("Wind Speed (avg.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1);
-      DEBUG_PRINTF("Wind Speed (max.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1);
-      DEBUG_PRINTF("Wind Direction:      %4.1f °\n",    weatherSensor.sensor[ws].wind_direction_deg_fp1);
+      DEBUG_PRINTF("Wind Speed (avg.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1/10.0);
+      DEBUG_PRINTF("Wind Speed (max.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1/10.0);
+      DEBUG_PRINTF("Wind Direction:      %4.1f °\n",    weatherSensor.sensor[ws].wind_direction_deg_fp1/10.0);
     } else {
       DEBUG_PRINTF("-- Weather Sensor Failure\n");
     }
