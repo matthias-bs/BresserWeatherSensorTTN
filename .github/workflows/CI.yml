@@ -81,6 +81,7 @@ jobs:
           do
             arduino-cli lib install "$i"
           done
+          ls -R
 
       - name: Install platform
         if: ${{ env.run-build == 'true' }}
