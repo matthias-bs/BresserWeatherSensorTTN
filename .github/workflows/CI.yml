@@ -95,8 +95,11 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Copy BresserWeatherCfg.h
-         cp /home/runner/work/BresserWeatherSensorTTN/BresserWeatherSensorTTN/examples/BresserWeatherSensorTTN/BresserWeatherCfg.h \
-            /home/runner/Arduino/libraries/BresserWeatherSensorReceiver/src/
+        if: ${{ env.run-build == 'true' }}
+        run:
+          |
+          cp /home/runner/work/BresserWeatherSensorTTN/BresserWeatherSensorTTN/examples/BresserWeatherSensorTTN/BresserWeatherCfg.h \
+             /home/runner/Arduino/libraries/BresserWeatherSensorReceiver/src/
 
       - name: Build examples
         if: ${{ env.run-build == 'true' }}
