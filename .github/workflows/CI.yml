@@ -65,6 +65,7 @@ jobs:
         if: ${{ env.run-build == 'true' }}
         run:
           |
+          arduino-cli config init --enable_unsafe_install
           arduino-cli lib install --git-url https://github.com/matthias-bs/BresserWeatherSensorReceiver.git
           #declare -a required_libs=("https://github.com/matthias-bs/BresserWeatherSensorReceiver.git"
           declare -a required_libs=(
