@@ -304,16 +304,16 @@ RTC_DATA_ATTR time_t                          rtcLastClockSync = 0;
 #endif
 
 // ESP32 ADC with calibration
-#ifdef PIN_ADC0_IN
+#if defined(ADC_EN) && defined(PIN_ADC0_IN)
     ESP32AnalogRead adc0;
 #endif
-#ifdef PIN_ADC1_IN
+#if defined(ADC_EN) && defined(PIN_ADC1_IN)
     ESP32AnalogRead adc1;
 #endif
-#ifdef PIN_ADC2_IN
+#if defined(ADC_EN) && defined(PIN_ADC2_IN)
     ESP32AnalogRead adc2;
 #endif
-#ifdef PIN_ADC3_IN
+#if defined(ADC_EN) && defined(PIN_ADC3_IN)
     ESP32AnalogRead adc3;
 #endif
 
@@ -1051,7 +1051,7 @@ cSensor::doUplink(void) {
     #ifdef ADC_EN
         DEBUG_PRINTF("Supply  Voltage:   %4d   mV\n",       supply_voltage);
     #endif
-    #ifdef PIN_ADC3_IN
+    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
         DEBUG_PRINTF("Battery Voltage:   %4d   mV\n",       battery_voltage);
     #endif
     #ifdef MITHERMOMETER_EN
@@ -1126,7 +1126,7 @@ cSensor::doUplink(void) {
     #ifdef ADC_EN
         encoder.writeUint16(supply_voltage);
     #endif
-    #ifdef PIN_ADC3_IN
+    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
         encoder.writeUint16(battery_voltage);
     #endif
     #ifdef ONEWIRE_EN
