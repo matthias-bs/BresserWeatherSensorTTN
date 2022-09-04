@@ -1037,13 +1037,15 @@ cSensor::doUplink(void) {
       }
     #endif
 
-    // Debug output for auxiliary sensors/voltages
-    if (water_temp_c != DEVICE_DISCONNECTED_C) {
-        DEBUG_PRINTF("Water Temperature:  % 2.1f °C\n",  water_temp_c);
-    } else {
-        DEBUG_PRINTF("Water Temperature:   --.- °C\n");
-        water_temp_c = -30.0;
-    }
+    #ifdef ONEWIRE_EN
+        // Debug output for auxiliary sensors/voltages
+        if (water_temp_c != DEVICE_DISCONNECTED_C) {
+            DEBUG_PRINTF("Water Temperature:  % 2.1f °C\n",  water_temp_c);
+        } else {
+            DEBUG_PRINTF("Water Temperature:   --.- °C\n");
+            water_temp_c = -30.0;
+        }
+    #endif
     #ifdef ADC_EN
         DEBUG_PRINTF("Supply  Voltage:   %4d   mV\n",       supply_voltage);
     #endif
