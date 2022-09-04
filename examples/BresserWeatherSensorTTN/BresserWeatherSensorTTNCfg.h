@@ -82,7 +82,7 @@
 #define ADC_EN
 
 // Enable OneWire temperature measurement
-#define ONEWIRE_EN
+//#define ONEWIRE_EN
 
 // Enable BLE temperature/humidity measurement
 // Note: BLE requires a lot of program memory!
