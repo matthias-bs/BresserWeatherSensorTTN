@@ -115,7 +115,8 @@ jobs:
         if: ${{ env.run-build == 'true' }}
         run:
           |
-          for example in $(find $PWD/examples -name '*.ino' | sort); do
+          #for example in $(find $PWD/examples -name '*.ino' | sort); do
+          for example in $(find $PWD -name '*.ino' | sort); do
             # check whether to skip this sketch
             if [ ! -z '${{ steps.prep.outputs.skip-pattern }}' ] && [[ ${example} =~ ${{ steps.prep.outputs.skip-pattern }} ]]; then
               # skip sketch
