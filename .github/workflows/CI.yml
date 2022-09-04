@@ -102,7 +102,7 @@ jobs:
         if: ${{ env.run-build == 'true' }}
         run:
           |
-          cp /home/runner/work/BresserWeatherSensorTTN/BresserWeatherSensorTTN/examples/BresserWeatherSensorTTN/WeatherSensorCfg.h \
+          cp /home/runner/work/BresserWeatherSensorTTN/BresserWeatherSensorTTN/WeatherSensorCfg.h \
              /home/runner/Arduino/libraries/BresserWeatherSensorReceiver/src/
 
       - name: Customizing lmic_project_config.h (LMIC_ENABLE_DeviceTimeReq)
@@ -111,11 +111,12 @@ jobs:
           |
           echo "#define LMIC_ENABLE_DeviceTimeReq 1" >> /home/runner/Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h
       
-      - name: Build examples
+      - name: Build sketch
         if: ${{ env.run-build == 'true' }}
         run:
           |
           #for example in $(find $PWD/examples -name '*.ino' | sort); do
+          # modified to compile a singe sketch (instead of a library's examples)
           for example in $(find $PWD -name '*.ino' | sort); do
             # check whether to skip this sketch
             if [ ! -z '${{ steps.prep.outputs.skip-pattern }}' ] && [[ ${example} =~ ${{ steps.prep.outputs.skip-pattern }} ]]; then
