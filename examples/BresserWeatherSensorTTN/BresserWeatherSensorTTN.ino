@@ -126,8 +126,11 @@
 #endif
 
 #ifdef ADC_EN
+    #pragma #pragma GCC diagnostic push
+    #pragma GCC diagnostic warning "-Wunused-variable"
     // ESP32 calibrated Analog Input Reading
     #include <ESP32AnalogRead.h>
+    #pragma #pragma GCC diagnostic pop
 #endif
 
 // BresserWeatherSensorReceiver
