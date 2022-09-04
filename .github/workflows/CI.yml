@@ -105,6 +105,12 @@ jobs:
           cp /home/runner/work/BresserWeatherSensorTTN/BresserWeatherSensorTTN/examples/BresserWeatherSensorTTN/WeatherSensorCfg.h \
              /home/runner/Arduino/libraries/BresserWeatherSensorReceiver/src/
 
+      - name: Customizing lmic_project_config.h (LMIC_ENABLE_DeviceTimeReq)
+        if: ${{ env.run-build == 'true' }}
+        run:
+          |
+          echo "#define LMIC_ENABLE_DeviceTimeReq 1" >> /home/runner/Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h
+      
       - name: Build examples
         if: ${{ env.run-build == 'true' }}
         run:
