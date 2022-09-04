@@ -3,9 +3,9 @@
 [![CI](https://github.com/matthias-bs/BresserWeatherSensorTTN/actions/workflows/CI.yml/badge.svg)](https://github.com/matthias-bs/BresserWeatherSensorTTN/actions/workflows/CI.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/LICENSE)
 
-Bresser 5-in-1/6-in-1 868 MHz Weather Sensor Radio Receiver based on ESP32 and RFM95W - provides data via LoRaWAN to The Things Network
+Bresser 5-in-1/6-in-1 868 MHz Weather Sensor Radio Receiver based on ESP32 and RFM95W/SX1276 - provides data via LoRaWAN to The Things Network
 
-The RFM95W radio transceiver is used in FSK mode to receive weather sensor data and in LoRaWAN mode to connect to The Things Network.
+The RFM95W/SX1276 radio transceiver is used in FSK mode to receive weather sensor data and in LoRaWAN mode to connect to The Things Network.
 
 ## Features
 * Single 868 MHz Radio Transceiver for both Sensor Data Reception and LoRaWAN Connection
