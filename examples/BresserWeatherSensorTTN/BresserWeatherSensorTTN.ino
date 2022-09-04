@@ -126,11 +126,8 @@
 #endif
 
 #ifdef ADC_EN
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic warning "-Wunused-variable"
     // ESP32 calibrated Analog Input Reading
     #include <ESP32AnalogRead.h>
-    #pragma GCC diagnostic pop
 #endif
 
 // BresserWeatherSensorReceiver
@@ -222,8 +219,10 @@ public:
     cSensor() {};
 
     float getTemperature(void);
-    uint16_t getVoltage(void);
-    uint16_t getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider);
+    #ifdef ADC_EN
+        uint16_t getVoltage(void);
+        uint16_t getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider);
+    #endif
     void uplinkRequest(void) {
         m_fUplinkRequest = true;
     };
@@ -834,7 +833,7 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
         adc.attach(PIN_ADC_IN);
     #endif
 
-    #ifdef PIN_ADC3_IN
+    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
         // Use ADC3 with PIN_ADC3_IN
         adc3.attach(PIN_ADC3_IN);
     #endif
@@ -895,7 +894,6 @@ cSensor::getVoltage(void)
 
     return voltage;
 }
-#endif
 
 //
 // Get supply / battery voltage
@@ -913,6 +911,7 @@ cSensor::getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider)
 
     return voltage;
 }
+#endif
 
 #ifdef ONEWIRE_EN
 //
