@@ -986,7 +986,7 @@ cSensor::doUplink(void) {
     #ifdef ADC_EN
         uint16_t  supply_voltage      = getVoltage();
     #endif
-    #ifdef PIN_ADC3_IN
+    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
         uint16_t  battery_voltage     = getVoltage(adc3, ADC3_SAMPLES, ADC3_DIV);
     #endif
     bool          mithermometer_valid = false;
