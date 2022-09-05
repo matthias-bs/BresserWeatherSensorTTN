@@ -249,6 +249,11 @@ protected:
 |
 \****************************************************************************/
 
+/*!
+ * \class cSensor
+ * 
+ * \brief The sensor object - collect sensor data ans schedule uplink
+ */
 class cSensor {
 public:
     /// \brief the constructor. Deliberately does very little.
@@ -258,6 +263,8 @@ public:
      * \fn getTemperature
      * 
      * \brief Get temperature from DS18B20 sensor via OneWire bus
+     * 
+     * \returns Temperature [degC]
      */
     float getTemperature(void);
     
@@ -286,6 +293,12 @@ public:
          */
         uint16_t getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider);
     #endif
+        
+    /*!
+     * \fn uplinkRequest
+     * 
+     * \brief Request uplink to LoRaWAN
+     */
     void uplinkRequest(void) {
         m_fUplinkRequest = true;
     };
