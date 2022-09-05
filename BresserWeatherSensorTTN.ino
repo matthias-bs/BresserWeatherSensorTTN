@@ -101,6 +101,7 @@
 // - settimeofday()/gettimeofday() must be used to access the ESP32's RTC time
 //
 ///////////////////////////////////////////////////////////////////////////////
+/*! \file */ 
 
 #define ARDUINO_LMIC_CFG_NETWORK_TTN 1
 
