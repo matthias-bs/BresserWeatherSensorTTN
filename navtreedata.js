@@ -36,14 +36,19 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ]
+      [ "File List", "files.html", "files_dup" ],
+      [ "File Members", "globals.html", [
+        [ "All", "globals.html", null ],
+        [ "Functions", "globals_func.html", null ],
+        [ "Variables", "globals_vars.html", null ]
+      ] ]
     ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"_bresser_weather_sensor_t_t_n_cfg_8h_source.html"
+"_bresser_weather_sensor_t_t_n_8ino.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
