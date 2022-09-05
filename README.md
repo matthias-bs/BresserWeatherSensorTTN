@@ -86,6 +86,10 @@ JSON-Path with Uplink-Decoder (see [ttn_decoder_fp_v6.js](ttn_decoder_fp_v6.js))
 
 `.uplink_message.decoded_payload.bytes.<variable>`
 
+## Doxygen Generated Source Code Documentation
+
+https://matthias-bs.github.io/BresserWeatherSensorTTN/index.html
+
 ## References
 
 Based on
