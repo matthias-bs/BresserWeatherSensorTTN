@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['readme_2',['Readme',['../md_src__readme.html',1,'']]]
+  ['loop_4',['loop',['../classc_sensor.html#adcf3a62c0ddbfea36ded6280118ce787',1,'cSensor']]]
 ];
