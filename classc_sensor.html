@@ -89,6 +89,9 @@ $(document).ready(function(){initNavTree('classc_sensor.html',''); initResizable
 <div class="title">cSensor Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>The sensor object - collect sensor data ans schedule uplink.  
+ <a href="classc_sensor.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -96,13 +99,13 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_sensor.html#a5dbac65bd830ca7f6b8a2ac43d34ba0d">cSensor</a> ()</td></tr>
 <tr class="memdesc:a5dbac65bd830ca7f6b8a2ac43d34ba0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">the constructor. Deliberately does very little. <br /></td></tr>
 <tr class="separator:a5dbac65bd830ca7f6b8a2ac43d34ba0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9a77de215330062387a7e0d097b9e70"><td class="memItemLeft" align="right" valign="top"><a id="aa9a77de215330062387a7e0d097b9e70"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_sensor.html#aa9a77de215330062387a7e0d097b9e70">getTemperature</a> (void)</td></tr>
-<tr class="memdesc:aa9a77de215330062387a7e0d097b9e70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get temperature from DS18B20 sensor via OneWire bus. <br /></td></tr>
+<tr class="memitem:aa9a77de215330062387a7e0d097b9e70"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_sensor.html#aa9a77de215330062387a7e0d097b9e70">getTemperature</a> (void)</td></tr>
+<tr class="memdesc:aa9a77de215330062387a7e0d097b9e70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get temperature from DS18B20 sensor via OneWire bus.  <a href="classc_sensor.html#aa9a77de215330062387a7e0d097b9e70">More...</a><br /></td></tr>
 <tr class="separator:aa9a77de215330062387a7e0d097b9e70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31ae6fdec24e420931d6bc99af2adec0"><td class="memItemLeft" align="right" valign="top"><a id="a31ae6fdec24e420931d6bc99af2adec0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>uplinkRequest</b> (void)</td></tr>
-<tr class="separator:a31ae6fdec24e420931d6bc99af2adec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3338de574b62fe75e146587cbaf67f2f"><td class="memItemLeft" align="right" valign="top"><a id="a3338de574b62fe75e146587cbaf67f2f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_sensor.html#a3338de574b62fe75e146587cbaf67f2f">uplinkRequest</a> (void)</td></tr>
+<tr class="memdesc:a3338de574b62fe75e146587cbaf67f2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request uplink to LoRaWAN. <br /></td></tr>
+<tr class="separator:a3338de574b62fe75e146587cbaf67f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa764fc02e853f073ac0d4d2e39d380ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_sensor.html#aa764fc02e853f073ac0d4d2e39d380ec">setup</a> (std::uint32_t uplinkPeriodMs=6 *60 *1000)</td></tr>
 <tr class="memdesc:aa764fc02e853f073ac0d4d2e39d380ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">set up the sensor object  <a href="classc_sensor.html#aa764fc02e853f073ac0d4d2e39d380ec">More...</a><br /></td></tr>
 <tr class="separator:aa764fc02e853f073ac0d4d2e39d380ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -110,7 +113,30 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>uplinkRequest</b> (vo
 <tr class="memdesc:adcf3a62c0ddbfea36ded6280118ce787"><td class="mdescLeft">&#160;</td><td class="mdescRight">update sensor loop.  <a href="classc_sensor.html#adcf3a62c0ddbfea36ded6280118ce787">More...</a><br /></td></tr>
 <tr class="separator:adcf3a62c0ddbfea36ded6280118ce787"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The sensor object - collect sensor data ans schedule uplink. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa9a77de215330062387a7e0d097b9e70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9a77de215330062387a7e0d097b9e70">&#9670;&nbsp;</a></span>getTemperature()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cSensor::getTemperature </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get temperature from DS18B20 sensor via OneWire bus. </p>
+<dl class="section return"><dt>Returns</dt><dd>Temperature [degC] </dd></dl>
+
+</div>
+</div>
 <a id="adcf3a62c0ddbfea36ded6280118ce787"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adcf3a62c0ddbfea36ded6280118ce787">&#9670;&nbsp;</a></span>loop()</h2>
 

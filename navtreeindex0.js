@@ -11,7 +11,7 @@ var NAVTREEINDEX0 =
 "classc_my_lo_ra_w_a_n.html#aa8b5cd5a2fff11837b469ac3a3f80e7d":[3,0,0,2],
 "classc_my_lo_ra_w_a_n.html#acd6e41a545f280acb784d469cbbdf61a":[3,0,0,5],
 "classc_sensor.html":[3,0,1],
-"classc_sensor.html#a31ae6fdec24e420931d6bc99af2adec0":[3,0,1,4],
+"classc_sensor.html#a3338de574b62fe75e146587cbaf67f2f":[3,0,1,4],
 "classc_sensor.html#a5dbac65bd830ca7f6b8a2ac43d34ba0d":[3,0,1,0],
 "classc_sensor.html#aa764fc02e853f073ac0d4d2e39d380ec":[3,0,1,3],
 "classc_sensor.html#aa9a77de215330062387a7e0d097b9e70":[3,0,1,1],

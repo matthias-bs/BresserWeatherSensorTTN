@@ -4,5 +4,5 @@ var classc_sensor =
     [ "getTemperature", "classc_sensor.html#aa9a77de215330062387a7e0d097b9e70", null ],
     [ "loop", "classc_sensor.html#adcf3a62c0ddbfea36ded6280118ce787", null ],
     [ "setup", "classc_sensor.html#aa764fc02e853f073ac0d4d2e39d380ec", null ],
-    [ "uplinkRequest", "classc_sensor.html#a31ae6fdec24e420931d6bc99af2adec0", null ]
+    [ "uplinkRequest", "classc_sensor.html#a3338de574b62fe75e146587cbaf67f2f", null ]
 ];
