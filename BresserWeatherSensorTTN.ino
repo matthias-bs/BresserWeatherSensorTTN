@@ -190,7 +190,7 @@ public:
     using Super = Arduino_LoRaWAN_ttn;
     
     /*!
-     * \function setup
+     * \fn setup
      * 
      * \brief Initialize cMyLoRaWAN object
      */
@@ -198,7 +198,7 @@ public:
     
     
     /*!
-     * \function requestNetworkTime
+     * \fn requestNetworkTime
      * 
      * \brief Wrapper function for LMIC_requestNetworkTime()
      */
@@ -206,7 +206,7 @@ public:
     
     
     /*!
-     * \function printSessionInfo
+     * \fn printSessionInfo
      * 
      * \brief Print contents of session info data structure for debugging
      * 
@@ -216,7 +216,7 @@ public:
     
     
     /*!
-     * \function printSessionState
+     * \fn printSessionState
      * 
      * \brief Print contents of session state data structure for debugging
      * 
@@ -254,34 +254,59 @@ public:
     /// \brief the constructor. Deliberately does very little.
     cSensor() {};
 
+    /*!
+     * \fn getTemperature
+     * 
+     * \brief Get temperature from DS18B20 sensor via OneWire bus
+     */
     float getTemperature(void);
+    
     #ifdef ADC_EN
+        /*!
+         * \fn getVoltage
+         * 
+         * \brief Get supply voltage (fixed ADC input circuit on FireBeetle ESP32 board)
+         * 
+         * \returns Voltage [mV]
+         */
         uint16_t getVoltage(void);
+        
+        /*
+         * \fn getVoltage
+         * 
+         * \brief Get ADC voltage from specified port with averaging and application of divider
+         * 
+         * \param adc ADC port
+         * 
+         * \param samples No. of samples used in averaging
+         * 
+         * \param divider Voltage divider
+         * 
+         * \returns Voltage [mV]
+         */
         uint16_t getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider);
     #endif
     void uplinkRequest(void) {
         m_fUplinkRequest = true;
     };
     
-    ///
-    /// \brief set up the sensor object
-    ///
-    /// \param uplinkPeriodMs optional uplink interval. If not specified,
-    ///         transmit every six minutes.
-    ///
+    /*!
+     * \brief set up the sensor object
+     *
+     * \param uplinkPeriodMs optional uplink interval. If not specified,
+     *                       transmit every six minutes.
+     */
     void setup(std::uint32_t uplinkPeriodMs = 6 * 60 * 1000);
 
-    ///
-    /// \brief update sensor loop.
-    ///
-    /// \details
-    ///     This should be called from the global loop(); it periodically
-    ///     gathers and transmits sensor data.
-    ///
+    /*!
+     * \brief update sensor loop.
+     *
+     * \details
+     *     This should be called from the global loop(); it periodically
+     *     gathers and transmits sensor data.
+     */
     void loop();
 
-    float    temperature1; //<! temperature (DS18B20)
-    uint32_t voltage;      //<! battery voltage
     
 private:
     void doUplink();
