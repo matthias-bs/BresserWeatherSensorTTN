@@ -179,13 +179,49 @@ void printDateTime(void);
 |
 \****************************************************************************/
 
+/*!
+ * \class cMyLoRaWAN
+ * 
+ * \brief The LoRaWAN object - LoRaWAN protocol and session handling
+ */ 
 class cMyLoRaWAN : public Arduino_LoRaWAN_ttn {
 public:
     cMyLoRaWAN() {};
     using Super = Arduino_LoRaWAN_ttn;
+    
+    /*!
+     * \function setup
+     * 
+     * \brief Initialize cMyLoRaWAN object
+     */
     void setup();
+    
+    
+    /*!
+     * \function requestNetworkTime
+     * 
+     * \brief Wrapper function for LMIC_requestNetworkTime()
+     */
     void requestNetworkTime(void);
+    
+    
+    /*!
+     * \function printSessionInfo
+     * 
+     * \brief Print contents of session info data structure for debugging
+     * 
+     * \param Info Session information data structure
+     */
     void printSessionInfo(const SessionInfo &Info);
+    
+    
+    /*!
+     * \function printSessionState
+     * 
+     * \brief Print contents of session state data structure for debugging
+     * 
+     * \param State Session state data structure
+     */
     void printSessionState(const SessionState &State);
     
 protected:
