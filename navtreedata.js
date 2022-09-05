@@ -23,13 +23,18 @@ for the JavaScript code in this file
 var NAVTREE =
 [
   [ "BresserWeatherSensorTTN", "index.html", [
-    [ "Readme", "md_src__readme.html", null ]
+    [ "Contributor Covenant Code of Conduct", "md__c_o_d_e__o_f__c_o_n_d_u_c_t.html", null ],
+    [ "BresserWeatherSensorTTN", "md__r_e_a_d_m_e.html", null ],
+    [ "Readme", "md_src__readme.html", null ],
+    [ "Files", "files.html", [
+      [ "File List", "files.html", "files_dup" ]
+    ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"index.html"
+"_bresser_weather_sensor_t_t_n_cfg_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
