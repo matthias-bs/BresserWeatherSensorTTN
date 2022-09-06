@@ -27,7 +27,7 @@
     "lora-serialization": "thesolarnomad/lora-serialization#semver:^3.1.0",
     "ESP32Time": "fbiego/ESP32Time#semver:^2.0.0",
     "Timezone": "JChristensen/Timezone#semver:^1.2.4",
-    "ESP32AnalogRead": "madhephaestus/ESP32AnalogRead#semver:^0.2.0",
+    "ESP32AnalogRead": "madhephaestus/ESP32AnalogRead#semver:^0.2.1",
     "OneWire": "PaulStoffregen/OneWire#semver:^2.3.7",
     "Arduino-Temperature-Control-Library": "milesburton/Arduino-Temperature-Control-Library#semver:^3.9.1",
     "ESP32_ATC_MiThermometer_Library": "matthias-bs/ESP32_ATC_MiThermometer_Library#semver:^0.0.1"
