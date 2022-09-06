@@ -79,7 +79,7 @@
 //#define SENSORID_EN
 
 // Enable battery / supply voltage measurement
-//#define ADC_EN
+#define ADC_EN
 
 // Enable OneWire temperature measurement
 //#define ONEWIRE_EN
