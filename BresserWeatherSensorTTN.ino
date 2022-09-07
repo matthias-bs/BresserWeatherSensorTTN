@@ -101,7 +101,6 @@
 // - settimeofday()/gettimeofday() must be used to access the ESP32's RTC time
 //
 ///////////////////////////////////////////////////////////////////////////////
-/*! \file */ 
 
 #define ARDUINO_LMIC_CFG_NETWORK_TTN 1
 
@@ -132,7 +131,7 @@
 #endif
 
 // BresserWeatherSensorReceiver
-//#include "WeatherSensorCfg.h"
+#include "WeatherSensorCfg.h"
 #include "WeatherSensor.h"
 
 #ifdef MITHERMOMETER_EN
@@ -180,49 +179,13 @@ void printDateTime(void);
 |
 \****************************************************************************/
 
-/*!
- * \class cMyLoRaWAN
- * 
- * \brief The LoRaWAN object - LoRaWAN protocol and session handling
- */ 
 class cMyLoRaWAN : public Arduino_LoRaWAN_ttn {
 public:
     cMyLoRaWAN() {};
     using Super = Arduino_LoRaWAN_ttn;
-    
-    /*!
-     * \fn setup
-     * 
-     * \brief Initialize cMyLoRaWAN object
-     */
     void setup();
-    
-    
-    /*!
-     * \fn requestNetworkTime
-     * 
-     * \brief Wrapper function for LMIC_requestNetworkTime()
-     */
     void requestNetworkTime(void);
-    
-    
-    /*!
-     * \fn printSessionInfo
-     * 
-     * \brief Print contents of session info data structure for debugging
-     * 
-     * \param Info Session information data structure
-     */
     void printSessionInfo(const SessionInfo &Info);
-    
-    
-    /*!
-     * \fn printSessionState
-     * 
-     * \brief Print contents of session state data structure for debugging
-     * 
-     * \param State Session state data structure
-     */
     void printSessionState(const SessionState &State);
     
 protected:
@@ -250,77 +213,37 @@ protected:
 |
 \****************************************************************************/
 
-/*!
- * \class cSensor
- * 
- * \brief The sensor object - collect sensor data and schedule uplink
- */
 class cSensor {
 public:
     /// \brief the constructor. Deliberately does very little.
     cSensor() {};
 
-    /*!
-     * \fn getTemperature
-     * 
-     * \brief Get temperature from DS18B20 sensor via OneWire bus
-     * 
-     * \returns Temperature [degC]
-     */
     float getTemperature(void);
-    
-    #ifdef ADC_EN
-        /*!
-         * \fn getVoltage
-         * 
-         * \brief Get supply voltage (fixed ADC input circuit on FireBeetle ESP32 board)
-         * 
-         * \returns Voltage [mV]
-         */
-        uint16_t getVoltage(void);
-        
-        /*
-         * \fn getVoltage
-         * 
-         * \brief Get ADC voltage from specified port with averaging and application of divider
-         * 
-         * \param adc ADC port
-         * 
-         * \param samples No. of samples used in averaging
-         * 
-         * \param divider Voltage divider
-         * 
-         * \returns Voltage [mV]
-         */
-        uint16_t getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider);
-    #endif
-        
-    /*!
-     * \fn uplinkRequest
-     * 
-     * \brief Request uplink to LoRaWAN
-     */
+    uint16_t getVoltage(void);
+    uint16_t getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider);
     void uplinkRequest(void) {
         m_fUplinkRequest = true;
     };
     
-    /*!
-     * \brief set up the sensor object
-     *
-     * \param uplinkPeriodMs optional uplink interval. If not specified,
-     *                       transmit every six minutes.
-     */
+    ///
+    /// \brief set up the sensor object
+    ///
+    /// \param uplinkPeriodMs optional uplink interval. If not specified,
+    ///         transmit every six minutes.
+    ///
     void setup(std::uint32_t uplinkPeriodMs = 6 * 60 * 1000);
 
-    /*!
-     * \brief update sensor loop.
-     *
-     * \details
-     *     This should be called from the global loop(); it periodically
-     *     gathers and transmits sensor data.
-     */
+    ///
+    /// \brief update sensor loop.
+    ///
+    /// \details
+    ///     This should be called from the global loop(); it periodically
+    ///     gathers and transmits sensor data.
+    ///
     void loop();
 
+    float    temperature1; //<! temperature (DS18B20)
+    uint32_t voltage;      //<! battery voltage
     
 private:
     void doUplink();
@@ -359,72 +282,72 @@ const cMyLoRaWAN::lmic_pinmap myPinMap = {
      .rxtx_rx_active = 0,
      .rssi_cal = 0,
      .spi_freq = 8000000,
-     .pConfig = NULL
 };
 
 // The following variables are stored in the ESP32's RTC RAM -
 // their value is retained after a Sleep Reset.
-RTC_DATA_ATTR uint32_t                        magicFlag1;               //!< flag for validating Session State in RTC RAM 
-RTC_DATA_ATTR Arduino_LoRaWAN::SessionState   rtcSavedSessionState;     //!< Session State saved in RTC RAM
-RTC_DATA_ATTR uint32_t                        magicFlag2;               //!< flag for validating Session Info in RTC RAM 
-RTC_DATA_ATTR Arduino_LoRaWAN::SessionInfo    rtcSavedSessionInfo;      //!< Session Info saved in RTC RAM
-RTC_DATA_ATTR size_t                          rtcSavedNExtraInfo;       //!< size of extra Session Info data
-RTC_DATA_ATTR uint8_t                         rtcSavedExtraInfo[EXTRA_INFO_MEM_SIZE]; //!< extra Session Info data
-RTC_DATA_ATTR bool                            runtimeExpired = false;   //!< flag indicating if runtime has expired at least once
-RTC_DATA_ATTR time_t                          rtcLastClockSync = 0;     //!< timestamp of last RTC synchonization to network time
+RTC_DATA_ATTR uint32_t                        magicFlag1;
+RTC_DATA_ATTR Arduino_LoRaWAN::SessionState   rtcSavedSessionState;
+RTC_DATA_ATTR uint32_t                        magicFlag2;
+RTC_DATA_ATTR Arduino_LoRaWAN::SessionInfo    rtcSavedSessionInfo;
+RTC_DATA_ATTR size_t                          rtcSavedNExtraInfo;
+RTC_DATA_ATTR uint8_t                         rtcSavedExtraInfo[EXTRA_INFO_MEM_SIZE];
+RTC_DATA_ATTR bool                            runtimeExpired = false;
+RTC_DATA_ATTR time_t                          rtcLastClockSync = 0;
 
 #ifdef ADC_EN
     // ESP32 ADC with calibration
-    ESP32AnalogRead adc; //!< ADC object for supply voltage measurement
+    ESP32AnalogRead adc;
 #endif
 
 // ESP32 ADC with calibration
-#if defined(ADC_EN) && defined(PIN_ADC0_IN)
-    ESP32AnalogRead adc0; //!< ADC object
+#ifdef PIN_ADC0_IN
+    ESP32AnalogRead adc0;
 #endif
-#if defined(ADC_EN) && defined(PIN_ADC1_IN)
-    ESP32AnalogRead adc1; //!< ADC object
+#ifdef PIN_ADC1_IN
+    ESP32AnalogRead adc1;
 #endif
-#if defined(ADC_EN) && defined(PIN_ADC2_IN)
-    ESP32AnalogRead adc2; //!< ADC object
+#ifdef PIN_ADC2_IN
+    ESP32AnalogRead adc2;
 #endif
-#if defined(ADC_EN) && defined(PIN_ADC3_IN)
-    ESP32AnalogRead adc3; //!< ADC object
+#ifdef PIN_ADC3_IN
+    ESP32AnalogRead adc3;
 #endif
 
-/// Bresser Weather Sensor Receiver
+// Setup Bresser Weather Sensor
 WeatherSensor weatherSensor;
 
 
 #ifdef ONEWIRE_EN
     // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
-    OneWire oneWire(PIN_ONEWIRE_BUS); //!< OneWire bus
+    OneWire oneWire(PIN_ONEWIRE_BUS);
 
     // Pass our oneWire reference to Dallas Temperature. 
-    DallasTemperature temp_sensors(&oneWire); //!< Dallas temperature sensors connected to OneWire bus
+    DallasTemperature temp_sensors(&oneWire);
 #endif
 
 #ifdef MITHERMOMETER_EN
     // Setup BLE Temperature/Humidity Sensors
-    ATC_MiThermometer miThermometer(knownBLEAddresses); //!< Mijia Bluetooth Low Energy Thermo-/Hygrometer
+    ATC_MiThermometer miThermometer(knownBLEAddresses);
 #endif
 
-/// LoRaWAN uplink payload buffer
-static uint8_t loraData[PAYLOAD_SIZE]; //!< LoRaWAN uplink payload buffer
+// Uplink payload buffer
+static uint8_t loraData[PAYLOAD_SIZE];
 
-/// Sleep request (set in NetTxComplete();
+// Sleep request (set in NetTxComplete();
 bool sleepReq = false;
 
-/// Force sleep mode after <code>sleepTimeout</code> has been reached (if FORCE_SLEEP is defined) 
-ostime_t sleepTimeout; //!
+// Force sleep mode after <sleepTimeout> has been reached (if FORCE_SLEEP is defined) 
+ostime_t sleepTimeout;
 
-/// Seconds since the UTC epoch
+// Seconds since the UTC epoch
 uint32_t userUTCTime;
 
-/// RTC sync request flag - set (if due) in setup() / cleared in UserRequestNetworkTimeCb()
+// RTC sync request - 
+// set (if due) in setup() / cleared in UserRequestNetworkTimeCb()
 bool rtcSyncReq = false;
 
-/// Real time clock
+// Real time clock
 ESP32Time rtc;
 
 /****************************************************************************\
@@ -460,13 +383,13 @@ ESP32Time rtc;
     // The following constants should be copied to secrets.h and configured appropriately
     // according to the settings from TTN Console
     
-    /// DeviceEUI, little-endian (lsb first)
+    // deveui, little-endian (lsb first)
     static const std::uint8_t deveui[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     
-    /// AppEUI, little-endian (lsb first)
+    // appeui, little-endian (lsb first)
     static const std::uint8_t appeui[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     
-    /// AppKey: just a string of bytes, sometimes referred to as "big endian".
+    // appkey: just a string of bytes, sometimes referred to as "big endian".
     static const std::uint8_t appkey[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 #endif
 
@@ -476,12 +399,13 @@ ESP32Time rtc;
 |
 \****************************************************************************/
 
-/// Arduino setup
 void setup() {
     // set baud rate
     Serial.begin(115200);
 
-    // wait for serial to be ready - or timeout if USB is not connected
+    // wait for serial to be ready
+    //while (! Serial)
+    //    yield();
     delay(500);
 
     sleepTimeout = sec2osticks(SLEEP_TIMEOUT_INITIAL);
@@ -518,7 +442,6 @@ void setup() {
 |
 \****************************************************************************/
 
-/// Arduino execution loop
 void loop() {
     // the order of these is arbitrary, but you must poll them all.
     myLoRaWAN.loop();
@@ -822,7 +745,7 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
     return true;
 }
 
-/// Print date and time (i.e. local time)
+// Print date and time (i.e. local time)
 void printDateTime(void) {
         struct tm timeinfo;
         char tbuf[26];
@@ -833,15 +756,7 @@ void printDateTime(void) {
         DEBUG_PRINTF("%s\n", tbuf);
 }
 
-/**
- * \fn UserRequestNetworkTimeCb
- * 
- * \brief Callback function for setting RTC from LoRaWAN network time
- * 
- * \param pVoidUserUTCTime user supplied buffer for UTC time
- * 
- * \param flagSuccess flag indicating if network time request was succesful
- */
+// Callback function for setting RTC from LoRaWAN network time
 void UserRequestNetworkTimeCb(void *pVoidUserUTCTime, int flagSuccess) {
     // Explicit conversion from void* to uint32_t* to avoid compiler errors
     uint32_t *pUserUTCTime = (uint32_t *) pVoidUserUTCTime;
@@ -915,7 +830,7 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
         adc.attach(PIN_ADC_IN);
     #endif
 
-    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
+    #ifdef PIN_ADC3_IN
         // Use ADC3 with PIN_ADC3_IN
         adc3.attach(PIN_ADC3_IN);
     #endif
@@ -976,6 +891,7 @@ cSensor::getVoltage(void)
 
     return voltage;
 }
+#endif
 
 //
 // Get supply / battery voltage
@@ -993,7 +909,6 @@ cSensor::getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider)
 
     return voltage;
 }
-#endif
 
 #ifdef ONEWIRE_EN
 //
@@ -1018,6 +933,7 @@ cSensor::getTemperature(void)
             DEBUG_PRINTF("Error: Could not read temperature data\n");
         }
     #endif
+    
     return tempC;
 }
 #endif
@@ -1068,7 +984,7 @@ cSensor::doUplink(void) {
     #ifdef ADC_EN
         uint16_t  supply_voltage      = getVoltage();
     #endif
-    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
+    #ifdef PIN_ADC3_IN
         uint16_t  battery_voltage     = getVoltage(adc3, ADC3_SAMPLES, ADC3_DIV);
     #endif
     bool          mithermometer_valid = false;
@@ -1104,9 +1020,9 @@ cSensor::doUplink(void) {
       DEBUG_PRINTF("Air Temperature:    % 3.1f °C\n",   weatherSensor.sensor[ws].temp_c);
       DEBUG_PRINTF("Humidity:            %2d   %%\n",   weatherSensor.sensor[ws].humidity);
       DEBUG_PRINTF("Rain Gauge:       %7.1f mm\n",      weatherSensor.sensor[ws].rain_mm);
-      DEBUG_PRINTF("Wind Speed (avg.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1/10.0);
-      DEBUG_PRINTF("Wind Speed (max.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1/10.0);
-      DEBUG_PRINTF("Wind Direction:      %4.1f °\n",    weatherSensor.sensor[ws].wind_direction_deg_fp1/10.0);
+      DEBUG_PRINTF("Wind Speed (avg.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1);
+      DEBUG_PRINTF("Wind Speed (max.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1);
+      DEBUG_PRINTF("Wind Direction:      %4.1f °\n",    weatherSensor.sensor[ws].wind_direction_deg_fp1);
     } else {
       DEBUG_PRINTF("-- Weather Sensor Failure\n");
     }
@@ -1121,19 +1037,17 @@ cSensor::doUplink(void) {
       }
     #endif
 
-    #ifdef ONEWIRE_EN
-        // Debug output for auxiliary sensors/voltages
-        if (water_temp_c != DEVICE_DISCONNECTED_C) {
-            DEBUG_PRINTF("Water Temperature:  % 2.1f °C\n",  water_temp_c);
-        } else {
-            DEBUG_PRINTF("Water Temperature:   --.- °C\n");
-            water_temp_c = -30.0;
-        }
-    #endif
+    // Debug output for auxiliary sensors/voltages
+    if (water_temp_c != DEVICE_DISCONNECTED_C) {
+        DEBUG_PRINTF("Water Temperature:  % 2.1f °C\n",  water_temp_c);
+    } else {
+        DEBUG_PRINTF("Water Temperature:   --.- °C\n");
+        water_temp_c = -30.0;
+    }
     #ifdef ADC_EN
         DEBUG_PRINTF("Supply  Voltage:   %4d   mV\n",       supply_voltage);
     #endif
-    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
+    #ifdef PIN_ADC3_IN
         DEBUG_PRINTF("Battery Voltage:   %4d   mV\n",       battery_voltage);
     #endif
     #ifdef MITHERMOMETER_EN
@@ -1208,7 +1122,7 @@ cSensor::doUplink(void) {
     #ifdef ADC_EN
         encoder.writeUint16(supply_voltage);
     #endif
-    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
+    #ifdef PIN_ADC3_IN
         encoder.writeUint16(battery_voltage);
     #endif
     #ifdef ONEWIRE_EN
