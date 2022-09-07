@@ -87,6 +87,8 @@ jobs:
           do
             arduino-cli lib install "$i"
           done
+          # OneWire is installed due to dependency in DallasTemperature, but OneWireNg shall be used instead
+          rm -r /home/runner/Arduino/libraries/OneWire
 
       - name: Install platform
         if: ${{ env.run-build == 'true' }}
