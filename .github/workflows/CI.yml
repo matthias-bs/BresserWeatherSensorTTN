@@ -79,9 +79,10 @@ jobs:
             "ESP32Time@2.0.0"
             "Timezone@1.2.4"
             "ESP32AnalogRead@0.2.1"
-            "OneWire@2.3.7"
+            "OneWireNg@0.12.0"
             "DallasTemperature@3.9.0"
             "ATC MiThermometer Library@0.0.1")
+          #"OneWire@2.3.7"
           for i in "${required_libs[@]}"
           do
             arduino-cli lib install "$i"
