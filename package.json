@@ -29,7 +29,6 @@
     "Timezone": "JChristensen/Timezone#semver:^1.2.4",
     "ESP32AnalogRead": "madhephaestus/ESP32AnalogRead#semver:^0.2.1",
     "OneWireNg": "https://github.com/pstolarz/OneWireNg#semver:^0.12.0",
-    //"OneWire": "PaulStoffregen/OneWire#semver:^2.3.7",
     "Arduino-Temperature-Control-Library": "milesburton/Arduino-Temperature-Control-Library#semver:^3.9.1",
     "ESP32_ATC_MiThermometer_Library": "matthias-bs/ESP32_ATC_MiThermometer_Library#semver:^0.0.1"
   }
