@@ -22,4 +22,4 @@ deploy:
   local_dir: doc/html
   verbose: true
   on:
-    branch: master
+    branch: main
