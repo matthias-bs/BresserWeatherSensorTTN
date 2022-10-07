@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['magicflag1_42',['magicFlag1',['../_bresser_weather_sensor_t_t_n_8ino.html#ad2284c3fa8ab7465ec0b9c0afa8ec66e',1,'BresserWeatherSensorTTN.ino']]],
-  ['magicflag2_43',['magicFlag2',['../_bresser_weather_sensor_t_t_n_8ino.html#a9bdc927fe3706302971df5480c644832',1,'BresserWeatherSensorTTN.ino']]]
+  ['adc_48',['adc',['../_bresser_weather_sensor_t_t_n_8ino.html#a50355c8e58a465c9cf8a0a8e763c4b78',1,'BresserWeatherSensorTTN.ino']]],
+  ['adc3_49',['adc3',['../_bresser_weather_sensor_t_t_n_8ino.html#aaa6a722d1257901d23e1110ca77f2abb',1,'BresserWeatherSensorTTN.ino']]]
 ];

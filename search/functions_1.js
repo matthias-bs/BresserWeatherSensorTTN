@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['gettemperature_33',['getTemperature',['../classc_sensor.html#aa9a77de215330062387a7e0d097b9e70',1,'cSensor']]]
+  ['gettemperature_37',['getTemperature',['../classc_sensor.html#a3e28d4817e205860da28d3809ff6c511',1,'cSensor']]],
+  ['getvoltage_38',['getVoltage',['../classc_sensor.html#a40d2dbd8a699fdbf2f2126593aefb3ca',1,'cSensor']]]
 ];

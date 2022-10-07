@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['setup_23',['setup',['../classc_my_lo_ra_w_a_n.html#acd6e41a545f280acb784d469cbbdf61a',1,'cMyLoRaWAN::setup()'],['../classc_sensor.html#aa764fc02e853f073ac0d4d2e39d380ec',1,'cSensor::setup()'],['../_bresser_weather_sensor_t_t_n_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'setup():&#160;BresserWeatherSensorTTN.ino']]],
-  ['sleepreq_24',['sleepReq',['../_bresser_weather_sensor_t_t_n_8ino.html#af6a553cefc7cf2dddb686b3bd2631bc5',1,'BresserWeatherSensorTTN.ino']]],
-  ['sleeptimeout_25',['sleepTimeout',['../_bresser_weather_sensor_t_t_n_8ino.html#aac96bf5854bc0dc7bf2a09e651cd5bfa',1,'BresserWeatherSensorTTN.ino']]]
+  ['printdatetime_14',['printDateTime',['../_bresser_weather_sensor_t_t_n_8ino.html#a884d71ae866f4092712d745266d0ca9a',1,'BresserWeatherSensorTTN.ino']]],
+  ['printsessioninfo_15',['printSessionInfo',['../classc_my_lo_ra_w_a_n.html#aa8b5cd5a2fff11837b469ac3a3f80e7d',1,'cMyLoRaWAN']]],
+  ['printsessionstate_16',['printSessionState',['../classc_my_lo_ra_w_a_n.html#a935668d2f2c9c799f422c73ed1cc393c',1,'cMyLoRaWAN']]]
 ];
