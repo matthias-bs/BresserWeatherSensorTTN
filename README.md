@@ -48,7 +48,7 @@ TBD
 | Timezone                         | r                            | - |
 | BresserWeatherSensorReceiver     | r                            | https://github.com/matthias-bs/BresserWeatherSensorReceiver<br>=> add directory to BresserWeatherSensorTTN/src                                          |
 | ESP32AnalogRead                  | o                            | - |
-| OneWire                          | o                            | - |
+| OneWireNg                        | o                            | - |
 | DallasTemperature                | o                            | - |
 | ATC MiThermometer Library        | o                            | - |
 
@@ -102,5 +102,5 @@ Based on
 * [ESP32Time](https://github.com/fbiego/ESP32Time) by Felix Biego
 * [Arduino Timezone Library](https://github.com/JChristensen/Timezone) by Jack Cristensen
 * [ESP32AnalogRead](https://github.com/madhephaestus/ESP32AnalogRead) by Kevin Harrington (madhephaestus)
-* [OneWire](https://github.com/PaulStoffregen/OneWire) for Arduino by Paul Stoffregen
+* [OneWireNg](https://github.com/pstolarz/OneWireNg) by Piotr Stolarz
 * [DallasTemperature / Arduino-Temperature-Control-Library](https://github.com/milesburton/Arduino-Temperature-Control-Library) by Miles Burton 
