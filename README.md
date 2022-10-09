@@ -83,7 +83,7 @@ v3 message key field jsonpaths:
 ```  
 
 
-JSON-Path with Uplink-Decoder (see [ttn_decoder_fp_v6.js](ttn_decoder_fp_v6.js))
+JSON-Path with Uplink-Decoder (see [ttn_decoder_fp.js](ttn_decoder_fp.js))
 
 `.uplink_message.decoded_payload.bytes.<variable>`
 
