@@ -161,9 +161,14 @@ o: optional </th><th class="markdownTableHeadNone">Installation  </th></tr>
 </div><!-- fragment --><p>JSON-Path with Uplink-Decoder (see <a href="ttn_decoder_fp.js">ttn_decoder_fp.js</a>)</p>
 <p><code>.uplink_message.decoded_payload.bytes.&lt;variable&gt;</code></p>
 <h2>Helium Network Decoder</h2>
+<p>Add an MQTT integration in the Helium console - the "Endpoint" is in fact an MQTT broker you have to provide: <img src="https://user-images.githubusercontent.com/83612361/195050719-8562ad0e-5523-436f-8b61-e4b15b08d6de.png" alt="Helium_MQTT_Integration" class="inline"/></p>
 <p>Add <a href="helium_decoder.js">helium_decoder.js</a> in the Helium console as custom function: <img src="https://user-images.githubusercontent.com/83612361/195045593-d6c76e0c-1d87-410a-b941-8636b35d601a.png" alt="Helium_Decoder_Function" class="inline"/></p>
 <p>Add your function to the flow: <img src="https://user-images.githubusercontent.com/83612361/195047042-6a8d9dfe-61f6-43e3-ac51-b917d01ff237.png" alt="Helium_Decoder_Flow" class="inline"/></p>
-<h1>Doxygen Generated Source Code Documentation</h1>
+<p>Example decoder output (JSON): </p><div class="fragment"><div class="line">rx = {[...],&quot;decoded&quot;:{&quot;payload&quot;:{&quot;air_temp_c&quot;:&quot;13.5&quot;,&quot;battery_v&quot;:4197,&quot;humidity&quot;:72,&quot;indoor_humidity&quot;:53,&quot;indoor_temp_c&quot;:&quot;21.7&quot;,&quot;rain_day&quot;:&quot;0.0&quot;,&quot;rain_hr&quot;:&quot;0.0&quot;,&quot;rain_mm&quot;:&quot;480.8&quot;,&quot;rain_mon&quot;:&quot;0.0&quot;,&quot;rain_week&quot;:&quot;0.0&quot;,&quot;soil_moisture&quot;:0,&quot;soil_temp_c&quot;:&quot;-30.0&quot;,</div>
+<div class="line">&quot;status&quot;:{&quot;ble_ok&quot;:true,&quot;res&quot;:false,&quot;rtc_sync_req&quot;:true,&quot;runtime_expired&quot;:true,&quot;s1_batt_ok&quot;:false,&quot;s1_dec_ok&quot;:false,&quot;ws_batt_ok&quot;:true,&quot;ws_dec_ok&quot;:true},</div>
+<div class="line">&quot;supply_v&quot;:4210,&quot;water_temp_c&quot;:&quot;-30.0&quot;,&quot;wind_avg_meter_sec&quot;:&quot;1.9&quot;,&quot;wind_direction_deg&quot;:&quot;282.0&quot;,&quot;wind_gust_meter_sec&quot;:&quot;2.0&quot;},</div>
+<div class="line">&quot;status&quot;:&quot;success&quot;}, [...]</div>
+</div><!-- fragment --><h1>Doxygen Generated Source Code Documentation</h1>
 <p><a href="https://matthias-bs.github.io/BresserWeatherSensorTTN/index.html">https://matthias-bs.github.io/BresserWeatherSensorTTN/index.html</a></p>
 <h1>References</h1>
 <p>Based on</p><ul>
