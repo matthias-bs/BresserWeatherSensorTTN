@@ -91,12 +91,13 @@ $(document).ready(function(){initNavTree('_bresser_weather_sensor_t_t_n_8ino.htm
 <div class="title">BresserWeatherSensorTTN.ino File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;Arduino_LoRaWAN_network.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;BresserWeatherSensorTTNCfg.h&quot;</code><br />
+<code>#include &lt;Arduino_LoRaWAN_network.h&gt;</code><br />
 <code>#include &lt;Arduino_LoRaWAN_EventLog.h&gt;</code><br />
 <code>#include &lt;arduino_lmic.h&gt;</code><br />
 <code>#include &lt;ESP32Time.h&gt;</code><br />
 <code>#include &lt;Timezone.h&gt;</code><br />
-<code>#include &quot;BresserWeatherSensorTTNCfg.h&quot;</code><br />
+<code>#include &quot;RainGauge.h&quot;</code><br />
 <code>#include &lt;DallasTemperature.h&gt;</code><br />
 <code>#include &lt;ESP32AnalogRead.h&gt;</code><br />
 <code>#include &quot;WeatherSensor.h&quot;</code><br />
@@ -115,9 +116,6 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a3822dcd594d4c358e185bc3a268dd2f1"><td class="memItemLeft" align="right" valign="top"><a id="a3822dcd594d4c358e185bc3a268dd2f1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>ARDUINO_LMIC_CFG_NETWORK_TTN</b>&#160;&#160;&#160;1</td></tr>
-<tr class="separator:a3822dcd594d4c358e185bc3a268dd2f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a571157f00cf5e951a8dd09da262c4969"><td class="memItemLeft" align="right" valign="top"><a id="a571157f00cf5e951a8dd09da262c4969"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PIN_LMIC_NSS</b>&#160;&#160;&#160;14</td></tr>
 <tr class="separator:a571157f00cf5e951a8dd09da262c4969"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -243,6 +241,10 @@ ESP32AnalogRead&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
 WeatherSensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a4f79b4f602e5910ea50712638c86b19c">weatherSensor</a></td></tr>
 <tr class="memdesc:a4f79b4f602e5910ea50712638c86b19c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bresser Weather Sensor Receiver. <br /></td></tr>
 <tr class="separator:a4f79b4f602e5910ea50712638c86b19c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6965ff1ec8f32647b494bd1a458575f9"><td class="memItemLeft" align="right" valign="top"><a id="a6965ff1ec8f32647b494bd1a458575f9"></a>
+RainGauge&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a6965ff1ec8f32647b494bd1a458575f9">rainGauge</a></td></tr>
+<tr class="memdesc:a6965ff1ec8f32647b494bd1a458575f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rain data statistics. <br /></td></tr>
+<tr class="separator:a6965ff1ec8f32647b494bd1a458575f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a988a13c4fd0ed4eba1d6dff73d064914"><td class="memItemLeft" align="right" valign="top"><a id="a988a13c4fd0ed4eba1d6dff73d064914"></a>
 DallasTemperature temp_sensors &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a988a13c4fd0ed4eba1d6dff73d064914">oneWire</a></td></tr>
 <tr class="memdesc:a988a13c4fd0ed4eba1d6dff73d064914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dallas temperature sensors connected to OneWire bus. <br /></td></tr>

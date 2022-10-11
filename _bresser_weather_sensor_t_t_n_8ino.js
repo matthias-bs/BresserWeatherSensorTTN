@@ -2,7 +2,6 @@ var _bresser_weather_sensor_t_t_n_8ino =
 [
     [ "cMyLoRaWAN", "classc_my_lo_ra_w_a_n.html", "classc_my_lo_ra_w_a_n" ],
     [ "cSensor", "classc_sensor.html", "classc_sensor" ],
-    [ "ARDUINO_LMIC_CFG_NETWORK_TTN", "_bresser_weather_sensor_t_t_n_8ino.html#a3822dcd594d4c358e185bc3a268dd2f1", null ],
     [ "DEBUG_PORT", "_bresser_weather_sensor_t_t_n_8ino.html#ad7725bd9f76ca4bbdfdeb470ac223138", null ],
     [ "DEBUG_PRINTF", "_bresser_weather_sensor_t_t_n_8ino.html#a5c8ef3c24dad2c469a42784a9a39403b", null ],
     [ "DEBUG_PRINTF_TS", "_bresser_weather_sensor_t_t_n_8ino.html#a5d85581d74bae8579b031113e1ea23f3", null ],
@@ -32,6 +31,7 @@ var _bresser_weather_sensor_t_t_n_8ino =
     [ "mySensor", "_bresser_weather_sensor_t_t_n_8ino.html#a029e01f5b686d0569063faeb77f88091", null ],
     [ "oneWire", "_bresser_weather_sensor_t_t_n_8ino.html#a988a13c4fd0ed4eba1d6dff73d064914", null ],
     [ "PAYLOAD_SIZE", "_bresser_weather_sensor_t_t_n_8ino.html#ab11c1a19f4cab5fae7885a6da09e064a", null ],
+    [ "rainGauge", "_bresser_weather_sensor_t_t_n_8ino.html#a6965ff1ec8f32647b494bd1a458575f9", null ],
     [ "rtc", "_bresser_weather_sensor_t_t_n_8ino.html#a9914c8ecdaedd4bd9c93c344bea096c0", null ],
     [ "rtcLastClockSync", "_bresser_weather_sensor_t_t_n_8ino.html#a3714d7084c0d8d2cf536f681b65461d6", null ],
     [ "rtcSavedExtraInfo", "_bresser_weather_sensor_t_t_n_8ino.html#a9b7bd5038658fbb5b87d8a9feaedf86f", null ],
