@@ -91,12 +91,22 @@ JSON-Path with Uplink-Decoder (see [ttn_decoder_fp.js](ttn_decoder_fp.js))
 
 ### Helium Network Decoder
 
+Add an MQTT integration in the Helium console - the "Endpoint" is in fact an MQTT broker you have to provide:
+![Helium_MQTT_Integration](https://user-images.githubusercontent.com/83612361/195050719-8562ad0e-5523-436f-8b61-e4b15b08d6de.png)
+
 Add [helium_decoder.js](helium_decoder.js) in the Helium console as custom function:
 ![Helium_Decoder_Function](https://user-images.githubusercontent.com/83612361/195045593-d6c76e0c-1d87-410a-b941-8636b35d601a.png)
 
 Add your function to the flow:
 ![Helium_Decoder_Flow](https://user-images.githubusercontent.com/83612361/195047042-6a8d9dfe-61f6-43e3-ac51-b917d01ff237.png)
 
+Example decoder output (JSON):
+```
+rx = {[...],"decoded":{"payload":{"air_temp_c":"13.5","battery_v":4197,"humidity":72,"indoor_humidity":53,"indoor_temp_c":"21.7","rain_day":"0.0","rain_hr":"0.0","rain_mm":"480.8","rain_mon":"0.0","rain_week":"0.0","soil_moisture":0,"soil_temp_c":"-30.0",
+"status":{"ble_ok":true,"res":false,"rtc_sync_req":true,"runtime_expired":true,"s1_batt_ok":false,"s1_dec_ok":false,"ws_batt_ok":true,"ws_dec_ok":true},
+"supply_v":4210,"water_temp_c":"-30.0","wind_avg_meter_sec":"1.9","wind_direction_deg":"282.0","wind_gust_meter_sec":"2.0"},
+"status":"success"}, [...]
+```
 
 ## Doxygen Generated Source Code Documentation
 
