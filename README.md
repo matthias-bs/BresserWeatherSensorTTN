@@ -10,6 +10,7 @@ The RFM95W/SX1276 radio transceiver is used in FSK mode to receive weather senso
 
 ## Features
 * Single 868 MHz Radio Transceiver for both Sensor Data Reception and LoRaWAN Connection
+* Tested with The Things Network and Helium Network (EU868)
 * Supports multiple 868 MHz Sensors (e.g. Weather Sensor and Soil Moisture Sensor or Indoor Thermometer/Hygrometer)
 * Low Power Design (using ESP32 Deep Sleep Mode)
 * Fast LoRaWAN Joining after Deep Sleep (using ESP32 RTC RAM)
@@ -56,7 +57,7 @@ Installation: "-" means normal Arduino IDE Library Installer
 
 See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies) for required/tested versions.
 
-## The Things Network MQTT Integration
+## MQTT Integration
 
 ### The Things Network Decoder
 
@@ -66,6 +67,7 @@ The actual payload depends on the options selected in the Arduino software - the
 
 ### TTN-MQTT-Integration
 
+TTN provides an MQTT broker.
 How to receive and decode the payload with an MQTT client -
 see https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2
 
@@ -86,6 +88,15 @@ v3 message key field jsonpaths:
 JSON-Path with Uplink-Decoder (see [ttn_decoder_fp.js](ttn_decoder_fp.js))
 
 `.uplink_message.decoded_payload.bytes.<variable>`
+
+### Helium Network Decoder
+
+Add [helium_decoder.js](helium_decoder.js) in the Helium console as custom function:
+![Helium_Decoder_Function](https://user-images.githubusercontent.com/83612361/195045593-d6c76e0c-1d87-410a-b941-8636b35d601a.png)
+
+Add your function to the flow:
+![Helium_Decoder_Flow](https://user-images.githubusercontent.com/83612361/195047042-6a8d9dfe-61f6-43e3-ac51-b917d01ff237.png)
+
 
 ## Doxygen Generated Source Code Documentation
 
