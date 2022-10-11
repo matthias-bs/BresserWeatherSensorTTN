@@ -148,9 +148,9 @@ o: optional </th><th class="markdownTableHeadNone">Installation  </th></tr>
 <p>Installation: "-" means normal Arduino IDE Library Installer</p>
 <p>See <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies">dependencies</a> for required/tested versions.</p>
 <h1>MQTT Integration</h1>
-<h2>The Things Network Decoder</h2>
-<p>Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing: paste <a href="ttn_decoder_fp.js">ttn_decoder_fp.js</a> as "Custom Javascript formatter" to "Payload Formatters" -&gt; "Uplink" on The Things Network Console. The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210">ttn_decoder_fp.js line 176ff</a>).</p>
-<h2>TTN-MQTT-Integration</h2>
+<h2>The Things Network MQTT Integration and Message Decoder</h2>
+<p>Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing: paste <a href="ttn_decoder_fp.js">ttn_decoder_fp.js</a> as "Custom Javascript formatter" to "Payload Formatters" -&gt; "Uplink" on The Things Network Console.</p>
+<p><b>Note:</b> The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210">ttn_decoder_fp.js line 176ff</a>).</p>
 <p>TTN provides an MQTT broker. How to receive and decode the payload with an MQTT client - see <a href="https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2">https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2</a></p>
 <p>V3 topic:</p>
 <p><code>v3/&lt;ttn app id&gt;&lt;at symbol&gt;ttn/devices/&lt;ttn device id&gt;/up</code></p>
@@ -160,9 +160,11 @@ o: optional </th><th class="markdownTableHeadNone">Installation  </th></tr>
 <div class="line">&lt;payload&gt; = .uplink_message.frm_payload</div>
 </div><!-- fragment --><p>JSON-Path with Uplink-Decoder (see <a href="ttn_decoder_fp.js">ttn_decoder_fp.js</a>)</p>
 <p><code>.uplink_message.decoded_payload.bytes.&lt;variable&gt;</code></p>
-<h2>Helium Network Decoder</h2>
+<h2>Helium Network MQTT Integration and Message Decoder</h2>
+<p>Please refer to <a href="https://docs.helium.com/use-the-network/console/integrations/mqtt/">https://docs.helium.com/use-the-network/console/integrations/mqtt/</a>.</p>
 <p>Add an MQTT integration in the Helium console - the "Endpoint" is in fact an MQTT broker you have to provide: <img src="https://user-images.githubusercontent.com/83612361/195050719-8562ad0e-5523-436f-8b61-e4b15b08d6de.png" alt="Helium_MQTT_Integration" class="inline"/></p>
 <p>Add <a href="helium_decoder.js">helium_decoder.js</a> in the Helium console as custom function: <img src="https://user-images.githubusercontent.com/83612361/195045593-d6c76e0c-1d87-410a-b941-8636b35d601a.png" alt="Helium_Decoder_Function" class="inline"/></p>
+<p><b>Note:</b> The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers).</p>
 <p>Add your function to the flow: <img src="https://user-images.githubusercontent.com/83612361/195047042-6a8d9dfe-61f6-43e3-ac51-b917d01ff237.png" alt="Helium_Decoder_Flow" class="inline"/></p>
 <p>Example decoder output (JSON): </p><div class="fragment"><div class="line">rx = {[...],&quot;decoded&quot;:{&quot;payload&quot;:{&quot;air_temp_c&quot;:&quot;13.5&quot;,&quot;battery_v&quot;:4197,&quot;humidity&quot;:72,&quot;indoor_humidity&quot;:53,&quot;indoor_temp_c&quot;:&quot;21.7&quot;,&quot;rain_day&quot;:&quot;0.0&quot;,&quot;rain_hr&quot;:&quot;0.0&quot;,&quot;rain_mm&quot;:&quot;480.8&quot;,&quot;rain_mon&quot;:&quot;0.0&quot;,&quot;rain_week&quot;:&quot;0.0&quot;,&quot;soil_moisture&quot;:0,&quot;soil_temp_c&quot;:&quot;-30.0&quot;,</div>
 <div class="line">&quot;status&quot;:{&quot;ble_ok&quot;:true,&quot;res&quot;:false,&quot;rtc_sync_req&quot;:true,&quot;runtime_expired&quot;:true,&quot;s1_batt_ok&quot;:false,&quot;s1_dec_ok&quot;:false,&quot;ws_batt_ok&quot;:true,&quot;ws_dec_ok&quot;:true},</div>
