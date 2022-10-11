@@ -43,12 +43,26 @@
 
 #include <vector>
 #include <string>
+#include <Timezone.h>
 
 // Enable debug mode (debug messages via serial port)
 #define _BWS_DEBUG_MODE_
 
-// Enable TTN debug mode - this generates dummy weather data and skips weather sensor reception 
-//#define TTN_DEBUG
+//--- Select LoRaWAN Network ---
+// The Tings Network
+#define ARDUINO_LMIC_CFG_NETWORK_TTN 1
+
+// Helium Network
+// see mcci-cathena/arduino-lorawan issue #185 "Add Helium EU868 support"
+// (https://github.com/mcci-catena/arduino-lorawan/issues/185)
+#define ARDUINO_LMIC_CFG_NETWORK_GENERIC 0
+
+// Enable Device_Time_Req MAC command
+#define LMIC_ENABLE_DeviceTimeReq 1
+
+
+// Enable LORAWAN debug mode - this generates dummy weather data and skips weather sensor reception 
+//#define LORAWAN_DEBUG
 
 // Enable sleep mode - sleep after successful transmission to TTN (recommended!)
 #define SLEEP_EN
@@ -63,6 +77,9 @@
 // Force deep sleep after a certain time, even if transmission was not completed
 #define FORCE_SLEEP
 
+// Force a new join procedure (instead of re-join) after encountering sleep timeout
+//#define FORCE_JOIN_AFTER_SLEEP_TIMEOUT
+
 // During initialization (not joined), force deep sleep after SLEEP_TIMEOUT_INITIAL (if enabled)
 #define SLEEP_TIMEOUT_INITIAL 1800
 
@@ -73,10 +90,13 @@
 #define SLEEP_TIMEOUT_EXTRA 300
 
 // Timeout for weather sensor data reception (seconds)
-#define WEATHERSENSOR_TIMEOUT 120
+#define WEATHERSENSOR_TIMEOUT 180
 
 // Enable transmission of weather sensor ID
 //#define SENSORID_EN
+
+// Enable rain data statistics
+#define RAINDATA_EN
 
 // Enable battery / supply voltage measurement
 #define ADC_EN
