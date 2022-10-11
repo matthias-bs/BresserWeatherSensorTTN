@@ -49,7 +49,7 @@
 #define _BWS_DEBUG_MODE_
 
 //--- Select LoRaWAN Network ---
-// The Tings Network
+// The Things Network
 #define ARDUINO_LMIC_CFG_NETWORK_TTN 1
 
 // Helium Network
@@ -71,8 +71,7 @@
 #define SLEEP_INTERVAL 360
 
 // RTC to network time sync interval (in minutes)
-//#define CLOCK_SYNC_INTERVAL 24 * 60
-#define CLOCK_SYNC_INTERVAL 15
+#define CLOCK_SYNC_INTERVAL 24 * 60
 
 // Force deep sleep after a certain time, even if transmission was not completed
 #define FORCE_SLEEP
