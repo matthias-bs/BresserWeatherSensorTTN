@@ -3,12 +3,12 @@
 // 
 // Bresser 5-in-1/6-in-1 868 MHz Weather Sensor Radio Receiver 
 // based on ESP32 and RFM95W - 
-// provides data via LoRaWAN to The Things Network
+// sends data to a LoRaWAN network (e.g. The Things Network)
 //
 // The RFM95W radio transceiver is used
 // in FSK mode to receive weather sensor data
 // and
-// in LoRaWAN mode to connect to The Things Network
+// in LoRaWAN mode to connect to a LoRaWAN network
 //
 // Based on:
 // ---------
@@ -21,7 +21,7 @@
 // ESP32Time by Felix Biego (https://github.com/fbiego/ESP32Time)
 // Arduino Timezone Library by Jack Cristensen (https://github.com/JChristensen/Timezone)
 // ESP32AnalogRead by Kevin Harrington (madhephaestus) (https://github.com/madhephaestus/ESP32AnalogRead)
-// OneWire - for Arduino by Paul Stoffregen (https://github.com/PaulStoffregen/OneWire)
+// OneWireNg by Piotr Stolarz (https://github.com/pstolarz/OneWireNg)
 // DallasTemperature / Arduino-Temperature-Control-Library by Miles Burton (https://github.com/milesburton/Arduino-Temperature-Control-Library) 
 //
 // Library dependencies (tested versions):
@@ -30,16 +30,16 @@
 // MCCI Arduino Development Kit ADK     0.2.2
 // MCCI LoRaWAN LMIC library            4.1.1
 // MCCI Arduino LoRaWAN Library         0.9.2
-// RadioLib                             5.2.0
-// LoRa_Serialization                   3.1.0
+// RadioLib                             5.4.1
+// LoRa_Serialization                   3.2.1
 // ESP32Time                            2.0.0
 // Timezone                             1.2.4
-// ESP32AnalogRead                      0.2.0 (optional)
-// OneWire                              2.3.7 (optional)
+// ESP32AnalogRead                      0.2.1 (optional)
+// OneWireNg                            0.12.1 (optional)
 // DallasTemperature                    3.9.0 (optional)
 // ATC MiThermometer Library            0.0.1 (optional)
 //
-// BresserWeatherSensorReceiver         0.2.0
+// BresserWeatherSensorReceiver         0.3.3
 //   https://github.com/matthias-bs/BresserWeatherSensorReceiver
 //   => add directory to BresserWeatherSensorTTN/src
 //
@@ -76,9 +76,14 @@
 // 20220816 Added support of multiple Bresser 868 MHz sensors; 
 //          e.g. weather sensor and soil temperature/moisture sensor
 // 20220825 Added time keeping with RTC and synchronization to network time
+// 20220915 Added monthly/daily/hourly precipitation values
+// 20221010 Changed cMyLoRaWAN to inherit from Arduino_LoRaWAN_network
+//          instead of Arduino_LoRaWAN_ttn
+//          Moved LoRaWAN network selection to BresserWeatherSensorTTNCfg.h
+//          Changed LoRaWAN message size to actual payload size
 //
 // ToDo:
-// - add monthly/daily/hourly precipitation values
+// -  
 //
 // Notes:
 // - Mapping of radio module is done in two places:
@@ -103,15 +108,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 /*! \file */ 
 
-#define ARDUINO_LMIC_CFG_NETWORK_TTN 1
-
+#include "BresserWeatherSensorTTNCfg.h"
 #include <Arduino_LoRaWAN_network.h>
 #include <Arduino_LoRaWAN_EventLog.h>
 #include <arduino_lmic.h>
 #include <ESP32Time.h>
 #include <Timezone.h>
-#include "BresserWeatherSensorTTNCfg.h"
-//#include "RainGauge.h" // Work in progress
+
+
+#ifdef RAINDATA_EN
+#include "RainGauge.h"
+#endif
 
 #if (not(LMIC_ENABLE_DeviceTimeReq))
     #warning "LMIC_ENABLE_DeviceTimeReq is not set in lmic_project_config.h - will not be able to retrieve network time!"
@@ -184,10 +191,10 @@ void printDateTime(void);
  * 
  * \brief The LoRaWAN object - LoRaWAN protocol and session handling
  */ 
-class cMyLoRaWAN : public Arduino_LoRaWAN_ttn {
+class cMyLoRaWAN : public Arduino_LoRaWAN_network {
 public:
     cMyLoRaWAN() {};
-    using Super = Arduino_LoRaWAN_ttn;
+    using Super = Arduino_LoRaWAN_network;
     
     /*!
      * \fn setup
@@ -394,6 +401,10 @@ RTC_DATA_ATTR time_t                          rtcLastClockSync = 0;     //!< tim
 /// Bresser Weather Sensor Receiver
 WeatherSensor weatherSensor;
 
+#ifdef RAINDATA_EN
+    /// Rain data statistics 
+    RainGauge rainGauge;
+#endif
 
 #ifdef ONEWIRE_EN
     // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
@@ -538,8 +549,11 @@ void loop() {
             DEBUG_PRINTF("Shutdown()\n");
             runtimeExpired = true;
             myLoRaWAN.Shutdown();
-            magicFlag1 = 0;
-            magicFlag2 = 0;
+            #ifdef FORCE_JOIN_AFTER_SLEEP_TIMEOUT
+                // Force join (instead of re-join)
+                magicFlag1 = 0;
+                magicFlag2 = 0;
+            #endif
             ESP.deepSleep(SLEEP_INTERVAL * 1000000);
         }
     #endif
@@ -854,7 +868,9 @@ void UserRequestNetworkTimeCb(void *pVoidUserUTCTime, int flagSuccess) {
     lmic_time_reference_t lmicTimeReference;
 
     if (flagSuccess != 1) {
+        // Most likely the service is not provided by the gateway. No sense in trying again...
         DEBUG_PRINTF_TS("UserRequestNetworkTimeCb: didn't succeed\n");
+        rtcSyncReq = false;
         return;
     }
 
@@ -923,7 +939,7 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
         miThermometer.begin();
     #endif
     
-    #ifndef TTN_DEBUG
+    #ifndef LORAWAN_DEBUG
         weatherSensor.begin();
         //bool decode_ok = weatherSensor.getData(WEATHERSENSOR_TIMEOUT * 1000, DATA_TYPE | DATA_COMPLETE, SENSOR_TYPE_WEATHER1);
         bool decode_ok = weatherSensor.getData(WEATHERSENSOR_TIMEOUT * 1000, DATA_ALL_SLOTS);
@@ -935,7 +951,36 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
     } else {
         DEBUG_PRINTF("Receiving Weather Sensor Data failed.\n");
     }
+    
+    #ifdef RAINDATA_EN
+        // Check if time is valid
+        if (rtcLastClockSync > 0) {
+            // Get local date and time
+            struct tm timeinfo;
+            time_t tlocal = euCentral.toLocal(rtc.getLocalEpoch()); 
+            localtime_r(&tlocal, &timeinfo);
+
+            // Find weather sensor and determine rain gauge overflow limit
+            uint32_t rg_overflow;
+            // Try to find SENSOR_TYPE_WEATHER0
+            int ws = weatherSensor.findType(SENSOR_TYPE_WEATHER0);
+            if (ws > -1) {
+                rg_overflow = 100;
+            }
+            else {
+                // Try to find SENSOR_TYPE_WEATHER1
+                ws = weatherSensor.findType(SENSOR_TYPE_WEATHER1);
+                rg_overflow = 100000;
+            }
+
+            // If weather sensor has be found and rain data is valid, update statistics
+            if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].rain_ok) {
+                rainGauge.update(timeinfo, weatherSensor.sensor[ws].rain_mm, rg_overflow);
+            }
+        }
+    #endif
 }
+
 
 void
 cSensor::loop(void) {
@@ -1105,7 +1150,7 @@ cSensor::doUplink(void) {
       DEBUG_PRINTF("Rain Gauge:       %7.1f mm\n",      weatherSensor.sensor[ws].rain_mm);
       DEBUG_PRINTF("Wind Speed (avg.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1/10.0);
       DEBUG_PRINTF("Wind Speed (max.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1/10.0);
-      DEBUG_PRINTF("Wind Direction:      %4.1f °\n",    weatherSensor.sensor[ws].wind_direction_deg_fp1/10.0);
+      DEBUG_PRINTF("Wind Direction:     %4.1f °\n",     weatherSensor.sensor[ws].wind_direction_deg_fp1/10.0);
     } else {
       DEBUG_PRINTF("-- Weather Sensor Failure\n");
     }
@@ -1164,7 +1209,8 @@ cSensor::doUplink(void) {
     #endif
 
     // Status flags
-    encoder.writeBitmap(false, false, 
+    encoder.writeBitmap(false,
+                        rtcSyncReq, 
                         runtimeExpired,
                         mithermometer_valid,
                         (s1 > -1) ? weatherSensor.sensor[s1].valid : false,
@@ -1234,13 +1280,33 @@ cSensor::doUplink(void) {
         }
     #endif
 
+    // Rain data statistics
+    #ifdef RAINDATA_EN
+        if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].rain_ok) {
+            DEBUG_PRINTF("Rain past 60min:  %7.1f mm\n", rainGauge.pastHour());
+            DEBUG_PRINTF("Rain curr. day:   %7.1f mm\n", rainGauge.currentDay());
+            DEBUG_PRINTF("Rain curr. week:  %7.1f mm\n", rainGauge.currentWeek());
+            DEBUG_PRINTF("Rain curr. month: %7.1f mm\n", rainGauge.currentMonth());
+            encoder.writeRawFloat(rainGauge.pastHour());
+            encoder.writeRawFloat(rainGauge.currentDay());
+            encoder.writeRawFloat(rainGauge.currentWeek());
+            encoder.writeRawFloat(rainGauge.currentMonth());
+        } else {
+            DEBUG_PRINTF("Current rain gauge statistics not valid.\n");
+            encoder.writeRawFloat(-1);
+            encoder.writeRawFloat(-1);
+            encoder.writeRawFloat(-1);
+            encoder.writeRawFloat(-1);            
+        }
+    #endif
+
     //encoder.writeRawFloat(radio.getRSSI()); // NOTE: int8_t would be more efficient
 
     this->m_fBusy = true;
 
     // Schedule transmission
     if (! myLoRaWAN.SendBuffer(
-        loraData, sizeof(loraData),
+        loraData, encoder.getLength(),
         // this is the completion function:
         [](void *pClientData, bool fSucccess) -> void {
             auto const pThis = (cSensor *)pClientData;
