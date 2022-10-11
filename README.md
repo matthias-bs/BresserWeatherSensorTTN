@@ -59,13 +59,12 @@ See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/networ
 
 ## MQTT Integration
 
-### The Things Network Decoder
+### The Things Network MQTT Integration and Message Decoder
 
 Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing:
 paste [ttn_decoder_fp.js](ttn_decoder_fp.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Uplink" on The Things Network Console.
-The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [ttn_decoder_fp.js line 176ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210)).
 
-### TTN-MQTT-Integration
+**Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [ttn_decoder_fp.js line 176ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210)).
 
 TTN provides an MQTT broker.
 How to receive and decode the payload with an MQTT client -
@@ -89,13 +88,17 @@ JSON-Path with Uplink-Decoder (see [ttn_decoder_fp.js](ttn_decoder_fp.js))
 
 `.uplink_message.decoded_payload.bytes.<variable>`
 
-### Helium Network Decoder
+### Helium Network MQTT Integration and Message Decoder
+
+Please refer to https://docs.helium.com/use-the-network/console/integrations/mqtt/.
 
 Add an MQTT integration in the Helium console - the "Endpoint" is in fact an MQTT broker you have to provide:
 ![Helium_MQTT_Integration](https://user-images.githubusercontent.com/83612361/195050719-8562ad0e-5523-436f-8b61-e4b15b08d6de.png)
 
 Add [helium_decoder.js](helium_decoder.js) in the Helium console as custom function:
 ![Helium_Decoder_Function](https://user-images.githubusercontent.com/83612361/195045593-d6c76e0c-1d87-410a-b941-8636b35d601a.png)
+
+**Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers).
 
 Add your function to the flow:
 ![Helium_Decoder_Flow](https://user-images.githubusercontent.com/83612361/195047042-6a8d9dfe-61f6-43e3-ac51-b917d01ff237.png)
