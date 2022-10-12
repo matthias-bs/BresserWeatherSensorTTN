@@ -5,6 +5,7 @@
 //
 // - Enabling or disabling of features
 // - Timing configuration
+// - Timezone
 //
 // created: 08/2022
 //
@@ -35,6 +36,7 @@
 // History:
 //
 // 20220819 Created from BresserWeatherSensorTTN.ino
+// 20221011 Changed timezone handling
 //
 // ToDo:
 // - 
@@ -43,7 +45,6 @@
 
 #include <vector>
 #include <string>
-#include <Timezone.h>
 
 // Enable debug mode (debug messages via serial port)
 #define _BWS_DEBUG_MODE_
@@ -59,7 +60,6 @@
 
 // Enable Device_Time_Req MAC command
 #define LMIC_ENABLE_DeviceTimeReq 1
-
 
 // Enable LORAWAN debug mode - this generates dummy weather data and skips weather sensor reception 
 //#define LORAWAN_DEBUG
@@ -165,8 +165,5 @@
     std::vector<std::string> knownBLEAddresses = {"a4:c1:38:b8:1f:7f"};
 #endif
 
-// Central European Summer Time - begins last Sunday in March   at 1:00 UTC
-TimeChangeRule euCEST = {"CEST", Last, Sun, Mar, 1, 120};  //UTC + 2 hours
-// Central European Time        - begins last Sunday in October at 1:00 UTC
-TimeChangeRule euCET  = {"EST",  Last, Sun, Oct, 1,  60};  //UTC + 1 hours
-Timezone euCentral(euCEST, euCET);
+// Enter your time zone (https://remotemonitoringsystems.ca/time-zone-abbreviations.php)
+const char* TZ_INFO    = "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00";  
