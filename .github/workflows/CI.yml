@@ -56,7 +56,7 @@ jobs:
             # ESP32
             python -m pip install pyserial
             #echo "::set-output name=index-url::--additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json"
-            echo 'index-url="--additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json"' >> $GITHUB_OUTPUT
+            echo "index-url=--additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json" >> $GITHUB_OUTPUT
           fi
 
       - name: Install libraries
