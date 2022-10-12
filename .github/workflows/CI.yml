@@ -77,7 +77,6 @@ jobs:
             "MCCI Arduino Development Kit ADK@0.2.2"
             "LoRa Serialization@3.2.1"
             "ESP32Time@2.0.0"
-            "Timezone@1.2.4"
             "ESP32AnalogRead@0.2.1"
             "OneWireNg@0.12.0"
             "DallasTemperature@3.9.0"
