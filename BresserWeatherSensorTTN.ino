@@ -33,7 +33,6 @@
 // RadioLib                             5.4.1
 // LoRa_Serialization                   3.2.1
 // ESP32Time                            2.0.0
-// Timezone                             1.2.4
 // ESP32AnalogRead                      0.2.1 (optional)
 // OneWireNg                            0.12.1 (optional)
 // DallasTemperature                    3.9.0 (optional)
@@ -81,6 +80,7 @@
 //          instead of Arduino_LoRaWAN_ttn
 //          Moved LoRaWAN network selection to BresserWeatherSensorTTNCfg.h
 //          Changed LoRaWAN message size to actual payload size
+// 20221011 Replaced Timezone library by ESP32's internal TZ handling 
 //
 // ToDo:
 // -  
@@ -101,9 +101,10 @@
 //   significantly
 // - The ESP32's Bluetooth LE interface is used to access sensor data (option)
 // - To enable Network Time Requests:
-//   in MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h:
 //   #define LMIC_ENABLE_DeviceTimeReq 1
 // - settimeofday()/gettimeofday() must be used to access the ESP32's RTC time
+// - Arduino ESP32 package has built-in time zone handling, see 
+//   https://github.com/SensorsIot/NTP-time-for-ESP8266-and-ESP32/blob/master/NTP_Example/NTP_Example.ino 
 //
 ///////////////////////////////////////////////////////////////////////////////
 /*! \file */ 
@@ -113,7 +114,6 @@
 #include <Arduino_LoRaWAN_EventLog.h>
 #include <arduino_lmic.h>
 #include <ESP32Time.h>
-#include <Timezone.h>
 
 
 #ifdef RAINDATA_EN
@@ -121,7 +121,7 @@
 #endif
 
 #if (not(LMIC_ENABLE_DeviceTimeReq))
-    #warning "LMIC_ENABLE_DeviceTimeReq is not set in lmic_project_config.h - will not be able to retrieve network time!"
+    #warning "LMIC_ENABLE_DeviceTimeReq is not set - will not be able to retrieve network time!"
 #endif
 
 #ifndef SLEEP_EN
@@ -498,6 +498,9 @@ void setup() {
 
     DEBUG_PRINTF_TS("setup()\n");
     
+    // Set time zone
+    setenv("TZ", TZ_INFO, 1);
+    
 #ifdef _BWS_DEBUG_MODE_
         printDateTime();
 #endif
@@ -710,55 +713,6 @@ cMyLoRaWAN::NetSaveSessionInfo(
     #endif
 }
 
-/// Return saved session info (keys) from ESP32's RTC RAM
-///
-/// if you have persistent storage, you should provide a function
-/// that gets the saved session info from persistent storage, or
-/// indicate that there isn't a valid saved session. Note that
-/// the saved info is opaque to the higher level.
-///
-/// \return true if \p sessionInfo was filled in, false otherwise.
-///
-/// Note:
-/// According to "Purpose of NetSaveSessionInfo #165"
-/// (https://github.com/mcci-catena/arduino-lorawan/issues/165)
-/// "GetSavedSessionInfo() is effectively useless and should probably be removed to avoid confusion."
-/// sic!
-#if false
-bool 
-cMyLoRaWAN::GetSavedSessionInfo(
-                SessionInfo &sessionInfo,
-                uint8_t *pExtraSessionInfo,
-                size_t nExtraSessionInfo,
-                size_t *pnExtraSessionActual
-                ) {
-    if (magicFlag2 != MAGIC2) {
-        // if not provided, default zeros buf and returns false.
-        memset(&sessionInfo, 0, sizeof(sessionInfo));
-        if (pExtraSessionInfo) {
-            memset(pExtraSessionInfo, 0, nExtraSessionInfo);
-        }
-        if (pnExtraSessionActual) {
-            *pnExtraSessionActual = 0;
-        }
-        DEBUG_PRINTF_TS("GetSavedSessionInfo() - failed\n");
-        return false;
-    } else {
-        sessionInfo = rtcSavedSessionInfo;
-        if (pExtraSessionInfo) {
-            memcpy(pExtraSessionInfo, rtcSavedExtraInfo, nExtraSessionInfo);
-        }
-        if (pnExtraSessionActual) {
-            *pnExtraSessionActual = rtcSavedNExtraInfo;
-        }
-        DEBUG_PRINTF_TS("GetSavedSessionInfo() - o.k.\n");
-        #ifdef _BWS_DEBUG_MODE_
-            printSessionInfo(sessionInfo);
-        #endif
-        return true;
-    }
-}
-#endif
 
 // Save State in RTC RAM. Note that it's often the same;
 // often only the frame counters change.
@@ -840,8 +794,8 @@ void printDateTime(void) {
         struct tm timeinfo;
         char tbuf[26];
         
-        time_t tlocal = euCentral.toLocal(rtc.getLocalEpoch()); 
-        localtime_r(&tlocal, &timeinfo);
+        time_t tnow = rtc.getLocalEpoch();
+        localtime_r(&tnow, &timeinfo);
         strftime(tbuf, 25, "%Y-%m-%d %H:%M:%S", &timeinfo);
         DEBUG_PRINTF("%s\n", tbuf);
 }
@@ -957,8 +911,8 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
         if (rtcLastClockSync > 0) {
             // Get local date and time
             struct tm timeinfo;
-            time_t tlocal = euCentral.toLocal(rtc.getLocalEpoch()); 
-            localtime_r(&tlocal, &timeinfo);
+            time_t tnow = rtc.getLocalEpoch();
+            localtime_r(&tnow, &timeinfo);
 
             // Find weather sensor and determine rain gauge overflow limit
             uint32_t rg_overflow;
@@ -1306,7 +1260,7 @@ cSensor::doUplink(void) {
 
     // Schedule transmission
     if (! myLoRaWAN.SendBuffer(
-        loraData, encoder.getLength(),
+        loraData, sizeof(loraData),
         // this is the completion function:
         [](void *pClientData, bool fSucccess) -> void {
             auto const pThis = (cSensor *)pClientData;
