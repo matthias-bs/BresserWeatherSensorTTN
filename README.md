@@ -46,7 +46,6 @@ TBD
 | RadioLib                         | r                            | - |
 | LoRa_Serialization               | r                            | - |
 | ESP32Time                        | r                            | - |
-| Timezone                         | r                            | - |
 | BresserWeatherSensorReceiver     | r                            | https://github.com/matthias-bs/BresserWeatherSensorReceiver<br>=> add directory to BresserWeatherSensorTTN/src                                          |
 | ESP32AnalogRead                  | o                            | - |
 | OneWireNg                        | o                            | - |
@@ -124,7 +123,6 @@ Based on
 * [MCCI Arduino LoRaWAN Library](https://github.com/mcci-catena/arduino-lorawan) by Terry Moore, MCCI
 * [Lora-Serialization](https://github.com/thesolarnomad/lora-serialization) by Joscha Feth
 * [ESP32Time](https://github.com/fbiego/ESP32Time) by Felix Biego
-* [Arduino Timezone Library](https://github.com/JChristensen/Timezone) by Jack Cristensen
 * [ESP32AnalogRead](https://github.com/madhephaestus/ESP32AnalogRead) by Kevin Harrington (madhephaestus)
 * [OneWireNg](https://github.com/pstolarz/OneWireNg) by Piotr Stolarz
 * [DallasTemperature / Arduino-Temperature-Control-Library](https://github.com/milesburton/Arduino-Temperature-Control-Library) by Miles Burton 
