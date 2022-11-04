@@ -1226,7 +1226,7 @@ cSensor::doUplink(void) {
         if (s1 > -1) {
             // soil sensor data available
             encoder.writeTemperature(weatherSensor.sensor[s1].temp_c);
-            encoder.writeUint8(weatherSensor.sensor[s1].humidity);
+            encoder.writeUint8(weatherSensor.sensor[s1].moisture);
         } else {
             // fill with suspicious dummy values
             encoder.writeTemperature(-30);
