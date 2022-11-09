@@ -86,8 +86,18 @@ $(document).ready(function(){initNavTree('md_src__readme.html',''); initResizabl
 <div class="title">Readme </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Add directory <code>BresserWeatherSensorReceiver</code> from <a href="https://github.com/matthias-bs/BresserWeatherSensorReceiver">https://github.com/matthias-bs/BresserWeatherSensorReceiver</a> here and customize <code>./BresserWeatherSensorReceiver/src/WeatherSensorCfg.h</code>! See <a href="WeatherSensorCfg.h.template">WeatherSensorCfg.h.template</a> for settings consistent with <a href="../BresserWeatherSensorTTN.ino">BresserWeatherSensorTTN.ino</a>.</p>
-<p>This is a workaround for <a href="https://github.com/matthias-bs/BresserWeatherSensorReceiver/issues/1">https://github.com/matthias-bs/BresserWeatherSensorReceiver/issues/1</a> </p>
+<div class="textblock"><p>If you cannot use the default configuration and you do not want do change <a class="el" href="_weather_sensor_cfg_8h_source.html">WeatherSensorCfg.h</a> in the Arduino library directory (Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h):</p><ul>
+<li>Copy the directory <code>BresserWeatherSensorReceiver</code> here</li>
+<li>customize <code>./BresserWeatherSensorReceiver/src/WeatherSensorCfg.h</code> - see <a href="WeatherSensorCfg.h.template">WeatherSensorCfg.h.template</a> for settings consistent with <a href="../BresserWeatherSensorTTN.ino">BresserWeatherSensorTTN.ino</a></li>
+<li><p class="startli">change the include directives in <code><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html">BresserWeatherSensorTTN.ino</a></code></p>
+<p class="startli">from </p><div class="fragment"><div class="line">// BresserWeatherSensorReceiver</div>
+<div class="line">#include &quot;WeatherSensorCfg.h&quot;</div>
+<div class="line">#include &quot;WeatherSensor.h&quot;</div>
+</div><!-- fragment --><p> to </p><div class="fragment"><div class="line">// BresserWeatherSensorReceiver</div>
+<div class="line">#include &quot;src/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h&quot;</div>
+<div class="line">#include &quot;src/BresserWeatherSensorReceiver/src/WeatherSensor.h&quot;</div>
+</div><!-- fragment --> </li>
+</ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
