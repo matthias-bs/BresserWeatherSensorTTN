@@ -86,31 +86,32 @@ See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/networ
 
 ### Configure the RF Transceiver GPIO Wiring
 
-For the LoRaWAN software part, change the default configuration in [BresserWeatherSensorTTN.ino](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino):
-```
-#define PIN_LMIC_NSS      14
-#define PIN_LMIC_RST      12
-#define PIN_LMIC_DIO0     4
-#define PIN_LMIC_DIO1     16
-#define PIN_LMIC_DIO2     17
-```
+**Note:** If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in **two** places!
 
-For the BresserWeatherSensorReceiver software part, change the default configuration in the directory **Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h**!!! 
+1. For the LoRaWAN software part, change the default configuration in [BresserWeatherSensorTTN.ino](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino):
+   ```
+   #define PIN_LMIC_NSS      14
+   #define PIN_LMIC_RST      12
+   #define PIN_LMIC_DIO0     4
+   #define PIN_LMIC_DIO1     16
+   #define PIN_LMIC_DIO2     17
+   ```
 
-Changing **BresserWeatherSensorTTN/WeatherSensorCfg.h** will have no effect!
-```
-    #define PIN_RECEIVER_CS   14
+2. For the BresserWeatherSensorReceiver software part, change the default configuration in the directory **Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h**!!! 
+
+   Changing **BresserWeatherSensorTTN/WeatherSensorCfg.h** will have no effect!
+   ```
+   #define PIN_RECEIVER_CS   14
     
-    // CC1101: GDO0 / RFM95W/SX127x: G0
-    #define PIN_RECEIVER_IRQ  4 
+   // CC1101: GDO0 / RFM95W/SX127x: G0
+   #define PIN_RECEIVER_IRQ  4 
     
-    // CC1101: GDO2 / RFM95W/SX127x: G1
-    #define PIN_RECEIVER_GPIO 16
+   // CC1101: GDO2 / RFM95W/SX127x: G1
+   #define PIN_RECEIVER_GPIO 16
     
-    // RFM95W/SX127x - GPIOxx / CC1101 - RADIOLIB_NC
-    #define PIN_RECEIVER_RST  12
-```
-**Note:** If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in both places!
+   // RFM95W/SX127x - GPIOxx / CC1101 - RADIOLIB_NC
+   #define PIN_RECEIVER_RST  12
+   ```
 
 ### Configure the RF Transceiver SPI Wiring
 
