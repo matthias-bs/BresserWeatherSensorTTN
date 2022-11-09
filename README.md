@@ -34,7 +34,13 @@ Please see my [LoRaWAN_Node](https://github.com/matthias-bs/LoRaWAN_Node) projec
 Mains adapter or Li-Ion battery (with or without solar charger) - depending on desired operation time and duty cycle.
 
 ## Software Build Setup
-TBD
+
+* Install the Arduino ESP32 board package in the Arduino IDE
+* Select the desired ESP32 board
+* Install all libraries as listed in the section [Library Dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/edit/main/README.md#library-dependencies) via the Arduino IDE Library Manager"
+* Download and unpack the desired BresserWeatherSensorTTN release ([Releases](https://github.com/matthias-bs/BresserWeatherSensorTTN/releases))
+* Load the sketch `BresserWeatherSensorTTN.ino` from the unpacked BresserWeatherSensorTTN archive directory
+* Compile
 
 ### Library Dependencies
 
