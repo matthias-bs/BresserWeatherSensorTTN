@@ -150,6 +150,37 @@ o: optional    </th></tr>
 <td class="markdownTableBodyNone">ATC MiThermometer Library   </td><td class="markdownTableBodyNone">o   </td></tr>
 </table>
 <p>See <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies">dependencies</a> for required/tested versions.</p>
+<h1>Software Customization</h1>
+<h2>Configure the RF Transceiver GPIO Wiring</h2>
+<p>For the LoRaWAN software part, change the default configuration in <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino">BresserWeatherSensorTTN.ino</a>: </p><div class="fragment"><div class="line">#define PIN_LMIC_NSS      14</div>
+<div class="line">#define PIN_LMIC_RST      12</div>
+<div class="line">#define PIN_LMIC_DIO0     4</div>
+<div class="line">#define PIN_LMIC_DIO1     16</div>
+<div class="line">#define PIN_LMIC_DIO2     17</div>
+</div><!-- fragment --><p>For the BresserWeatherSensorReceiver software part, change the default configuration in the directory <b>Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h</b>!!!</p>
+<p>Changing <b>BresserWeatherSensor/WeatherSensorCfg.h</b> will have no effect! </p><div class="fragment"><div class="line">#define PIN_RECEIVER_CS   14</div>
+<div class="line"> </div>
+<div class="line">// CC1101: GDO0 / RFM95W/SX127x: G0</div>
+<div class="line">#define PIN_RECEIVER_IRQ  4 </div>
+<div class="line"> </div>
+<div class="line">// CC1101: GDO2 / RFM95W/SX127x: G1</div>
+<div class="line">#define PIN_RECEIVER_GPIO 16</div>
+<div class="line"> </div>
+<div class="line">// RFM95W/SX127x - GPIOxx / CC1101 - RADIOLIB_NC</div>
+<div class="line">#define PIN_RECEIVER_RST  12</div>
+</div><!-- fragment --><p> <b>Note:</b> If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in both places!</p>
+<h2>Configure the RF Transceiver SPI Wiring</h2>
+<p>The board specific default SPI pin definitions (MISO, MOSI and SCK) can be found in <a href="https://github.com/espressif/arduino-esp32/tree/master/variants">https://github.com/espressif/arduino-esp32/tree/master/variants</a></p>
+<p>To configure other SPI pins than the default ones... is up to you. I.e. better use the default pins unless you have a really good reason not to do so and then only if you know what you're doing!</p>
+<h2>Other Configuration Options</h2>
+<p>In <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTNCfg.h">BresserWeatherSensorTTNCfg.h</a>:</p><ul>
+<li>Select the desired LoRaWAN network by (un)-commenting <code>ARDUINO_LMIC_CFG_NETWORK_TTN</code> or <code>ARDUINO_LMIC_CFG_NETWORK_GENERIC</code></li>
+<li>Disable features which you do not want to use</li>
+<li>Configure the timing parameters (if you think this is needed)</li>
+<li>If enabled, configure your ATC MiThermometer's BLE MAC Addressby by editing <code>knownBLEAddresses</code></li>
+<li>Configure your time zone by editing <code>TZ_INFO</code></li>
+<li>Configure the ADC's input pins, dividers and oversampling settings as needed</li>
+</ul>
 <h1>MQTT Integration</h1>
 <h2>The Things Network MQTT Integration and Message Decoder</h2>
 <p>Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing: paste <a href="ttn_decoder_fp.js">ttn_decoder_fp.js</a> as "Custom Javascript formatter" to "Payload Formatters" -&gt; "Uplink" on The Things Network Console.</p>
