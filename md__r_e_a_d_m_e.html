@@ -167,13 +167,15 @@ o: optional    </th></tr>
 <h2>Configure the RF Transceiver GPIO Wiring</h2>
 <p><b>Note:</b> If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in <b>two</b> places!</p>
 <ol type="1">
-<li>For the LoRaWAN software part, change the default configuration in <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino">BresserWeatherSensorTTN.ino</a>: <div class="fragment"><div class="line">#define PIN_LMIC_NSS      14</div>
+<li><p class="startli"><b>LoRaWAN Software Part</b></p>
+<p class="startli">Change the default configuration in <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino">BresserWeatherSensorTTN.ino</a>: </p><div class="fragment"><div class="line">#define PIN_LMIC_NSS      14</div>
 <div class="line">#define PIN_LMIC_RST      12</div>
 <div class="line">#define PIN_LMIC_DIO0     4</div>
 <div class="line">#define PIN_LMIC_DIO1     16</div>
 <div class="line">#define PIN_LMIC_DIO2     17</div>
 </div><!-- fragment --></li>
-<li><p class="startli">For the BresserWeatherSensorReceiver software part, change the default configuration in the directory <b>Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h</b>!!!</p>
+<li><p class="startli"><b>BresserWeatherSensorReceiver Software Part</b></p>
+<p class="startli">Change the default configuration in the directory <b>Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h</b>!!!</p>
 <p class="startli">Changing <b><a class="el" href="_weather_sensor_cfg_8h_source.html">BresserWeatherSensorTTN/WeatherSensorCfg.h</a></b> will have no effect! </p><div class="fragment"><div class="line">#define PIN_RECEIVER_CS   14</div>
 <div class="line"> </div>
 <div class="line">// CC1101: GDO0 / RFM95W/SX127x: G0</div>
