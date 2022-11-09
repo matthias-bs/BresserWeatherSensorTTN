@@ -38,21 +38,20 @@ TBD
 
 ### Library Dependencies
 
-| Library                          | r: required /<br>o: optional | Installation |
-| -------------------------------- | ---------------------------- | ------------ |
-| MCCI Arduino Development Kit ADK | r                            | - |
-| MCCI LoRaWAN LMIC library        | r                            | - |
-| MCCI Arduino LoRaWAN Library     | r                            | - |
-| RadioLib                         | r                            | - |
-| LoRa_Serialization               | r                            | - |
-| ESP32Time                        | r                            | - |
-| BresserWeatherSensorReceiver     | r                            | https://github.com/matthias-bs/BresserWeatherSensorReceiver<br>=> add directory to BresserWeatherSensorTTN/src                                          |
-| ESP32AnalogRead                  | o                            | - |
-| OneWireNg                        | o                            | - |
-| DallasTemperature                | o                            | - |
-| ATC MiThermometer Library        | o                            | - |
+| Library                          | r: required /<br>o: optional |
+| -------------------------------- | ---------------------------- |
+| MCCI Arduino Development Kit ADK | r                            |
+| MCCI LoRaWAN LMIC library        | r                            |
+| MCCI Arduino LoRaWAN Library     | r                            |
+| RadioLib                         | r                            |
+| LoRa_Serialization               | r                            |
+| ESP32Time                        | r                            |
+| BresserWeatherSensorReceiver     | r                            |
+| ESP32AnalogRead                  | o                            |
+| OneWireNg                        | o                            |
+| DallasTemperature                | o                            |
+| ATC MiThermometer Library        | o                            |
 
-Installation: "-" means normal Arduino IDE Library Installer 
 
 See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies) for required/tested versions.
 
