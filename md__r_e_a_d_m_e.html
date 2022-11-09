@@ -154,7 +154,7 @@ o: optional    </th></tr>
 <h2>Configure the LoRaWAN Network settings APPEUI, DEVEUI and APPKEY</h2>
 <ul>
 <li>First you have to follow your LoRaWAN Network provider's instructions on how to configure/obtain the settings.</li>
-<li>Then configure the BresserWeatherSensorTTN accordingly:<ul>
+<li>Then configure the BresserWeatherSensorTTN software accordingly:<ul>
 <li>Solution 1 (not recommended): Configure the section starting with <code>// APPEUI, DEVEUI and APPKEY</code> in <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino">BresserWeatherSensorTTN.ino</a></li>
 <li><p class="startli">Solution 2 (recommended): Configure the file <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/secrets.h">secrets.h</a> - refer to <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/secrets.h.template">secrets.h.template</a> as an example &ndash; ``` #define SECRETS</p>
 <p class="startli">// deveui, little-endian static const std::uint8_t deveui[] = { 0xAA, 0xBB, 0xCC, 0x00, 0x00, 0xDD, 0xEE, 0xFF };</p>
