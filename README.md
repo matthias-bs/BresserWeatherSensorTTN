@@ -88,7 +88,9 @@ See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/networ
 
 **Note:** If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in **two** places!
 
-1. For the LoRaWAN software part, change the default configuration in [BresserWeatherSensorTTN.ino](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino):
+1. **LoRaWAN Software Part**
+
+   Change the default configuration in [BresserWeatherSensorTTN.ino](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino):
    ```
    #define PIN_LMIC_NSS      14
    #define PIN_LMIC_RST      12
@@ -97,7 +99,9 @@ See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/networ
    #define PIN_LMIC_DIO2     17
    ```
 
-2. For the BresserWeatherSensorReceiver software part, change the default configuration in the directory **Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h**!!! 
+2. **BresserWeatherSensorReceiver Software Part**
+
+   Change the default configuration in the directory **Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h**!!! 
 
    Changing **BresserWeatherSensorTTN/WeatherSensorCfg.h** will have no effect!
    ```
