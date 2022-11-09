@@ -158,7 +158,7 @@ o: optional    </th></tr>
 <div class="line">#define PIN_LMIC_DIO1     16</div>
 <div class="line">#define PIN_LMIC_DIO2     17</div>
 </div><!-- fragment --><p>For the BresserWeatherSensorReceiver software part, change the default configuration in the directory <b>Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h</b>!!!</p>
-<p>Changing <b>BresserWeatherSensor/WeatherSensorCfg.h</b> will have no effect! </p><div class="fragment"><div class="line">#define PIN_RECEIVER_CS   14</div>
+<p>Changing <b><a class="el" href="_weather_sensor_cfg_8h_source.html">BresserWeatherSensorTTN/WeatherSensorCfg.h</a></b> will have no effect! </p><div class="fragment"><div class="line">#define PIN_RECEIVER_CS   14</div>
 <div class="line"> </div>
 <div class="line">// CC1101: GDO0 / RFM95W/SX127x: G0</div>
 <div class="line">#define PIN_RECEIVER_IRQ  4 </div>
@@ -181,6 +181,13 @@ o: optional    </th></tr>
 <li>Configure your time zone by editing <code>TZ_INFO</code></li>
 <li>Configure the ADC's input pins, dividers and oversampling settings as needed</li>
 </ul>
+<h2>Change the LoRaWAN Message Payload/Encoding</h2>
+<p>In <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino">BresserWeatherSensorTTN.ino</a>, change the code starting with </p><div class="fragment"><div class="line">//</div>
+<div class="line">// Encode sensor data as byte array for LoRaWAN transmission</div>
+<div class="line">//</div>
+<div class="line">LoraEncoder encoder(loraData);</div>
+</div><!-- fragment --><p> Make sure that you do not exceed the size of the LoRaWAN uplink payload buffer <code>loraData[PAYLOAD_SIZE]</code>. The payload size is limited to 51 bytes by the LMIC library (for a good reason).</p>
+<p>If you are using an Integration at the network side (such as an MQTT Integration), make sure you adjust your changes there as well - otherwise decoding the receiving/decoding the messages will fail.</p>
 <h1>MQTT Integration</h1>
 <h2>The Things Network MQTT Integration and Message Decoder</h2>
 <p>Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing: paste <a href="ttn_decoder_fp.js">ttn_decoder_fp.js</a> as "Custom Javascript formatter" to "Payload Formatters" -&gt; "Uplink" on The Things Network Console.</p>
