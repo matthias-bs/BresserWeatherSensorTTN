@@ -1,4 +1,17 @@
-Add directory `BresserWeatherSensorReceiver` from https://github.com/matthias-bs/BresserWeatherSensorReceiver here and customize `./BresserWeatherSensorReceiver/src/WeatherSensorCfg.h`!
-See [WeatherSensorCfg.h.template](WeatherSensorCfg.h.template) for settings consistent with [BresserWeatherSensorTTN.ino](../BresserWeatherSensorTTN.ino).
+If you cannot use the default configuration and you do not want do change WeatherSensorCfg.h in the Arduino library directory (Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h):
+* Copy the directory `BresserWeatherSensorReceiver` here
+* customize `./BresserWeatherSensorReceiver/src/WeatherSensorCfg.h` - see [WeatherSensorCfg.h.template](WeatherSensorCfg.h.template) for settings consistent with [BresserWeatherSensorTTN.ino](../BresserWeatherSensorTTN.ino)
+* change the include directives in `BresserWeatherSensorTTN.ino`
 
-This is a workaround for https://github.com/matthias-bs/BresserWeatherSensorReceiver/issues/1
+   from
+   ```
+   // BresserWeatherSensorReceiver
+   #include "WeatherSensorCfg.h"
+   #include "WeatherSensor.h"
+   ```
+   to
+   ```
+   // BresserWeatherSensorReceiver
+   #include "src/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h"
+   #include "src/BresserWeatherSensorReceiver/src/WeatherSensor.h"
+   ```
