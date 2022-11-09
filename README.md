@@ -37,7 +37,7 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 
 * Install the Arduino ESP32 board package in the Arduino IDE
 * Select the desired ESP32 board
-* Install all libraries as listed in the section [Library Dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/edit/main/README.md#library-dependencies) via the Arduino IDE Library Manager"
+* Install all libraries as listed in the section [Library Dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/edit/main/README.md#library-dependencies) via the Arduino IDE Library Manager
 * Download and unpack the desired BresserWeatherSensorTTN release ([Releases](https://github.com/matthias-bs/BresserWeatherSensorTTN/releases))
 * Load the sketch `BresserWeatherSensorTTN.ino` from the unpacked BresserWeatherSensorTTN archive directory
 * Compile
@@ -62,6 +62,27 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies) for required/tested versions.
 
 ## Software Customization
+
+### Configure the LoRaWAN Network settings APPEUI, DEVEUI and APPKEY
+
+* First you have to follow your LoRaWAN Network provider's instructions on how to configure/obtain the settings.
+* Then configure the BresserWeatherSensorTTN accordingly:
+   * Solution 1 (not recommended):
+      Configure the section starting with `// APPEUI, DEVEUI and APPKEY` in [BresserWeatherSensorTTN.ino](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino)
+   * Solution 2 (recommended):
+   Configure the file [secrets.h](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/secrets.h) - refer to [secrets.h.template](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/secrets.h.template) as an example --
+      ```
+      #define SECRETS
+   
+      // deveui, little-endian
+      static const std::uint8_t deveui[] = { 0xAA, 0xBB, 0xCC, 0x00, 0x00, 0xDD, 0xEE, 0xFF };
+   
+      // appeui, little-endian
+      static const std::uint8_t appeui[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+     // appkey: just a string of bytes, sometimes referred to as "big endian".
+     static const std::uint8_t appkey[] = { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x00 };
+     ```
 
 ### Configure the RF Transceiver GPIO Wiring
 
