@@ -139,6 +139,7 @@
 #endif
 
 // BresserWeatherSensorReceiver
+#include "WeatherSensorCfg.h"
 #include "WeatherSensor.h"
 
 #ifdef MITHERMOMETER_EN
