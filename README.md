@@ -76,7 +76,7 @@ For the LoRaWAN software part, change the default configuration in [BresserWeath
 
 For the BresserWeatherSensorReceiver software part, change the default configuration in the directory **Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h**!!! 
 
-Changing **BresserWeatherSensor/WeatherSensorCfg.h** will have no effect!
+Changing **BresserWeatherSensorTTN/WeatherSensorCfg.h** will have no effect!
 ```
     #define PIN_RECEIVER_CS   14
     
@@ -106,6 +106,18 @@ In [BresserWeatherSensorTTNCfg.h](https://github.com/matthias-bs/BresserWeatherS
 * If enabled, configure your ATC MiThermometer's BLE MAC Addressby by editing `knownBLEAddresses`
 * Configure your time zone by editing `TZ_INFO`
 * Configure the ADC's input pins, dividers and oversampling settings as needed
+
+### Change the LoRaWAN Message Payload/Encoding
+In [BresserWeatherSensorTTN.ino](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino), change the code starting with
+```
+//
+// Encode sensor data as byte array for LoRaWAN transmission
+//
+LoraEncoder encoder(loraData);
+```
+Make sure that you do not exceed the size of the LoRaWAN uplink payload buffer `loraData[PAYLOAD_SIZE]`. The payload size is limited to 51 bytes by the LMIC library (for a good reason).
+
+If you are using an Integration at the network side (such as an MQTT Integration), make sure you adjust your changes there as well - otherwise decoding the receiving/decoding the messages will fail. 
 
 ## MQTT Integration
 
