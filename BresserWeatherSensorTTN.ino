@@ -33,14 +33,11 @@
 // RadioLib                             5.4.1
 // LoRa_Serialization                   3.2.1
 // ESP32Time                            2.0.0
+// BresserWeatherSensorReceiver         0.4.0
 // ESP32AnalogRead                      0.2.1 (optional)
 // OneWireNg                            0.12.1 (optional)
 // DallasTemperature                    3.9.0 (optional)
 // ATC MiThermometer Library            0.0.1 (optional)
-//
-// BresserWeatherSensorReceiver         0.3.3
-//   https://github.com/matthias-bs/BresserWeatherSensorReceiver
-//   => add directory to BresserWeatherSensorTTN/src
 //
 //
 // created: 06/2022
@@ -81,6 +78,7 @@
 //          Moved LoRaWAN network selection to BresserWeatherSensorTTNCfg.h
 //          Changed LoRaWAN message size to actual payload size
 // 20221011 Replaced Timezone library by ESP32's internal TZ handling 
+// 20221109 Updated BresserWeatherSensorReceiver to v0.4.0
 //
 // ToDo:
 // -  
