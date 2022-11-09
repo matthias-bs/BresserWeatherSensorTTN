@@ -116,8 +116,8 @@ $(document).ready(function(){initNavTree('md__r_e_a_d_m_e.html',''); initResizab
 <ul>
 <li>Install the Arduino ESP32 board package in the Arduino IDE</li>
 <li>Select the desired ESP32 board</li>
-<li>Install all libraries as listed in the section <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/edit/main/README.md#library-dependencies">Library Dependencies</a> via the Arduino IDE Library Manager"
-* Download and unpack the desired BresserWeatherSensorTTN release (&lt;a href="<a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/releases">https://github.com/matthias-bs/BresserWeatherSensorTTN/releases</a>"&gt;Releases)</li>
+<li>Install all libraries as listed in the section <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/edit/main/README.md#library-dependencies">Library Dependencies</a> via the Arduino IDE Library Manager</li>
+<li>Download and unpack the desired BresserWeatherSensorTTN release (<a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/releases">Releases</a>)</li>
 <li>Load the sketch <code><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html">BresserWeatherSensorTTN.ino</a></code> from the unpacked BresserWeatherSensorTTN archive directory</li>
 <li>Compile</li>
 </ul>
@@ -151,6 +151,19 @@ o: optional    </th></tr>
 </table>
 <p>See <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies">dependencies</a> for required/tested versions.</p>
 <h1>Software Customization</h1>
+<h2>Configure the LoRaWAN Network settings APPEUI, DEVEUI and APPKEY</h2>
+<ul>
+<li>First you have to follow your LoRaWAN Network provider's instructions on how to configure/obtain the settings.</li>
+<li>Then configure the BresserWeatherSensorTTN accordingly:<ul>
+<li>Solution 1 (not recommended): Configure the section starting with <code>// APPEUI, DEVEUI and APPKEY</code> in <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino">BresserWeatherSensorTTN.ino</a></li>
+<li><p class="startli">Solution 2 (recommended): Configure the file <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/secrets.h">secrets.h</a> - refer to <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/secrets.h.template">secrets.h.template</a> as an example &ndash; ``` #define SECRETS</p>
+<p class="startli">// deveui, little-endian static const std::uint8_t deveui[] = { 0xAA, 0xBB, 0xCC, 0x00, 0x00, 0xDD, 0xEE, 0xFF };</p>
+<p class="startli">// appeui, little-endian static const std::uint8_t appeui[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };</p>
+<p class="startli">// appkey: just a string of bytes, sometimes referred to as "big endian". static const std::uint8_t appkey[] = { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x00 }; ```</p>
+</li>
+</ul>
+</li>
+</ul>
 <h2>Configure the RF Transceiver GPIO Wiring</h2>
 <p>For the LoRaWAN software part, change the default configuration in <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino">BresserWeatherSensorTTN.ino</a>: </p><div class="fragment"><div class="line">#define PIN_LMIC_NSS      14</div>
 <div class="line">#define PIN_LMIC_RST      12</div>
