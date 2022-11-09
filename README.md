@@ -66,7 +66,7 @@ See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/networ
 ### Configure the LoRaWAN Network settings APPEUI, DEVEUI and APPKEY
 
 * First you have to follow your LoRaWAN Network provider's instructions on how to configure/obtain the settings.
-* Then configure the BresserWeatherSensorTTN accordingly:
+* Then configure the BresserWeatherSensorTTN software accordingly:
    * Solution 1 (not recommended):
       Configure the section starting with `// APPEUI, DEVEUI and APPKEY` in [BresserWeatherSensorTTN.ino](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino)
    * Solution 2 (recommended):
