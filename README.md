@@ -61,6 +61,52 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 
 See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies) for required/tested versions.
 
+## Software Customization
+
+### Configure the RF Transceiver GPIO Wiring
+
+For the LoRaWAN software part, change the default configuration in [BresserWeatherSensorTTN.ino](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTN.ino):
+```
+#define PIN_LMIC_NSS      14
+#define PIN_LMIC_RST      12
+#define PIN_LMIC_DIO0     4
+#define PIN_LMIC_DIO1     16
+#define PIN_LMIC_DIO2     17
+```
+
+For the BresserWeatherSensorReceiver software part, change the default configuration in the directory **Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h**!!! 
+
+Changing **BresserWeatherSensor/WeatherSensorCfg.h** will have no effect!
+```
+    #define PIN_RECEIVER_CS   14
+    
+    // CC1101: GDO0 / RFM95W/SX127x: G0
+    #define PIN_RECEIVER_IRQ  4 
+    
+    // CC1101: GDO2 / RFM95W/SX127x: G1
+    #define PIN_RECEIVER_GPIO 16
+    
+    // RFM95W/SX127x - GPIOxx / CC1101 - RADIOLIB_NC
+    #define PIN_RECEIVER_RST  12
+```
+**Note:** If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in both places!
+
+### Configure the RF Transceiver SPI Wiring
+
+The board specific default SPI pin definitions (MISO, MOSI and SCK) can be found in 
+https://github.com/espressif/arduino-esp32/tree/master/variants
+
+To configure other SPI pins than the default ones... is up to you. I.e. better use the default pins unless you have a really good reason not to do so and then only if you know what you're doing! 
+
+### Other Configuration Options
+In [BresserWeatherSensorTTNCfg.h](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/BresserWeatherSensorTTNCfg.h):
+* Select the desired LoRaWAN network by (un)-commenting `ARDUINO_LMIC_CFG_NETWORK_TTN` or `ARDUINO_LMIC_CFG_NETWORK_GENERIC`
+* Disable features which you do not want to use
+* Configure the timing parameters (if you think this is needed) 
+* If enabled, configure your ATC MiThermometer's BLE MAC Addressby by editing `knownBLEAddresses`
+* Configure your time zone by editing `TZ_INFO`
+* Configure the ADC's input pins, dividers and oversampling settings as needed
+
 ## MQTT Integration
 
 ### The Things Network MQTT Integration and Message Decoder
