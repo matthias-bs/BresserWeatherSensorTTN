@@ -86,6 +86,8 @@ See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/networ
 
 ### Configure the RF Transceiver GPIO Wiring
 
+See [Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts](https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/pinouts).
+
 **Note:** If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in **two** places!
 
 1. **LoRaWAN Software Part**
