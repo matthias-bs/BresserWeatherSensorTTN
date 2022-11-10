@@ -44,7 +44,6 @@ var NAVTREEINDEX0 =
 "_bresser_weather_sensor_t_t_n_8ino.html#af6a553cefc7cf2dddb686b3bd2631bc5":[4,0,0,40],
 "_bresser_weather_sensor_t_t_n_8ino.html#afe461d27b9c48d5921c00d521181f12f":[4,0,0,15],
 "_bresser_weather_sensor_t_t_n_cfg_8h_source.html":[4,0,1],
-"_weather_sensor_cfg_8h_source.html":[4,0,3],
 "annotated.html":[3,0],
 "classc_my_lo_ra_w_a_n.html":[3,0,0],
 "classc_my_lo_ra_w_a_n.html#a4d20f9547a27582dd817f9ee98ed11c7":[3,0,0,1],
