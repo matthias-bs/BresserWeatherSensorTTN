@@ -35,7 +35,7 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 
 ## Software Build Setup
 
-* Install the Arduino ESP32 board package in the Arduino IDE
+* Install the Arduino ESP32 board package (V1.0.6 or V2.0.5) in the Arduino IDE (V1.8.19)
 * Select the desired ESP32 board
 * Install all libraries as listed in the section [Library Dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/edit/main/README.md#library-dependencies) via the Arduino IDE Library Manager
 * Download and unpack the desired BresserWeatherSensorTTN release ([Releases](https://github.com/matthias-bs/BresserWeatherSensorTTN/releases))
