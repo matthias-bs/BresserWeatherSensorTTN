@@ -37,6 +37,7 @@
 //
 // 20220819 Created from BresserWeatherSensorTTN.ino
 // 20221011 Changed timezone handling
+// 20221113 Fixed ADC defines
 //
 // ToDo:
 // - 
@@ -125,20 +126,20 @@
 
 #ifdef PIN_ADC0_IN
     // Voltage divider R1 / (R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)
-    const float ADC3_DIV         = 0.5;       
-    const uint8_t ADC3_SAMPLES   = 10;
+    const float ADC0_DIV         = 0.5;       
+    const uint8_t ADC0_SAMPLES   = 10;
 #endif
 
 #ifdef PIN_ADC1_IN
     // Voltage divider R1 / (R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)
-    const float ADC3_DIV         = 0.5;       
-    const uint8_t ADC3_SAMPLES   = 10;
+    const float ADC1_DIV         = 0.5;       
+    const uint8_t ADC1_SAMPLES   = 10;
 #endif
 
 #ifdef PIN_ADC2_IN
     // Voltage divider R1 / (R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)
-    const float ADC3_DIV         = 0.5;       
-    const uint8_t ADC3_SAMPLES   = 10;
+    const float ADC2_DIV         = 0.5;       
+    const uint8_t ADC2_SAMPLES   = 10;
 #endif
 
 #ifdef PIN_ADC3_IN
