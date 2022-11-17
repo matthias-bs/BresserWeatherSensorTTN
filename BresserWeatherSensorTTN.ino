@@ -19,7 +19,6 @@
 // MCCI Arduino LoRaWAN Library by Terry Moore, MCCI (https://github.com/mcci-catena/arduino-lorawan)
 // Lora-Serialization by Joscha Feth (https://github.com/thesolarnomad/lora-serialization)
 // ESP32Time by Felix Biego (https://github.com/fbiego/ESP32Time)
-// Arduino Timezone Library by Jack Cristensen (https://github.com/JChristensen/Timezone)
 // ESP32AnalogRead by Kevin Harrington (madhephaestus) (https://github.com/madhephaestus/ESP32AnalogRead)
 // OneWireNg by Piotr Stolarz (https://github.com/pstolarz/OneWireNg)
 // DallasTemperature / Arduino-Temperature-Control-Library by Miles Burton (https://github.com/milesburton/Arduino-Temperature-Control-Library) 
@@ -79,12 +78,14 @@
 //          Changed LoRaWAN message size to actual payload size
 // 20221011 Replaced Timezone library by ESP32's internal TZ handling 
 // 20221109 Updated BresserWeatherSensorReceiver to v0.4.0
+// 20221117 Implemented wake-up to fixed time scheme
+//          Added energy saving modes
 //
 // ToDo:
 // -  
 //
 // Notes:
-// - Mapping of radio module is done in two places:
+// - Pin mapping of radio transceiver module is done in two places:
 //   - MCCI Arduino LoRaWAN Library:         this file (see below)
 //   - BresserWeatherSensorReceiver Library: WeatherSensorCfg.h
 // - After a successful transmission, the controller can go into deep sleep
@@ -102,7 +103,12 @@
 //   #define LMIC_ENABLE_DeviceTimeReq 1
 // - settimeofday()/gettimeofday() must be used to access the ESP32's RTC time
 // - Arduino ESP32 package has built-in time zone handling, see 
-//   https://github.com/SensorsIot/NTP-time-for-ESP8266-and-ESP32/blob/master/NTP_Example/NTP_Example.ino 
+//   https://github.com/SensorsIot/NTP-time-for-ESP8266-and-ESP32/blob/master/NTP_Example/NTP_Example.ino
+// - Apply fixes if using Arduino ESP32 board package v2.0.5
+//     - mcci-catena/arduino-lorawan#204
+//       (https://github.com/mcci-catena/arduino-lorawan/pull/204)
+//     - mcci-catena/arduino-lmic#714 
+//       (https://github.com/mcci-catena/arduino-lmic/issues/714#issuecomment-822051171)
 //
 ///////////////////////////////////////////////////////////////////////////////
 /*! \file */ 
@@ -376,7 +382,9 @@ RTC_DATA_ATTR Arduino_LoRaWAN::SessionInfo    rtcSavedSessionInfo;      //!< Ses
 RTC_DATA_ATTR size_t                          rtcSavedNExtraInfo;       //!< size of extra Session Info data
 RTC_DATA_ATTR uint8_t                         rtcSavedExtraInfo[EXTRA_INFO_MEM_SIZE]; //!< extra Session Info data
 RTC_DATA_ATTR bool                            runtimeExpired = false;   //!< flag indicating if runtime has expired at least once
+RTC_DATA_ATTR bool                            longSleep;                //!< last sleep interval; 0 - normal / 1 - long
 RTC_DATA_ATTR time_t                          rtcLastClockSync = 0;     //!< timestamp of last RTC synchonization to network time
+
 
 #ifdef ADC_EN
     // ESP32 ADC with calibration
@@ -539,16 +547,13 @@ void loop() {
 
     #ifdef SLEEP_EN
         if (sleepReq & !rtcSyncReq) {
-            DEBUG_PRINTF("Shutdown()\n");
             myLoRaWAN.Shutdown();
-            ESP.deepSleep(SLEEP_INTERVAL * 1000000);
+            prepareSleep();
         }
     #endif
 
     #ifdef FORCE_SLEEP
         if (os_getTime() > sleepTimeout) {
-            DEBUG_PRINTF_TS("Sleep timer expired!\n");
-            DEBUG_PRINTF("Shutdown()\n");
             runtimeExpired = true;
             myLoRaWAN.Shutdown();
             #ifdef FORCE_JOIN_AFTER_SLEEP_TIMEOUT
@@ -556,7 +561,8 @@ void loop() {
                 magicFlag1 = 0;
                 magicFlag2 = 0;
             #endif
-            ESP.deepSleep(SLEEP_INTERVAL * 1000000);
+            DEBUG_PRINTF_TS("Sleep timer expired!\n");
+            prepareSleep();
         }
     #endif
 }
@@ -799,6 +805,33 @@ void printDateTime(void) {
         DEBUG_PRINTF("%s\n", tbuf);
 }
 
+/// Determine sleep duration and enter Deep Sleep Mode
+void prepareSleep(void) {
+    uint32_t sleep_interval = SLEEP_INTERVAL;
+    longSleep = false;
+    #ifdef ADC_EN
+        // Long sleep interval if battery is weak
+        if (mySensor.getVoltage() < BATTERY_WEAK) {
+            sleep_interval = SLEEP_INTERVAL_LONG;
+            longSleep = true;
+        }
+    #endif
+
+    // If the real time is available, align the wake-up time to the
+    // to next non-fractional multiple of sleep_interval past the hour
+    if (rtcLastClockSync) {
+        struct tm timeinfo;
+        time_t t_now = rtc.getLocalEpoch();
+        localtime_r(&t_now, &timeinfo);
+
+        sleep_interval = sleep_interval - ((timeinfo.tm_min * 60) % sleep_interval + timeinfo.tm_sec);
+        sleep_interval += 20; // Added extra 20-secs of sleep to allow for slow ESP32 RTC timers
+    }
+    
+    DEBUG_PRINTF_TS("Shutdown() - sleeping for %d s\n", sleep_interval);
+    ESP.deepSleep(sleep_interval * 1000000LL);
+}
+
 /**
  * \fn UserRequestNetworkTimeCb
  * 
@@ -881,6 +914,11 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
     #ifdef ADC_EN
         // Use ADC with PIN_ADC_IN
         adc.attach(PIN_ADC_IN);
+        
+        if (getVoltage() < BATTERY_LOW) {
+          DEBUG_PRINTF("Battery low!");
+          prepareSleep();
+        }
     #endif
 
     #if defined(ADC_EN) && defined(PIN_ADC3_IN)
@@ -1162,7 +1200,7 @@ cSensor::doUplink(void) {
     #endif
 
     // Status flags
-    encoder.writeBitmap(false,
+    encoder.writeBitmap(longSleep,
                         rtcSyncReq, 
                         runtimeExpired,
                         mithermometer_valid,
