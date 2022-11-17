@@ -4,6 +4,7 @@
 // User specific configuration for BresserWeatherSensorTTN.ino
 //
 // - Enabling or disabling of features
+// - Voltage thresholds for power saving
 // - Timing configuration
 // - Timezone
 //
@@ -38,6 +39,9 @@
 // 20220819 Created from BresserWeatherSensorTTN.ino
 // 20221011 Changed timezone handling
 // 20221113 Fixed ADC defines
+// 20221117 Enabled FORCE_JOIN_AFTER_SLEEP_TIMEOUT per default
+//          Added defines for power saving - 
+//              BATTERY_WEAK, BATTERY_LOW, SLEEP_INTERVAL_LONG
 //
 // ToDo:
 // - 
@@ -65,11 +69,22 @@
 // Enable LORAWAN debug mode - this generates dummy weather data and skips weather sensor reception 
 //#define LORAWAN_DEBUG
 
+// Battery voltage thresholds for energy saving
+
+// If SLEEP_EN is defined and battery voltage is below BATTERY_WEAK [mV], MCU will sleep for SLEEP_INTERVAL_LONG
+#define BATTERY_WEAK 3500
+
+// Go to sleep mode immediately after start if battery voltage is below BATTERY_LOW [mV]
+#define BATTERY_LOW 3200
+
 // Enable sleep mode - sleep after successful transmission to TTN (recommended!)
 #define SLEEP_EN
 
 // If SLEEP_EN is defined, MCU will sleep for SLEEP_INTERVAL seconds after succesful transmission
 #define SLEEP_INTERVAL 360
+
+// Long sleep interval, MCU will sleep for SLEEP_INTERVAL_LONG seconds if battery voltage is below BATTERY_WEAK
+#define SLEEP_INTERVAL_LONG 900
 
 // RTC to network time sync interval (in minutes)
 #define CLOCK_SYNC_INTERVAL 24 * 60
@@ -78,7 +93,7 @@
 #define FORCE_SLEEP
 
 // Force a new join procedure (instead of re-join) after encountering sleep timeout
-//#define FORCE_JOIN_AFTER_SLEEP_TIMEOUT
+#define FORCE_JOIN_AFTER_SLEEP_TIMEOUT
 
 // During initialization (not joined), force deep sleep after SLEEP_TIMEOUT_INITIAL (if enabled)
 #define SLEEP_TIMEOUT_INITIAL 1800
