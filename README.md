@@ -48,19 +48,19 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 
 ### Library Dependencies
 
-| Library                          | r: required /<br>o: optional |
-| -------------------------------- | ---------------------------- |
-| MCCI Arduino Development Kit ADK | r                            |
-| MCCI LoRaWAN LMIC library        | r                            |
-| MCCI Arduino LoRaWAN Library     | r                            |
-| RadioLib                         | r                            |
-| LoRa_Serialization               | r                            |
-| ESP32Time                        | r                            |
-| BresserWeatherSensorReceiver     | r                            |
-| ESP32AnalogRead                  | o                            |
-| OneWireNg                        | o                            |
-| DallasTemperature                | o                            |
-| ATC MiThermometer Library        | o                            |
+| Library                            | r: required /<br>o: optional |
+| ---------------------------------- | ---------------------------- |
+| MCCI Arduino Development Kit ADK   | r                            |
+| MCCI LoRaWAN LMIC library          | r                            |
+| MCCI Arduino LoRaWAN Library       | r                            |
+| RadioLib                           | r                            |
+| LoRa_Serialization                 | r                            |
+| ESP32Time                          | r                            |
+| BresserWeatherSensorReceiver       | r                            |
+| ESP32AnalogRead                    | o                            |
+| OneWireNg                          | o                            |
+| DallasTemperature                  | o                            |
+| NimBLE-Arduino + ATC_MiThermometer | o                            |
 
 
 See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies) for required/tested versions.
@@ -220,4 +220,5 @@ Based on
 * [ESP32Time](https://github.com/fbiego/ESP32Time) by Felix Biego
 * [ESP32AnalogRead](https://github.com/madhephaestus/ESP32AnalogRead) by Kevin Harrington (madhephaestus)
 * [OneWireNg](https://github.com/pstolarz/OneWireNg) by Piotr Stolarz
-* [DallasTemperature / Arduino-Temperature-Control-Library](https://github.com/milesburton/Arduino-Temperature-Control-Library) by Miles Burton 
+* [DallasTemperature / Arduino-Temperature-Control-Library](https://github.com/milesburton/Arduino-Temperature-Control-Library) by Miles Burton
+* [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) by h2zero
