@@ -15,7 +15,7 @@ jobs:
           enable: all
           #suppressions-list: suppressions.txt
           force_language: c++ 
-          other_options: -I./src 
+          other_options: -I./src *.ino
           #--error-exitcode=2 ./src/*
           
         
