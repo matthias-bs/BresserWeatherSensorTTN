@@ -12,6 +12,11 @@ jobs:
         uses: deep5050/cppcheck-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN}}
+          enable: all
+          #suppressions-list: suppressions.txt
+          language: c++ 
+          other_options: -I./src 
+          #--error-exitcode=2 ./src/*
           
         
       - name: publish report    
