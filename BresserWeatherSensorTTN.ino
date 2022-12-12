@@ -1297,7 +1297,7 @@ cSensor::doUplink(void) {
 
     // Schedule transmission
     if (! myLoRaWAN.SendBuffer(
-        loraData, sizeof(loraData),
+        loraData, encoder.getLength(),
         // this is the completion function:
         [](void *pClientData, bool fSucccess) -> void {
             auto const pThis = (cSensor *)pClientData;
