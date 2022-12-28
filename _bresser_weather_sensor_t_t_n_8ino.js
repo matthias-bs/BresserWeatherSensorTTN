@@ -2,7 +2,6 @@ var _bresser_weather_sensor_t_t_n_8ino =
 [
     [ "cMyLoRaWAN", "classc_my_lo_ra_w_a_n.html", "classc_my_lo_ra_w_a_n" ],
     [ "cSensor", "classc_sensor.html", "classc_sensor" ],
-    [ "DEBUG_PORT", "_bresser_weather_sensor_t_t_n_8ino.html#ad7725bd9f76ca4bbdfdeb470ac223138", null ],
     [ "DEBUG_PRINTF", "_bresser_weather_sensor_t_t_n_8ino.html#a5c8ef3c24dad2c469a42784a9a39403b", null ],
     [ "DEBUG_PRINTF_TS", "_bresser_weather_sensor_t_t_n_8ino.html#a5d85581d74bae8579b031113e1ea23f3", null ],
     [ "EXTRA_INFO_MEM_SIZE", "_bresser_weather_sensor_t_t_n_8ino.html#ad1e00d731010e88d6355395309d99064", null ],

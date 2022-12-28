@@ -140,13 +140,11 @@ Macros</h2></td></tr>
 <tr class="memitem:ad1e00d731010e88d6355395309d99064"><td class="memItemLeft" align="right" valign="top"><a id="ad1e00d731010e88d6355395309d99064"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXTRA_INFO_MEM_SIZE</b>&#160;&#160;&#160;64</td></tr>
 <tr class="separator:ad1e00d731010e88d6355395309d99064"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7725bd9f76ca4bbdfdeb470ac223138"><td class="memItemLeft" align="right" valign="top"><a id="ad7725bd9f76ca4bbdfdeb470ac223138"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>DEBUG_PORT</b>&#160;&#160;&#160;Serial</td></tr>
-<tr class="separator:ad7725bd9f76ca4bbdfdeb470ac223138"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c8ef3c24dad2c469a42784a9a39403b"><td class="memItemLeft" align="right" valign="top"><a id="a5c8ef3c24dad2c469a42784a9a39403b"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>DEBUG_PRINTF</b>(...)&#160;&#160;&#160;{ DEBUG_PORT.printf(__VA_ARGS__); }</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DEBUG_PRINTF</b>(...)&#160;&#160;&#160;{ log_d(__VA_ARGS__); }</td></tr>
 <tr class="separator:a5c8ef3c24dad2c469a42784a9a39403b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d85581d74bae8579b031113e1ea23f3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>DEBUG_PRINTF_TS</b>(...)</td></tr>
+<tr class="memitem:a5d85581d74bae8579b031113e1ea23f3"><td class="memItemLeft" align="right" valign="top"><a id="a5d85581d74bae8579b031113e1ea23f3"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DEBUG_PRINTF_TS</b>(...)&#160;&#160;&#160;{ log_d(__VA_ARGS__); }</td></tr>
 <tr class="separator:a5d85581d74bae8579b031113e1ea23f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0c1bf4ee189c125eed41b77e7ce50a1"><td class="memItemLeft" align="right" valign="top"><a id="af0c1bf4ee189c125eed41b77e7ce50a1"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>FILLMEIN_8</b>&#160;&#160;&#160;(#dont edit this, edit the lines that use FILLMEIN_8)</td></tr>
@@ -278,27 +276,6 @@ ESP32Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <tr class="memdesc:a9914c8ecdaedd4bd9c93c344bea096c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Real time clock. <br /></td></tr>
 <tr class="separator:a9914c8ecdaedd4bd9c93c344bea096c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a5d85581d74bae8579b031113e1ea23f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d85581d74bae8579b031113e1ea23f3">&#9670;&nbsp;</a></span>DEBUG_PRINTF_TS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DEBUG_PRINTF_TS</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">                                   { DEBUG_PORT.printf(<span class="stringliteral">&quot;%d ms: &quot;</span>, osticks2ms(os_getTime())); \</div>
-<div class="line">                                   DEBUG_PORT.printf(__VA_ARGS__); }</div>
-</div><!-- fragment -->
-</div>
-</div>
 <h2 class="groupheader">Variable Documentation</h2>
 <a id="a0b8099bc46f487be5f55a9de1a62fe70"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0b8099bc46f487be5f55a9de1a62fe70">&#9670;&nbsp;</a></span>myPinMap</h2>
