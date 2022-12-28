@@ -599,20 +599,22 @@ cMyLoRaWAN::setup() {
                     0,
                     // the print-out function
                     [](cEventLog::EventNode_t const *pEvent) -> void {
-                        //Serial.print(" TX: ");
+                        Serial.print("TX: ");
                         //myEventLog.printCh(std::uint8_t(pEvent->getData(0)));
-                        //myEventLog.printRps(rps_t(pEvent->getData(1)));
+                        myEventLog.printRps(rps_t(pEvent->getData(1)));
                         //Serial.println();
-                        rps_t rps = rps_t(pEvent->getData(1));
-                        // see MCCI_Arduino_LoRaWAN_Library/src/lib/arduino_lorawan_cEventLog.cpp
-                        log_i("~TX: ch=%d rps=0x%04x (%s %s %s %s IH=%u)", 
-                            std::uint8_t(pEvent->getData(0)),
-                            rps,
-                            myEventLog.getSfName(rps),
-                            myEventLog.getBwName(rps),
-                            myEventLog.getCrName(rps),
-                            myEventLog.getCrcName(rps),
-                            unsigned(getIh(rps)));
+                        if (CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_INFO) {
+                            rps_t rps = rps_t(pEvent->getData(1));
+                            // see MCCI_Arduino_LoRaWAN_Library/src/lib/arduino_lorawan_cEventLog.cpp
+                            log_i("TX: ch=%d rps=0x%04x (%s %s %s %s IH=%u)", 
+                                std::uint8_t(pEvent->getData(0)),
+                                rps,
+                                myEventLog.getSfName(rps),
+                                myEventLog.getBwName(rps),
+                                myEventLog.getCrName(rps),
+                                myEventLog.getCrcName(rps),
+                                unsigned(getIh(rps)));
+                        }
                     }
                 );
             }
