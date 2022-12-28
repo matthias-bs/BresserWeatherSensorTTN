@@ -176,14 +176,13 @@ const uint8_t PAYLOAD_SIZE = 51;
 #define MAGIC2 (('m' << 24) | ('g' < 16) | ('c' << 8) | '2')
 #define EXTRA_INFO_MEM_SIZE 64
 
-//#define DEBUG_PORT Serial
-//#if defined(_BWS_DEBUG_MODE_)
+// To enable debug mode (debug messages via serial port):
+// Arduino IDE: Tools->Core Debug Level: "Debug|Verbose"
+// or
+// set CORE_DEBUG_LEVEL in BresserWeatherSensorTTNCfg.h
 #define DEBUG_PRINTF(...) { log_d(__VA_ARGS__); }
 #define DEBUG_PRINTF_TS(...) { log_d(__VA_ARGS__); }
-//#else
-//  #define DEBUG_PRINTF(...) {}
-//  #define DEBUG_PRINTF_TS(...) {}
-//#endif
+
 
 void printDateTime(void);
     
