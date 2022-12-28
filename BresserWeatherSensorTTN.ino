@@ -36,7 +36,7 @@
 // ESP32AnalogRead                      0.2.1 (optional)
 // OneWireNg                            0.12.1 (optional)
 // DallasTemperature                    3.9.0 (optional)
-// ATC MiThermometer Library            0.0.1 (optional)
+// ATC MiThermometer Library            0.1.0 (optional)
 //
 //
 // created: 06/2022
