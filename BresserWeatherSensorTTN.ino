@@ -604,7 +604,7 @@ cMyLoRaWAN::setup() {
                         //myEventLog.printRps(rps_t(pEvent->getData(1)));
                         //Serial.println();
                         // see MCCI_Arduino_LoRaWAN_Library/src/lib/arduino_lorawan_cEventLog.cpp
-                        log_i("TX: ch=%d rps=0x%02x (%s %s %s %s IH=%u)", 
+                        log_i("TX: ch=%d rps=0x%04x (%s %s %s %s IH=%u)", 
                             std::uint8_t(pEvent->getData(0)),
                             rps_t(pEvent->getData(1)),
                             myEventLog.getSfName(rps_t(pEvent->getData(1))),
