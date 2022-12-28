@@ -603,15 +603,16 @@ cMyLoRaWAN::setup() {
                         //myEventLog.printCh(std::uint8_t(pEvent->getData(0)));
                         //myEventLog.printRps(rps_t(pEvent->getData(1)));
                         //Serial.println();
+                        rps_t rps = rps_t(pEvent->getData(1));
                         // see MCCI_Arduino_LoRaWAN_Library/src/lib/arduino_lorawan_cEventLog.cpp
-                        log_i("TX: ch=%d rps=0x%04x (%s %s %s %s IH=%u)", 
+                        log_i("~TX: ch=%d rps=0x%04x (%s %s %s %s IH=%u)", 
                             std::uint8_t(pEvent->getData(0)),
-                            rps_t(pEvent->getData(1)),
-                            myEventLog.getSfName(rps_t(pEvent->getData(1))),
-                            myEventLog.getBwName(rps_t(pEvent->getData(1))),
-                            myEventLog.getCrName(rps_t(pEvent->getData(1))),
-                            myEventLog.getCrcName(rps_t(pEvent->getData(1))),
-                            unsigned(getIh(rps_t(pEvent->getData(1)))));
+                            rps,
+                            myEventLog.getSfName(rps),
+                            myEventLog.getBwName(rps),
+                            myEventLog.getCrName(rps),
+                            myEventLog.getCrcName(rps),
+                            unsigned(getIh(rps)));
                     }
                 );
             }
@@ -667,19 +668,19 @@ cMyLoRaWAN::NetTxComplete(void) {
 void 
 cMyLoRaWAN::printSessionInfo(const SessionInfo &Info)
 {
-    log_v("Tag:\t\t%d\n", Info.V1.Tag);
-    log_v("Size:\t\t%d\n", Info.V1.Size);
-    log_v("Rsv2:\t\t%d\n", Info.V1.Rsv2);
-    log_v("Rsv3:\t\t%d\n", Info.V1.Rsv3);
-    log_v("NetID:\t\t0x%08X\n", Info.V1.NetID);
-    log_v("DevAddr:\t0x%08X\n", Info.V1.DevAddr);
+    log_v("Tag:\t\t%d", Info.V1.Tag);
+    log_v("Size:\t\t%d", Info.V1.Size);
+    log_v("Rsv2:\t\t%d", Info.V1.Rsv2);
+    log_v("Rsv3:\t\t%d", Info.V1.Rsv3);
+    log_v("NetID:\t\t0x%08X", Info.V1.NetID);
+    log_v("DevAddr:\t\t0x%08X", Info.V1.DevAddr);
     if (CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG) {
         char buf[64];
         *buf = '\0';
         for (int i=0; i<15;i++) {
             sprintf(&buf[strlen(buf)], "%02X ", Info.V1.NwkSKey[i]);
         }
-        log_v("NwkSKey:\t%s", buf);
+        log_v("NwkSKey:\t\t%s", buf);
     }
     if (CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG) {
         char buf[64];
@@ -687,7 +688,7 @@ cMyLoRaWAN::printSessionInfo(const SessionInfo &Info)
         for (int i=0; i<15;i++) {
             sprintf(&buf[strlen(buf)], "%02X ", Info.V1.AppSKey[i]);  
         }
-        log_v("AppSKey:\t%s", buf);
+        log_v("AppSKey:\t\t%s", buf);
     }    
 }
 
@@ -695,18 +696,18 @@ cMyLoRaWAN::printSessionInfo(const SessionInfo &Info)
 void 
 cMyLoRaWAN::printSessionState(const SessionState &State)
 {
-    log_v("Tag:\t\t%d\n", State.V1.Tag);
-    log_v("Size:\t\t%d\n", State.V1.Size);
-    log_v("Region:\t\t%d\n", State.V1.Region);
-    log_v("LinkDR:\t\t%d\n", State.V1.LinkDR);
-    log_v("FCntUp:\t\t%d\n", State.V1.FCntUp);
-    log_v("FCntDown:\t%d\n", State.V1.FCntDown);
-    log_v("gpsTime:\t%d\n", State.V1.gpsTime);
-    log_v("globalAvail:\t%d\n", State.V1.globalAvail);
-    log_v("Rx2Frequency:\t%d\n", State.V1.Rx2Frequency);
-    log_v("PingFrequency:\t%d\n", State.V1.PingFrequency);
-    log_v("Country:\t%d\n", State.V1.Country);
-    log_v("LinkIntegrity:\t%d\n", State.V1.LinkIntegrity);
+    log_v("Tag:\t\t%d", State.V1.Tag);
+    log_v("Size:\t\t%d", State.V1.Size);
+    log_v("Region:\t\t%d", State.V1.Region);
+    log_v("LinkDR:\t\t%d", State.V1.LinkDR);
+    log_v("FCntUp:\t\t%d", State.V1.FCntUp);
+    log_v("FCntDown:\t\t%d", State.V1.FCntDown);
+    log_v("gpsTime:\t\t%d", State.V1.gpsTime);
+    log_v("globalAvail:\t%d", State.V1.globalAvail);
+    log_v("Rx2Frequency:\t%d", State.V1.Rx2Frequency);
+    log_v("PingFrequency:\t%d", State.V1.PingFrequency);
+    log_v("Country:\t\t%d", State.V1.Country);
+    log_v("LinkIntegrity:\t%d", State.V1.LinkIntegrity);
     // There is more in it...
 }
 
@@ -800,7 +801,7 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
           sprintf(&buf[strlen(buf)], "%02X ", pAbpInfo->AppSKey[i]);  
         }
         log_v("AppSKey:\t%s", buf);
-        log_v("FCntUp: %d\n", state.V1.FCntUp);
+        log_v("FCntUp:\t%d", state.V1.FCntUp);
     }
     return true;
 }
