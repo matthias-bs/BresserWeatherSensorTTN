@@ -81,6 +81,8 @@
 // 20221109 Updated BresserWeatherSensorReceiver to v0.4.0
 // 20221117 Implemented wake-up to fixed time scheme
 //          Added energy saving modes
+// 20221228 Modified DEBUG_PRINTF/DEBUG_PRINTF_TS macros to use
+//          Arduino logging functions
 //
 // ToDo:
 // -  
@@ -174,15 +176,14 @@ const uint8_t PAYLOAD_SIZE = 51;
 #define MAGIC2 (('m' << 24) | ('g' < 16) | ('c' << 8) | '2')
 #define EXTRA_INFO_MEM_SIZE 64
 
-#define DEBUG_PORT Serial
-#if defined(_BWS_DEBUG_MODE_)
-    #define DEBUG_PRINTF(...) { DEBUG_PORT.printf(__VA_ARGS__); }
-    #define DEBUG_PRINTF_TS(...) { DEBUG_PORT.printf("%d ms: ", osticks2ms(os_getTime())); \
-                                   DEBUG_PORT.printf(__VA_ARGS__); }
-#else
-  #define DEBUG_PRINTF(...) {}
-  #define DEBUG_PRINTF_TS(...) {}
-#endif
+//#define DEBUG_PORT Serial
+//#if defined(_BWS_DEBUG_MODE_)
+#define DEBUG_PRINTF(...) { log_d(__VA_ARGS__); }
+#define DEBUG_PRINTF_TS(...) { log_d(__VA_ARGS__); }
+//#else
+//  #define DEBUG_PRINTF(...) {}
+//  #define DEBUG_PRINTF_TS(...) {}
+//#endif
 
 void printDateTime(void);
     
@@ -498,37 +499,36 @@ ESP32Time rtc;
 void setup() {
     // set baud rate
     Serial.begin(115200);
+    Serial.setDebugOutput(true);
 
     // wait for serial to be ready - or timeout if USB is not connected
     delay(500);
 
     sleepTimeout = sec2osticks(SLEEP_TIMEOUT_INITIAL);
 
-    DEBUG_PRINTF_TS("setup()\n");
+    DEBUG_PRINTF_TS("");
     
     // Set time zone
     setenv("TZ", TZ_INFO, 1);
+    printDateTime();
     
-#ifdef _BWS_DEBUG_MODE_
-        printDateTime();
-#endif
     // Check if clock was never synchronized or sync interval has expired 
     if ((rtcLastClockSync == 0) || ((rtc.getLocalEpoch() - rtcLastClockSync) > (CLOCK_SYNC_INTERVAL * 60))) {
-        DEBUG_PRINTF("RTC sync required\n");
+        DEBUG_PRINTF("RTC sync required");
         rtcSyncReq = true;
     }
 
     // set up the log; do this first.
     myEventLog.setup();
-    DEBUG_PRINTF("myEventlog.setup() - done\n");
+    DEBUG_PRINTF("myEventlog.setup() - done");
 
     // set up the sensors.
     mySensor.setup();
-    DEBUG_PRINTF("mySensor.setup() - done\n");
+    DEBUG_PRINTF("mySensor.setup() - done");
 
     // set up lorawan.
     myLoRaWAN.setup();
-    DEBUG_PRINTF("myLoRaWAN.setup() - done\n");
+    DEBUG_PRINTF("myLoRaWAN.setup() - done");
     
     mySensor.uplinkRequest();
 }
@@ -562,7 +562,7 @@ void loop() {
                 magicFlag1 = 0;
                 magicFlag2 = 0;
             #endif
-            DEBUG_PRINTF_TS("Sleep timer expired!\n");
+            DEBUG_PRINTF_TS("Sleep timer expired!");
             prepareSleep();
         }
     #endif
@@ -580,9 +580,7 @@ void
 cMyLoRaWAN::setup() {
     // simply call begin() w/o parameters, and the LMIC's built-in
     // configuration for this board will be used.
-    bool res = this->Super::begin(myPinMap);
-    DEBUG_PRINTF("Arduino_LoRaWAN::begin(): %d\n", res);
-
+    this->Super::begin(myPinMap);
 
 //    LMIC_selectSubBand(0);
     LMIC_setClockError(MAX_CLOCK_ERROR * 1 / 100);
@@ -602,9 +600,19 @@ cMyLoRaWAN::setup() {
                     0,
                     // the print-out function
                     [](cEventLog::EventNode_t const *pEvent) -> void {
-                        Serial.print(F(" TX:"));
-                        myEventLog.printCh(std::uint8_t(pEvent->getData(0)));
-                        myEventLog.printRps(rps_t(pEvent->getData(1)));
+                        //Serial.print(" TX: ");
+                        //myEventLog.printCh(std::uint8_t(pEvent->getData(0)));
+                        //myEventLog.printRps(rps_t(pEvent->getData(1)));
+                        //Serial.println();
+                        // see MCCI_Arduino_LoRaWAN_Library/src/lib/arduino_lorawan_cEventLog.cpp
+                        log_i("TX: ch=%d rps=0x%02x (%s %s %s %s IH=%u)", 
+                            std::uint8_t(pEvent->getData(0)),
+                            rps_t(pEvent->getData(1)),
+                            myEventLog.getSfName(rps_t(pEvent->getData(1))),
+                            myEventLog.getBwName(rps_t(pEvent->getData(1))),
+                            myEventLog.getCrName(rps_t(pEvent->getData(1))),
+                            myEventLog.getCrcName(rps_t(pEvent->getData(1))),
+                            unsigned(getIh(rps_t(pEvent->getData(1)))));
                     }
                 );
             }
@@ -639,7 +647,7 @@ cMyLoRaWAN::GetOtaaProvisioningInfo(
 void
 cMyLoRaWAN::NetJoin(
     void) {
-    DEBUG_PRINTF_TS("NetJoin()\n");
+    DEBUG_PRINTF_TS("");
     sleepTimeout = os_getTime() + sec2osticks(SLEEP_TIMEOUT_JOINED);
     if (rtcSyncReq) {
         // Allow additional time for completing Network Time Request
@@ -651,52 +659,58 @@ cMyLoRaWAN::NetJoin(
 // If enabled, the controller goes into deep sleep mode now.
 void
 cMyLoRaWAN::NetTxComplete(void) {
-    DEBUG_PRINTF_TS("NetTxComplete()\n");
+    DEBUG_PRINTF_TS("");
     sleepReq = true;
 }
 
-#ifdef _BWS_DEBUG_MODE_
+
 // Print session info for debugging
 void 
 cMyLoRaWAN::printSessionInfo(const SessionInfo &Info)
 {
-    Serial.printf("Tag:\t\t%d\n", Info.V1.Tag);
-    Serial.printf("Size:\t\t%d\n", Info.V1.Size);
-    Serial.printf("Rsv2:\t\t%d\n", Info.V1.Rsv2);
-    Serial.printf("Rsv3:\t\t%d\n", Info.V1.Rsv3);
-    Serial.printf("NetID:\t\t0x%08X\n", Info.V1.NetID);
-    Serial.printf("DevAddr:\t0x%08X\n", Info.V1.DevAddr);
-    Serial.printf("NwkSKey:\t");
-    for (int i=0; i<15;i++) {
-      Serial.printf("%02X ", Info.V1.NwkSKey[i]);  
+    log_v("Tag:\t\t%d\n", Info.V1.Tag);
+    log_v("Size:\t\t%d\n", Info.V1.Size);
+    log_v("Rsv2:\t\t%d\n", Info.V1.Rsv2);
+    log_v("Rsv3:\t\t%d\n", Info.V1.Rsv3);
+    log_v("NetID:\t\t0x%08X\n", Info.V1.NetID);
+    log_v("DevAddr:\t0x%08X\n", Info.V1.DevAddr);
+    if (CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG) {
+        char buf[64];
+        *buf = '\0';
+        for (int i=0; i<15;i++) {
+            sprintf(&buf[strlen(buf)], "%02X ", Info.V1.NwkSKey[i]);
+        }
+        log_v("NwkSKey:\t%s", buf);
     }
-    Serial.printf("\n");
-    Serial.printf("AppSKey:\t");
-    for (int i=0; i<15;i++) {
-      Serial.printf("%02X ", Info.V1.AppSKey[i]);  
-    }
-    Serial.printf("\n");    
+    if (CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG) {
+        char buf[64];
+        *buf = '\0';
+        for (int i=0; i<15;i++) {
+            sprintf(&buf[strlen(buf)], "%02X ", Info.V1.AppSKey[i]);  
+        }
+        log_v("AppSKey:\t%s", buf);
+    }    
 }
 
 // Print session state for debugging
 void 
 cMyLoRaWAN::printSessionState(const SessionState &State)
 {
-    Serial.printf("Tag:\t\t%d\n", State.V1.Tag);
-    Serial.printf("Size:\t\t%d\n", State.V1.Size);
-    Serial.printf("Region:\t\t%d\n", State.V1.Region);
-    Serial.printf("LinkDR:\t\t%d\n", State.V1.LinkDR);
-    Serial.printf("FCntUp:\t\t%d\n", State.V1.FCntUp);
-    Serial.printf("FCntDown:\t%d\n", State.V1.FCntDown);
-    Serial.printf("gpsTime:\t%d\n", State.V1.gpsTime);
-    Serial.printf("globalAvail:\t%d\n", State.V1.globalAvail);
-    Serial.printf("Rx2Frequency:\t%d\n", State.V1.Rx2Frequency);
-    Serial.printf("PingFrequency:\t%d\n", State.V1.PingFrequency);
-    Serial.printf("Country:\t%d\n", State.V1.Country);
-    Serial.printf("LinkIntegrity:\t%d\n", State.V1.LinkIntegrity);
+    log_v("Tag:\t\t%d\n", State.V1.Tag);
+    log_v("Size:\t\t%d\n", State.V1.Size);
+    log_v("Region:\t\t%d\n", State.V1.Region);
+    log_v("LinkDR:\t\t%d\n", State.V1.LinkDR);
+    log_v("FCntUp:\t\t%d\n", State.V1.FCntUp);
+    log_v("FCntDown:\t%d\n", State.V1.FCntDown);
+    log_v("gpsTime:\t%d\n", State.V1.gpsTime);
+    log_v("globalAvail:\t%d\n", State.V1.globalAvail);
+    log_v("Rx2Frequency:\t%d\n", State.V1.Rx2Frequency);
+    log_v("PingFrequency:\t%d\n", State.V1.PingFrequency);
+    log_v("Country:\t%d\n", State.V1.Country);
+    log_v("LinkIntegrity:\t%d\n", State.V1.LinkIntegrity);
     // There is more in it...
 }
-#endif
+
 
 // Save Info to ESP32's RTC RAM
 // if not possible, just do nothing and make sure you return false
@@ -713,10 +727,8 @@ cMyLoRaWAN::NetSaveSessionInfo(
     rtcSavedNExtraInfo = nExtraInfo;
     memcpy(rtcSavedExtraInfo, pExtraInfo, nExtraInfo);
     magicFlag2 = MAGIC2;
-    DEBUG_PRINTF_TS("NetSaveSessionInfo()\n");
-    #ifdef _BWS_DEBUG_MODE_
-        printSessionInfo(Info);
-    #endif
+    DEBUG_PRINTF_TS("");
+    printSessionInfo(Info);
 }
 
 
@@ -728,10 +740,8 @@ void
 cMyLoRaWAN::NetSaveSessionState(const SessionState &State) {
     rtcSavedSessionState = State;
     magicFlag1 = MAGIC1;
-    DEBUG_PRINTF_TS("NetSaveSessionState()\n");
-    #ifdef _BWS_DEBUG_MODE_
-        printSessionState(State);
-    #endif
+    DEBUG_PRINTF_TS("");
+    printSessionState(State);
 }
 
 // Either fetch SessionState from somewhere and return true or...
@@ -740,13 +750,11 @@ bool
 cMyLoRaWAN::NetGetSessionState(SessionState &State) {
     if (magicFlag1 == MAGIC1) {
         State = rtcSavedSessionState;
-        DEBUG_PRINTF_TS("NetGetSessionState() - o.k.\n");
-        #ifdef _BWS_DEBUG_MODE_
-            printSessionState(State);
-        #endif
+        DEBUG_PRINTF_TS("o.k.");
+        printSessionState(State);
         return true;
     } else {
-        DEBUG_PRINTF_TS("NetGetSessionState() - failed\n");
+        DEBUG_PRINTF_TS("failed");
         return false;
     }
 }
@@ -769,7 +777,7 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
     if ((magicFlag1 != MAGIC1) || (magicFlag2 != MAGIC2)) {
          return false;
     }
-    DEBUG_PRINTF_TS("GetAbpProvisioningInfo()\n");
+    DEBUG_PRINTF_TS("");
 
     pAbpInfo->DevAddr = rtcSavedSessionInfo.V2.DevAddr;
     pAbpInfo->NetID   = rtcSavedSessionInfo.V2.NetID;
@@ -779,19 +787,22 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
     pAbpInfo->FCntUp   = state.V1.FCntUp;
     pAbpInfo->FCntDown = state.V1.FCntDown;
 
-    #ifdef _BWS_DEBUG_MODE_
-        Serial.printf("NwkSKey:\t");
+    if (CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG) {
+        char buf[64];
+        
+        *buf = '\0';
         for (int i=0; i<15;i++) {
-          Serial.printf("%02X ", pAbpInfo->NwkSKey[i]);  
+          sprintf(&buf[strlen(buf)], "%02X ", pAbpInfo->NwkSKey[i]);  
         }
-        Serial.printf("\n");
-        Serial.printf("AppSKey:\t");
+        log_v("NwkSKey:\t%s", buf);
+        
+        *buf = '\0';
         for (int i=0; i<15;i++) {
-          Serial.printf("%02X ", pAbpInfo->AppSKey[i]);  
+          sprintf(&buf[strlen(buf)], "%02X ", pAbpInfo->AppSKey[i]);  
         }
-        Serial.printf("\n");
-        Serial.printf("FCntUp: %d\n", state.V1.FCntUp);
-    #endif
+        log_v("AppSKey:\t%s", buf);
+        log_v("FCntUp: %d\n", state.V1.FCntUp);
+    }
     return true;
 }
 
@@ -803,7 +814,7 @@ void printDateTime(void) {
         time_t tnow = rtc.getLocalEpoch();
         localtime_r(&tnow, &timeinfo);
         strftime(tbuf, 25, "%Y-%m-%d %H:%M:%S", &timeinfo);
-        DEBUG_PRINTF("%s\n", tbuf);
+        DEBUG_PRINTF("%s", tbuf);
 }
 
 /// Determine sleep duration and enter Deep Sleep Mode
@@ -829,7 +840,7 @@ void prepareSleep(void) {
         sleep_interval += 20; // Added extra 20-secs of sleep to allow for slow ESP32 RTC timers
     }
     
-    DEBUG_PRINTF_TS("Shutdown() - sleeping for %d s\n", sleep_interval);
+    DEBUG_PRINTF_TS("Shutdown() - sleeping for %d s", sleep_interval);
     ESP.deepSleep(sleep_interval * 1000000LL);
 }
 
@@ -856,7 +867,7 @@ void UserRequestNetworkTimeCb(void *pVoidUserUTCTime, int flagSuccess) {
 
     if (flagSuccess != 1) {
         // Most likely the service is not provided by the gateway. No sense in trying again...
-        DEBUG_PRINTF_TS("UserRequestNetworkTimeCb: didn't succeed\n");
+        DEBUG_PRINTF_TS("didn't succeed");
         rtcSyncReq = false;
         return;
     }
@@ -864,7 +875,7 @@ void UserRequestNetworkTimeCb(void *pVoidUserUTCTime, int flagSuccess) {
     // Populate "lmic_time_reference"
     flagSuccess = LMIC_getNetworkTimeReference(&lmicTimeReference);
     if (flagSuccess != 1) {
-        DEBUG_PRINTF_TS("UserRequestNetworkTimeCb: LMIC_getNetworkTimeReference didn't succeed\n");
+        DEBUG_PRINTF_TS("LMIC_getNetworkTimeReference didn't succeed");
         return;
     }
 
@@ -888,11 +899,8 @@ void UserRequestNetworkTimeCb(void *pVoidUserUTCTime, int flagSuccess) {
     // Save clock sync timestamp and clear flag 
     rtcLastClockSync = rtc.getLocalEpoch();
     rtcSyncReq = false;
-    DEBUG_PRINTF_TS("RTC sync completed\n");
-
-#ifdef _BWS_DEBUG_MODE_
-        printDateTime();
-#endif
+    DEBUG_PRINTF_TS("RTC sync completed");
+    printDateTime();
 }
 
 void
@@ -939,9 +947,9 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
         bool decode_ok = weatherSensor.genMessage(0 /* slot */, 0x01234567 /* ID */, 1 /* type */, 0 /* channel */);
     #endif
     if (decode_ok) {
-        DEBUG_PRINTF("Receiving Weather Sensor Data o.k.\n");
+        DEBUG_PRINTF("Receiving Weather Sensor Data o.k.");
     } else {
-        DEBUG_PRINTF("Receiving Weather Sensor Data failed.\n");
+        DEBUG_PRINTF("Receiving Weather Sensor Data failed.");
     }
     
     #ifdef RAINDATA_EN
@@ -1008,7 +1016,7 @@ cSensor::getVoltage(void)
     }
     uint16_t voltage = int(voltage_raw / UBATT_SAMPLES / UBATT_DIV);
      
-    DEBUG_PRINTF("Voltage = %dmV\n", voltage);
+    DEBUG_PRINTF("Voltage = %dmV", voltage);
 
     return voltage;
 }
@@ -1025,7 +1033,7 @@ cSensor::getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider)
     }
     uint16_t voltage = int(voltage_raw / samples / divider);
      
-    DEBUG_PRINTF("Voltage = %dmV\n", voltage);
+    DEBUG_PRINTF("Voltage = %dmV", voltage);
 
     return voltage;
 }
@@ -1049,9 +1057,9 @@ cSensor::getTemperature(void)
     #ifdef _DEBUG_MODE_
         // Check if reading was successful
         if (tempC != DEVICE_DISCONNECTED_C) {
-            DEBUG_PRINTF("Temperature = %.2f°C\n", tempC);
+            DEBUG_PRINTF("Temperature = %.2f°C", tempC);
         } else {
-            DEBUG_PRINTF("Error: Could not read temperature data\n");
+            DEBUG_PRINTF("Error: Could not read temperature data");
         }
     #endif
     return tempC;
@@ -1080,12 +1088,12 @@ void
 cSensor::doUplink(void) {
     // if busy uplinking, just skip
     if (this->m_fBusy) {
-        DEBUG_PRINTF_TS("doUplink(): busy\n");
+        DEBUG_PRINTF_TS("busy");
         return;
     }
     // if LMIC is busy, just skip
     if (LMIC.opmode & (OP_POLL | OP_TXDATA | OP_TXRXPEND)) {
-        DEBUG_PRINTF_TS("doUplink(): other operation in progress\n");    
+        DEBUG_PRINTF_TS("other operation in progress");    
         return;
     }
 
@@ -1133,60 +1141,60 @@ cSensor::doUplink(void) {
     // Try to find SENSOR_TYPE_SOIL
     int s1 = weatherSensor.findType(SENSOR_TYPE_SOIL, 1);
 
-    DEBUG_PRINTF("--- Uplink Data ---\n");
+    DEBUG_PRINTF("--- Uplink Data ---");
     
     // Debug output for weather sensor data
     if (ws > -1) {
-      DEBUG_PRINTF("Air Temperature:    % 3.1f °C\n",   weatherSensor.sensor[ws].temp_c);
-      DEBUG_PRINTF("Humidity:            %2d   %%\n",   weatherSensor.sensor[ws].humidity);
-      DEBUG_PRINTF("Rain Gauge:       %7.1f mm\n",      weatherSensor.sensor[ws].rain_mm);
-      DEBUG_PRINTF("Wind Speed (avg.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1/10.0);
-      DEBUG_PRINTF("Wind Speed (max.):    %3.1f m/s\n", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1/10.0);
-      DEBUG_PRINTF("Wind Direction:     %4.1f °\n",     weatherSensor.sensor[ws].wind_direction_deg_fp1/10.0);
+      DEBUG_PRINTF("Air Temperature:    % 3.1f °C",   weatherSensor.sensor[ws].temp_c);
+      DEBUG_PRINTF("Humidity:            %2d   %%",   weatherSensor.sensor[ws].humidity);
+      DEBUG_PRINTF("Rain Gauge:       %7.1f mm",      weatherSensor.sensor[ws].rain_mm);
+      DEBUG_PRINTF("Wind Speed (avg.):    %3.1f m/s", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1/10.0);
+      DEBUG_PRINTF("Wind Speed (max.):    %3.1f m/s", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1/10.0);
+      DEBUG_PRINTF("Wind Direction:     %4.1f °",     weatherSensor.sensor[ws].wind_direction_deg_fp1/10.0);
     } else {
-      DEBUG_PRINTF("-- Weather Sensor Failure\n");
+      DEBUG_PRINTF("-- Weather Sensor Failure");
     }
 
     // Debug output for soil sensor data
     #ifdef SOILSENSOR_EN
       if (s1 > -1) {
-        DEBUG_PRINTF("Soil Temperature 1: % 3.1f °C\n",  weatherSensor.sensor[s1].temp_c);
-        DEBUG_PRINTF("Soil Moisture 1:     %2d   %%\n",  weatherSensor.sensor[s1].moisture);      
+        DEBUG_PRINTF("Soil Temperature 1: % 3.1f °C",  weatherSensor.sensor[s1].temp_c);
+        DEBUG_PRINTF("Soil Moisture 1:     %2d   %%",  weatherSensor.sensor[s1].moisture);      
       } else {
-        DEBUG_PRINTF("-- Soil Sensor 1 Failure\n");
+        DEBUG_PRINTF("-- Soil Sensor 1 Failure");
       }
     #endif
 
     #ifdef ONEWIRE_EN
         // Debug output for auxiliary sensors/voltages
         if (water_temp_c != DEVICE_DISCONNECTED_C) {
-            DEBUG_PRINTF("Water Temperature:  % 2.1f °C\n",  water_temp_c);
+            DEBUG_PRINTF("Water Temperature:  % 2.1f °C",  water_temp_c);
         } else {
-            DEBUG_PRINTF("Water Temperature:   --.- °C\n");
+            DEBUG_PRINTF("Water Temperature:   --.- °C");
             water_temp_c = -30.0;
         }
     #endif
     #ifdef ADC_EN
-        DEBUG_PRINTF("Supply  Voltage:   %4d   mV\n",       supply_voltage);
+        DEBUG_PRINTF("Supply  Voltage:   %4d   mV",       supply_voltage);
     #endif
     #if defined(ADC_EN) && defined(PIN_ADC3_IN)
-        DEBUG_PRINTF("Battery Voltage:   %4d   mV\n",       battery_voltage);
+        DEBUG_PRINTF("Battery Voltage:   %4d   mV",       battery_voltage);
     #endif
     #ifdef MITHERMOMETER_EN
         if (miThermometer.data[0].valid) {
             mithermometer_valid = true;
             indoor_temp_c   = miThermometer.data[0].temperature/100.0;
             indoor_humidity = miThermometer.data[0].humidity/100.0;
-            DEBUG_PRINTF("Indoor Air Temp.:   % 3.1f °C\n", miThermometer.data[0].temperature/100.0);
-            DEBUG_PRINTF("Indoor Humidity:     %3.1f %%\n", miThermometer.data[0].humidity/100.0);
+            DEBUG_PRINTF("Indoor Air Temp.:   % 3.1f °C", miThermometer.data[0].temperature/100.0);
+            DEBUG_PRINTF("Indoor Humidity:     %3.1f %%", miThermometer.data[0].humidity/100.0);
         } else {
-            DEBUG_PRINTF("Indoor Air Temp.:    --.- °C\n");
-            DEBUG_PRINTF("Indoor Humidity:     --   %%\n");
+            DEBUG_PRINTF("Indoor Air Temp.:    --.- °C");
+            DEBUG_PRINTF("Indoor Humidity:     --   %%");
             indoor_temp_c   = -30;
             indoor_humidity = 0;
         }
     #endif
-    DEBUG_PRINTF("\n");
+    DEBUG_PRINTF("");
 
     //
     // Encode sensor data as byte array for LoRaWAN transmission
@@ -1275,16 +1283,16 @@ cSensor::doUplink(void) {
     // Rain data statistics
     #ifdef RAINDATA_EN
         if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].rain_ok) {
-            DEBUG_PRINTF("Rain past 60min:  %7.1f mm\n", rainGauge.pastHour());
-            DEBUG_PRINTF("Rain curr. day:   %7.1f mm\n", rainGauge.currentDay());
-            DEBUG_PRINTF("Rain curr. week:  %7.1f mm\n", rainGauge.currentWeek());
-            DEBUG_PRINTF("Rain curr. month: %7.1f mm\n", rainGauge.currentMonth());
+            DEBUG_PRINTF("Rain past 60min:  %7.1f mm", rainGauge.pastHour());
+            DEBUG_PRINTF("Rain curr. day:   %7.1f mm", rainGauge.currentDay());
+            DEBUG_PRINTF("Rain curr. week:  %7.1f mm", rainGauge.currentWeek());
+            DEBUG_PRINTF("Rain curr. month: %7.1f mm", rainGauge.currentMonth());
             encoder.writeRawFloat(rainGauge.pastHour());
             encoder.writeRawFloat(rainGauge.currentDay());
             encoder.writeRawFloat(rainGauge.currentWeek());
             encoder.writeRawFloat(rainGauge.currentMonth());
         } else {
-            DEBUG_PRINTF("Current rain gauge statistics not valid.\n");
+            DEBUG_PRINTF("Current rain gauge statistics not valid.");
             encoder.writeRawFloat(-1);
             encoder.writeRawFloat(-1);
             encoder.writeRawFloat(-1);
