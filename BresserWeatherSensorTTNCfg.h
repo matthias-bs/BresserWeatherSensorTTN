@@ -60,12 +60,12 @@
 
 //--- Select LoRaWAN Network ---
 // The Things Network
-#define ARDUINO_LMIC_CFG_NETWORK_TTN 0
+#define ARDUINO_LMIC_CFG_NETWORK_TTN 1
 
 // Helium Network
 // see mcci-cathena/arduino-lorawan issue #185 "Add Helium EU868 support"
 // (https://github.com/mcci-catena/arduino-lorawan/issues/185)
-#define ARDUINO_LMIC_CFG_NETWORK_GENERIC 1
+#define ARDUINO_LMIC_CFG_NETWORK_GENERIC 0
 
 // Enable Device_Time_Req MAC command
 #define LMIC_ENABLE_DeviceTimeReq 1
