@@ -34,7 +34,7 @@
 // ESP32Time                            2.0.0
 // BresserWeatherSensorReceiver         0.4.0
 // ESP32AnalogRead                      0.2.1 (optional)
-// OneWireNg                            0.12.1 (optional)
+// OneWireNg                            0.12.2 (optional)
 // DallasTemperature                    3.9.1 (optional)
 // ATC MiThermometer Library            0.1.0 (optional)
 //
