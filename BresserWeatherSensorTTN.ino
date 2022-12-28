@@ -29,7 +29,7 @@
 // MCCI Arduino Development Kit ADK     0.2.2
 // MCCI LoRaWAN LMIC library            4.1.1
 // MCCI Arduino LoRaWAN Library         0.9.2
-// RadioLib                             5.4.1
+// RadioLib                             5.5.0
 // LoRa_Serialization                   3.2.1
 // ESP32Time                            2.0.0
 // BresserWeatherSensorReceiver         0.4.0
