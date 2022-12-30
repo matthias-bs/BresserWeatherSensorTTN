@@ -112,7 +112,7 @@
 // Timeout for weather sensor data reception (seconds)
 #define WEATHERSENSOR_TIMEOUT 180
 
-// If enabled, enter deep sleep mode if revceiving weather sensor data was not succesful
+// If enabled, enter deep sleep mode if receiving weather sensor data was not successful
 //#define WEATHERSENSOR_DATA_REQUIRED
 
 // Enable transmission of weather sensor ID
