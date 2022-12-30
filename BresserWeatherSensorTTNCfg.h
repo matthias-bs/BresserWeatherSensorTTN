@@ -44,6 +44,7 @@
 //              BATTERY_WEAK, BATTERY_LOW, SLEEP_INTERVAL_LONG
 // 20221228 Modified DEBUG_PRINTF/DEBUG_PRINTF_TS macros to use
 //          Arduino logging functions
+// 20221230 Added WEATHERSENSOR_DATA_REQUIRED
 //
 // ToDo:
 // - 
@@ -110,6 +111,9 @@
 
 // Timeout for weather sensor data reception (seconds)
 #define WEATHERSENSOR_TIMEOUT 180
+
+// If enabled, enter deep sleep mode if revceiving weather sensor data was not succesful
+//#define WEATHERSENSOR_DATA_REQUIRED
 
 // Enable transmission of weather sensor ID
 //#define SENSORID_EN
