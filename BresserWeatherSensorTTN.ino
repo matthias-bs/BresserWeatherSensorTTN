@@ -83,6 +83,8 @@
 //          Added energy saving modes
 // 20221228 Modified DEBUG_PRINTF/DEBUG_PRINTF_TS macros to use
 //          Arduino logging functions
+// 20221230 Added compile time option to enter deep sleep mode
+//          if receiving weather sensor data was not successful
 //
 // ToDo:
 // -  
@@ -952,6 +954,9 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
         DEBUG_PRINTF("Receiving Weather Sensor Data o.k.");
     } else {
         DEBUG_PRINTF("Receiving Weather Sensor Data failed.");
+        #ifdef WEATHERSENSOR_DATA_REQUIRED
+            prepareSleep();
+        #endif
     }
     
     #ifdef RAINDATA_EN
