@@ -85,6 +85,7 @@
 //          Arduino logging functions
 // 20221230 Added compile time option to enter deep sleep mode
 //          if receiving weather sensor data was not successful
+// 20221231 Added setting of RTC via downlink
 //
 // ToDo:
 // -  
@@ -185,6 +186,7 @@ const uint8_t PAYLOAD_SIZE = 51;
 #define DEBUG_PRINTF(...) { log_d(__VA_ARGS__); }
 #define DEBUG_PRINTF_TS(...) { log_d(__VA_ARGS__); }
 
+#define CMD_SET_DATETIME  0x88
 
 void printDateTime(void);
     
@@ -575,6 +577,39 @@ void loop() {
 |
 \****************************************************************************/
 
+// Receive and process downlink messages
+void ReceiveCb(
+    void *pCtx,
+    uint8_t uPort,
+    const uint8_t *pBuffer,
+    size_t nBuffer) {
+            
+    log_v("Port: %d", uPort);
+    char buf[255];
+    *buf = '\0';
+
+    if (uPort > 0) {
+        for (int i = 0; i < nBuffer; i++) {
+              sprintf(&buf[strlen(buf)], "%02X ", pBuffer[i]);
+        }
+        log_v("Data: %s", buf);
+
+        if ((pBuffer[0] == CMD_SET_DATETIME) && (nBuffer == 5)) {
+            
+            time_t set_time = pBuffer[4] | (pBuffer[3] << 8) | (pBuffer[2] << 16) | (pBuffer[1] << 24);
+            rtc.setTime(set_time);
+            #if CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG
+                char tbuf[25];
+                struct tm timeinfo;
+           
+                localtime_r(&set_time, &timeinfo);
+                strftime(tbuf, 25, "%Y-%m-%d %H:%M:%S", &timeinfo);
+                log_d("Set date/time: %s", tbuf);
+            #endif
+        }
+    }
+}
+
 // our setup routine does the class setup and then registers an event handler so
 // we can see some interesting things
 void
@@ -586,6 +621,9 @@ cMyLoRaWAN::setup() {
 //    LMIC_selectSubBand(0);
     LMIC_setClockError(MAX_CLOCK_ERROR * 1 / 100);
 
+
+    this->SetReceiveBufferBufferCb(ReceiveCb);
+    
     this->RegisterListener(
         // use a lambda so we're "inside" the cMyLoRaWAN from public/private perspective
         [](void *pClientInfo, uint32_t event) -> void {
@@ -601,15 +639,15 @@ cMyLoRaWAN::setup() {
                     0,
                     // the print-out function
                     [](cEventLog::EventNode_t const *pEvent) -> void {
-                        Serial.print("TX: ");
+                        //Serial.print("TX: ");
                         //myEventLog.printCh(std::uint8_t(pEvent->getData(0)));
-                        myEventLog.printRps(rps_t(pEvent->getData(1)));
+                        //myEventLog.printRps(rps_t(pEvent->getData(1)));
                         //Serial.println();
                         #if CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_INFO
                             rps_t rps = rps_t(pEvent->getData(1));
                         #endif
                         // see MCCI_Arduino_LoRaWAN_Library/src/lib/arduino_lorawan_cEventLog.cpp
-                        log_i("TX: ch=%d rps=0x%04x (%s %s %s %s IH=%u)", 
+                        log_i("TX: ch=%d rps=0x%04x (%s %s %s %s IH=%d)", 
                             std::uint8_t(pEvent->getData(0)),
                             rps,
                             myEventLog.getSfName(rps),
@@ -666,7 +704,6 @@ cMyLoRaWAN::NetTxComplete(void) {
     DEBUG_PRINTF_TS("");
     sleepReq = true;
 }
-
 
 // Print session info for debugging
 void 
