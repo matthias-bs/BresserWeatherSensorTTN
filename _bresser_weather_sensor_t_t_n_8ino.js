@@ -2,6 +2,7 @@ var _bresser_weather_sensor_t_t_n_8ino =
 [
     [ "cMyLoRaWAN", "classc_my_lo_ra_w_a_n.html", "classc_my_lo_ra_w_a_n" ],
     [ "cSensor", "classc_sensor.html", "classc_sensor" ],
+    [ "CMD_SET_DATETIME", "_bresser_weather_sensor_t_t_n_8ino.html#a16d6490da3f14953d4fc8abc6353d026", null ],
     [ "DEBUG_PRINTF", "_bresser_weather_sensor_t_t_n_8ino.html#a5c8ef3c24dad2c469a42784a9a39403b", null ],
     [ "DEBUG_PRINTF_TS", "_bresser_weather_sensor_t_t_n_8ino.html#a5d85581d74bae8579b031113e1ea23f3", null ],
     [ "EXTRA_INFO_MEM_SIZE", "_bresser_weather_sensor_t_t_n_8ino.html#ad1e00d731010e88d6355395309d99064", null ],
@@ -19,6 +20,7 @@ var _bresser_weather_sensor_t_t_n_8ino =
     [ "oneWire", "_bresser_weather_sensor_t_t_n_8ino.html#a1adb9131e79d1a1a94f258bf329e31d6", null ],
     [ "prepareSleep", "_bresser_weather_sensor_t_t_n_8ino.html#a1b3ca1ef80ad4a67eb3b6b88ada424fd", null ],
     [ "printDateTime", "_bresser_weather_sensor_t_t_n_8ino.html#a884d71ae866f4092712d745266d0ca9a", null ],
+    [ "ReceiveCb", "_bresser_weather_sensor_t_t_n_8ino.html#adcc0a832999dcb153e3abf33a8639501", null ],
     [ "setup", "_bresser_weather_sensor_t_t_n_8ino.html#a4fc01d736fe50cf5b977f755b675f11d", null ],
     [ "UserRequestNetworkTimeCb", "_bresser_weather_sensor_t_t_n_8ino.html#aebdd1bf31facb0c79ca2b987763b1050", null ],
     [ "adc", "_bresser_weather_sensor_t_t_n_8ino.html#a50355c8e58a465c9cf8a0a8e763c4b78", null ],
