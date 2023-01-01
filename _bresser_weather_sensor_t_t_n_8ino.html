@@ -95,6 +95,7 @@ $(document).ready(function(){initNavTree('_bresser_weather_sensor_t_t_n_8ino.htm
 <code>#include &lt;Arduino_LoRaWAN_network.h&gt;</code><br />
 <code>#include &lt;Arduino_LoRaWAN_EventLog.h&gt;</code><br />
 <code>#include &lt;arduino_lmic.h&gt;</code><br />
+<code>#include &lt;Preferences.h&gt;</code><br />
 <code>#include &lt;ESP32Time.h&gt;</code><br />
 <code>#include &quot;RainGauge.h&quot;</code><br />
 <code>#include &lt;DallasTemperature.h&gt;</code><br />
@@ -112,6 +113,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_sensor.html">cSensor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The sensor object - collect sensor data and schedule uplink.  <a href="classc_sensor.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structs_prefs.html">sPrefs</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -146,6 +149,18 @@ Macros</h2></td></tr>
 <tr class="memitem:a5d85581d74bae8579b031113e1ea23f3"><td class="memItemLeft" align="right" valign="top"><a id="a5d85581d74bae8579b031113e1ea23f3"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>DEBUG_PRINTF_TS</b>(...)&#160;&#160;&#160;{ log_d(__VA_ARGS__); }</td></tr>
 <tr class="separator:a5d85581d74bae8579b031113e1ea23f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ef23004659d442e110d84d95c173b0a"><td class="memItemLeft" align="right" valign="top"><a id="a3ef23004659d442e110d84d95c173b0a"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CMD_SET_WEATHERSENSOR_TIMEOUT</b>&#160;&#160;&#160;0xA0</td></tr>
+<tr class="separator:a3ef23004659d442e110d84d95c173b0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6d513741eec130023ce1a14bbc78396"><td class="memItemLeft" align="right" valign="top"><a id="ac6d513741eec130023ce1a14bbc78396"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CMD_SET_SLEEP_INTERVAL</b>&#160;&#160;&#160;0xA8</td></tr>
+<tr class="separator:ac6d513741eec130023ce1a14bbc78396"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab78a9949f3763b4a013c001e2da6f1c5"><td class="memItemLeft" align="right" valign="top"><a id="ab78a9949f3763b4a013c001e2da6f1c5"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CMD_SET_SLEEP_INTERVAL_LONG</b>&#160;&#160;&#160;0xA9</td></tr>
+<tr class="separator:ab78a9949f3763b4a013c001e2da6f1c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abce73b9789a966192b66c344fa7ff860"><td class="memItemLeft" align="right" valign="top"><a id="abce73b9789a966192b66c344fa7ff860"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CMD_RESET_RAINGAUGE</b>&#160;&#160;&#160;0xB0</td></tr>
+<tr class="separator:abce73b9789a966192b66c344fa7ff860"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16d6490da3f14953d4fc8abc6353d026"><td class="memItemLeft" align="right" valign="top"><a id="a16d6490da3f14953d4fc8abc6353d026"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CMD_SET_DATETIME</b>&#160;&#160;&#160;0x88</td></tr>
 <tr class="separator:a16d6490da3f14953d4fc8abc6353d026"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -253,6 +268,13 @@ ESP32AnalogRead&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
 WeatherSensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a4f79b4f602e5910ea50712638c86b19c">weatherSensor</a></td></tr>
 <tr class="memdesc:a4f79b4f602e5910ea50712638c86b19c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bresser Weather Sensor Receiver. <br /></td></tr>
 <tr class="separator:a4f79b4f602e5910ea50712638c86b19c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ea06cf7b8092a0adaf07614d7ece59d"><td class="memItemLeft" align="right" valign="top"><a id="a6ea06cf7b8092a0adaf07614d7ece59d"></a>
+Preferences&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a6ea06cf7b8092a0adaf07614d7ece59d">preferences</a></td></tr>
+<tr class="memdesc:a6ea06cf7b8092a0adaf07614d7ece59d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ESP32 preferences (stored in flash memory) <br /></td></tr>
+<tr class="separator:a6ea06cf7b8092a0adaf07614d7ece59d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c6494fefd2776eddd1baf6add6cf6d3"><td class="memItemLeft" align="right" valign="top"><a id="a0c6494fefd2776eddd1baf6add6cf6d3"></a>
+struct <a class="el" href="structs_prefs.html">sPrefs</a>&#160;</td><td class="memItemRight" valign="bottom"><b>prefs</b></td></tr>
+<tr class="separator:a0c6494fefd2776eddd1baf6add6cf6d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6965ff1ec8f32647b494bd1a458575f9"><td class="memItemLeft" align="right" valign="top"><a id="a6965ff1ec8f32647b494bd1a458575f9"></a>
 RainGauge&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a6965ff1ec8f32647b494bd1a458575f9">rainGauge</a></td></tr>
 <tr class="memdesc:a6965ff1ec8f32647b494bd1a458575f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rain data statistics. <br /></td></tr>
