@@ -230,7 +230,8 @@ o: optional    </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">CMD_SET_DATETIME   </td><td class="markdownTableBodyNone">0x88   </td><td class="markdownTableBodyNone">epoch   </td><td class="markdownTableBodyNone">unixtime[31:24]   </td><td class="markdownTableBodyNone">unixtime[23:16]   </td><td class="markdownTableBodyNone">unixtime[15:8]   </td><td class="markdownTableBodyNone">unixtime[7:0]   </td></tr>
 </table>
-<p>Example: Set SLEEP_INTERVAL to 360 seconds</p><ol type="1">
+<h2>Example: Set SLEEP_INTERVAL to 360 seconds</h2>
+<ol type="1">
 <li>Convert interval to hex: 360 = 0x0168</li>
 <li>Build command sequence: "CMD_SET_SLEEP_INTERVAL 360 secs" -&gt; 0xA8 0x01 0x68</li>
 <li>Convert command sequence to Base64 encoding: 0xA8 0x01 0x68 -&gt; "qAFo" (<a href="https://base64.guru/converter/encode/hex">Base64 Guru</a>)</li>
