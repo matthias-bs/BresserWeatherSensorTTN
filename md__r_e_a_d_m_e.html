@@ -215,6 +215,21 @@ o: optional    </th></tr>
 <div class="line">LoraEncoder encoder(loraData);</div>
 </div><!-- fragment --><p> Make sure that you do not exceed the size of the LoRaWAN uplink payload buffer <code>loraData[PAYLOAD_SIZE]</code>. The payload size is limited to 51 bytes by the LMIC library (for a good reason).</p>
 <p>If you are using an Integration at the network side (such as an MQTT Integration), make sure you adjust your changes there as well - otherwise decoding the receiving/decoding the messages will fail.</p>
+<h1>Remote Configuration via LoRaWAN Downlink</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Command   </th><th class="markdownTableHeadNone">Cmd   </th><th class="markdownTableHeadNone">Unit   </th><th class="markdownTableHeadNone">Data0   </th><th class="markdownTableHeadNone">Data1   </th><th class="markdownTableHeadNone">Data2   </th><th class="markdownTableHeadNone">Data3    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">CMD_SET_WEATHERSENSOR_TIMEOUT   </td><td class="markdownTableBodyNone">0xA0   </td><td class="markdownTableBodyNone">seconds   </td><td class="markdownTableBodyNone">timeout[7:0]   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone"></td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">CMD_SET_SLEEP_INTERVAL   </td><td class="markdownTableBodyNone">0xA8   </td><td class="markdownTableBodyNone">seconds   </td><td class="markdownTableBodyNone">interval[15: 8]   </td><td class="markdownTableBodyNone">interval[ 7: 0]   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone"></td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">CMD_SET_SLEEP_INTERVAL_LONG   </td><td class="markdownTableBodyNone">0xA9   </td><td class="markdownTableBodyNone">seconds   </td><td class="markdownTableBodyNone">interval[15: 8]   </td><td class="markdownTableBodyNone">interval[ 7: 0]   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone"></td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">CMD_RESET_RAINGAUGE   </td><td class="markdownTableBodyNone">0xB0   </td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone"></td><td class="markdownTableBodyNone"></td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">CMD_SET_DATETIME   </td><td class="markdownTableBodyNone">0x88   </td><td class="markdownTableBodyNone">epoch   </td><td class="markdownTableBodyNone">unixtime[31:24]   </td><td class="markdownTableBodyNone">unixtime[23:16]   </td><td class="markdownTableBodyNone">unixtime[15: 8]   </td><td class="markdownTableBodyNone">unixtime[ 7: 0]   </td></tr>
+</table>
 <h1>MQTT Integration</h1>
 <h2>The Things Network MQTT Integration and Message Decoder</h2>
 <p>Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing: paste <a href="ttn_decoder_fp.js">ttn_decoder_fp.js</a> as "Custom Javascript formatter" to "Payload Formatters" -&gt; "Uplink" on The Things Network Console.</p>
