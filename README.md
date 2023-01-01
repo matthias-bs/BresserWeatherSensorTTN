@@ -151,6 +151,16 @@ Make sure that you do not exceed the size of the LoRaWAN uplink payload buffer `
 
 If you are using an Integration at the network side (such as an MQTT Integration), make sure you adjust your changes there as well - otherwise decoding the receiving/decoding the messages will fail. 
 
+## Remote Configuration via LoRaWAN Downlink
+
+| Command                       | Cmd  | Unit    | Data0           | Data1           | Data2           | Data3           |
+| ----------------------------- | ---- | ------- | --------------- | --------------- | --------------- | --------------- |
+| CMD_SET_WEATHERSENSOR_TIMEOUT | 0xA0 | seconds | timeout[7:0]    |                 |                 |                 |
+| CMD_SET_SLEEP_INTERVAL        | 0xA8 | seconds | interval[15: 8] | interval[ 7: 0] |                 |                 |
+| CMD_SET_SLEEP_INTERVAL_LONG   | 0xA9 | seconds | interval[15: 8] | interval[ 7: 0] |                 |                 |
+| CMD_RESET_RAINGAUGE           | 0xB0 |         |                 |                 |                 |                 |
+| CMD_SET_DATETIME              | 0x88 | epoch   | unixtime[31:24] | unixtime[23:16] | unixtime[15: 8] | unixtime[ 7: 0] |
+
 ## MQTT Integration
 
 ### The Things Network MQTT Integration and Message Decoder
