@@ -161,7 +161,7 @@ If you are using an Integration at the network side (such as an MQTT Integration
 | CMD_RESET_RAINGAUGE           | 0xB0 |         |                 |                 |                 |                 |
 | CMD_SET_DATETIME              | 0x88 | epoch   | unixtime[31:24] | unixtime[23:16] | unixtime[15:8] | unixtime[7:0] |
 
-Example: Set SLEEP_INTERVAL to 360 seconds
+### Example: Set SLEEP_INTERVAL to 360 seconds
 1. Convert interval to hex: 360 = 0x0168
 2. Build command sequence: "CMD_SET_SLEEP_INTERVAL 360 secs" -> 0xA8 0x01 0x68
 3. Convert command sequence to Base64 encoding: 0xA8 0x01 0x68 -> "qAFo" ([Base64 Guru](https://base64.guru/converter/encode/hex))
