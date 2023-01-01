@@ -164,7 +164,7 @@ If you are using an Integration at the network side (such as an MQTT Integration
 Example: Set SLEEP_INTERVAL to 360 seconds
 1. Convert interval to hex: 360 = 0x0168
 2. Build command sequence: "CMD_SET_SLEEP_INTERVAL 360 secs" -> 0xA8 0x01 0x68
-3. Convert command sequence to Base64 encoding: 0xA8 0x01 0x68 -> "qAFo"
+3. Convert command sequence to Base64 encoding: 0xA8 0x01 0x68 -> "qAFo" ([Base64 Guru](https://base64.guru/converter/encode/hex))
 4. Send command sequence e.g. via Helium Console
     ![Helium_Add_Downlink_Payload](https://user-images.githubusercontent.com/83612361/210183244-a2d109bc-6782-4f83-b406-7f6e0b17eda1.png)
 
