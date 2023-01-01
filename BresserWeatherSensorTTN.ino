@@ -123,6 +123,7 @@
 #include <Arduino_LoRaWAN_network.h>
 #include <Arduino_LoRaWAN_EventLog.h>
 #include <arduino_lmic.h>
+#include <Preferences.h>
 #include <ESP32Time.h>
 
 
@@ -186,7 +187,40 @@ const uint8_t PAYLOAD_SIZE = 51;
 #define DEBUG_PRINTF(...) { log_d(__VA_ARGS__); }
 #define DEBUG_PRINTF_TS(...) { log_d(__VA_ARGS__); }
 
-#define CMD_SET_DATETIME  0x88
+// Downlink messages
+//
+// CMD_SET_WEATHERSENSOR_TIMEOUT
+// (seconds)
+// byte0: 0xA0
+// byte1: <timeout_in_secs>
+//
+// CMD_SET_SLEEP_INTERVAL
+// (seconds)
+// byte0: 0xA8
+// byte1: sleep_interval[15:8]
+// byte2: sleep_interval[ 7:0]
+
+// CMD_SET_SLEEP_INTERVAL_LONG
+// (seconds)
+// byte0: 0xA9
+// byte1: sleep_interval_long[15:8]
+// byte2: sleep_interval_long[ 7:0]
+//
+// CMD_RESET_RAINGAUGE
+// byte0: 0xB0
+//
+// CMD_SET_DATETIME
+// byte0: 0x88
+// byte1: unixtime[31:24]
+// byte2: unixtime[23:16]
+// byte3: unixtime[15: 8]
+// byte4: unixtime[ 7: 0]
+
+#define CMD_SET_WEATHERSENSOR_TIMEOUT   0xA0
+#define CMD_SET_SLEEP_INTERVAL          0xA8
+#define CMD_SET_SLEEP_INTERVAL_LONG     0xA9
+#define CMD_RESET_RAINGAUGE             0xB0
+#define CMD_SET_DATETIME                0x88
 
 void printDateTime(void);
     
@@ -413,6 +447,15 @@ RTC_DATA_ATTR time_t                          rtcLastClockSync = 0;     //!< tim
 /// Bresser Weather Sensor Receiver
 WeatherSensor weatherSensor;
 
+/// ESP32 preferences (stored in flash memory)
+Preferences preferences;
+
+struct sPrefs {
+uint8_t   ws_timeout;           //!< preferences: weather sensor timeout
+uint16_t  sleep_interval;       //!< preferences: sleep interval
+uint16_t  sleep_interval_long;  //!< preferences: sleep interval long
+} prefs;
+
 #ifdef RAINDATA_EN
     /// Rain data statistics 
     RainGauge rainGauge;
@@ -507,6 +550,15 @@ void setup() {
     // wait for serial to be ready - or timeout if USB is not connected
     delay(500);
 
+    preferences.begin("BWS-TTN", false);
+    prefs.ws_timeout = preferences.getUChar("ws_timeout", WEATHERSENSOR_TIMEOUT);
+    log_d("Preferences: weathersensor_timeout: %u s", prefs.ws_timeout);
+    prefs.sleep_interval      = preferences.getUShort("sleep_interval", SLEEP_INTERVAL);
+    log_d("Preferences: sleep_interval:        %u s", prefs.sleep_interval);
+    prefs.sleep_interval_long = preferences.getUShort("sleep_interval_long", SLEEP_INTERVAL_LONG);
+    log_d("Preferences: sleep_interval_long:   %u s", prefs.sleep_interval_long);
+    preferences.end();
+    
     sleepTimeout = sec2osticks(SLEEP_TIMEOUT_INITIAL);
 
     DEBUG_PRINTF_TS("");
@@ -607,6 +659,32 @@ void ReceiveCb(
                 log_d("Set date/time: %s", tbuf);
             #endif
         }
+        if ((pBuffer[0] == CMD_SET_WEATHERSENSOR_TIMEOUT) && (nBuffer == 2)) {
+            log_d("Set weathersensor_timeout: %u s", pBuffer[1]);
+            preferences.begin("BWS-TTN", false);
+            preferences.putUChar("ws_timeout", pBuffer[1]);
+            preferences.end();
+        }
+        if ((pBuffer[0] == CMD_SET_SLEEP_INTERVAL) && (nBuffer == 3)){
+            prefs.sleep_interval = pBuffer[2] | (pBuffer[1] << 8);
+            log_d("Set sleep_interval: %u s", prefs.sleep_interval);
+            preferences.begin("BWS-TTN", false);
+            preferences.putUShort("sleep_interval", prefs.sleep_interval);
+            preferences.end();            
+        }
+        if ((pBuffer[0] == CMD_SET_SLEEP_INTERVAL_LONG) && (nBuffer == 3)){
+            prefs.sleep_interval_long = pBuffer[2] | (pBuffer[1] << 8);
+            log_d("Set sleep_interval_long: %u s", prefs.sleep_interval_long);
+            preferences.begin("BWS-TTN", false);
+            preferences.putUShort("sleep_interval", prefs.sleep_interval_long);
+            preferences.end();            
+        }
+        #ifdef RAINDATA_EN
+            if ((pBuffer[0] == CMD_RESET_RAINGAUGE) && (nBuffer == 1)) {
+                log_d("Reset raingauge");
+                rainGauge.reset();
+            }
+        #endif
     }
 }
 
@@ -860,12 +938,12 @@ void printDateTime(void) {
 
 /// Determine sleep duration and enter Deep Sleep Mode
 void prepareSleep(void) {
-    uint32_t sleep_interval = SLEEP_INTERVAL;
+    uint32_t sleep_interval = prefs.sleep_interval;
     longSleep = false;
     #ifdef ADC_EN
         // Long sleep interval if battery is weak
         if (mySensor.getVoltage() < BATTERY_WEAK) {
-            sleep_interval = SLEEP_INTERVAL_LONG;
+            sleep_interval = prefs.sleep_interval_long;
             longSleep = true;
         }
     #endif
@@ -982,8 +1060,8 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
     
     #ifndef LORAWAN_DEBUG
         weatherSensor.begin();
-        //bool decode_ok = weatherSensor.getData(WEATHERSENSOR_TIMEOUT * 1000, DATA_TYPE | DATA_COMPLETE, SENSOR_TYPE_WEATHER1);
-        bool decode_ok = weatherSensor.getData(WEATHERSENSOR_TIMEOUT * 1000, DATA_ALL_SLOTS);
+        //bool decode_ok = weatherSensor.getData(prefs.ws_timeout * 1000, DATA_TYPE | DATA_COMPLETE, SENSOR_TYPE_WEATHER1);
+        bool decode_ok = weatherSensor.getData(prefs.ws_timeout * 1000, DATA_ALL_SLOTS);
     #else
         bool decode_ok = weatherSensor.genMessage(0 /* slot */, 0x01234567 /* ID */, 1 /* type */, 0 /* channel */);
     #endif
