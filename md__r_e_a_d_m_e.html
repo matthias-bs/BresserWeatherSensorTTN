@@ -230,12 +230,19 @@ o: optional    </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">CMD_SET_DATETIME   </td><td class="markdownTableBodyNone">0x88   </td><td class="markdownTableBodyNone">epoch   </td><td class="markdownTableBodyNone">unixtime[31:24]   </td><td class="markdownTableBodyNone">unixtime[23:16]   </td><td class="markdownTableBodyNone">unixtime[15:8]   </td><td class="markdownTableBodyNone">unixtime[7:0]   </td></tr>
 </table>
-<h2>Example: Set SLEEP_INTERVAL to 360 seconds</h2>
+<h2>Example 1: Set SLEEP_INTERVAL to 360 seconds</h2>
 <ol type="1">
 <li>Convert interval to hex: 360 = 0x0168</li>
 <li>Build command sequence: "CMD_SET_SLEEP_INTERVAL 360 secs" -&gt; 0xA8 0x01 0x68</li>
 <li>Convert command sequence to Base64 encoding: 0xA8 0x01 0x68 -&gt; "qAFo" (<a href="https://base64.guru/converter/encode/hex">Base64 Guru</a>)</li>
 <li>Send command sequence e.g. via Helium Console <img src="https://user-images.githubusercontent.com/83612361/210183244-a2d109bc-6782-4f83-b406-7f6e0b17eda1.png" alt="Helium_Add_Downlink_Payload" class="inline"/></li>
+</ol>
+<h2>Example 2: Set Date/Time</h2>
+<ol type="1">
+<li>Get epoch (e.g. from <a href="https://www.epochconverter.com/hex">https://www.epochconverter.com/hex</a>) (Example: 0x63B2BC32); add an offset (estimated) for time until received (Example: + 64 / 0x40 seconds =&gt; 0x63B2BC**7**2)</li>
+<li>Build command sequence: "CMD_SET_DATETIME 0x63B2BC72" -&gt; 0x88 0x63 0xB2 0xBC 0x72</li>
+<li>Convert command sequence to Base64 encoding: 0x88 0x63 0xB2 0xBC 0x72 -&gt; "iGOyvHI="</li>
+<li>Send command sequence e.g. via Helium Console</li>
 </ol>
 <h1>MQTT Integration</h1>
 <h2>The Things Network MQTT Integration and Message Decoder</h2>
