@@ -161,12 +161,20 @@ If you are using an Integration at the network side (such as an MQTT Integration
 | CMD_RESET_RAINGAUGE           | 0xB0 |         |                 |                 |                 |                 |
 | CMD_SET_DATETIME              | 0x88 | epoch   | unixtime[31:24] | unixtime[23:16] | unixtime[15:8] | unixtime[7:0] |
 
-### Example: Set SLEEP_INTERVAL to 360 seconds
+### Example 1: Set SLEEP_INTERVAL to 360 seconds
 1. Convert interval to hex: 360 = 0x0168
 2. Build command sequence: "CMD_SET_SLEEP_INTERVAL 360 secs" -> 0xA8 0x01 0x68
 3. Convert command sequence to Base64 encoding: 0xA8 0x01 0x68 -> "qAFo" ([Base64 Guru](https://base64.guru/converter/encode/hex))
 4. Send command sequence e.g. via Helium Console
     ![Helium_Add_Downlink_Payload](https://user-images.githubusercontent.com/83612361/210183244-a2d109bc-6782-4f83-b406-7f6e0b17eda1.png)
+
+### Example 2: Set Date/Time
+
+1. Get epoch (e.g. from https://www.epochconverter.com/hex) (Example: 0x63B2BC32); add an offset (estimated) for time until received (Example: + 64 / 0x40 seconds => 0x63B2BC**7**2) 
+2. Build command sequence: "CMD_SET_DATETIME 0x63B2BC72" -> 0x88 0x63 0xB2 0xBC 0x72
+3. Convert command sequence to Base64 encoding: 0x88 0x63 0xB2 0xBC 0x72 -> "iGOyvHI="
+4. Send command sequence e.g. via Helium Console
+
 
 ## MQTT Integration
 
