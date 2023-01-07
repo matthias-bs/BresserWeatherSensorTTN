@@ -86,6 +86,7 @@
 // 20221230 Added compile time option to enter deep sleep mode
 //          if receiving weather sensor data was not successful
 // 20221231 Added setting of RTC via downlink
+// 20220107 Added doCfgUplink()
 //
 // ToDo:
 // -  
@@ -209,6 +210,9 @@ const uint8_t PAYLOAD_SIZE = 51;
 // CMD_RESET_RAINGAUGE
 // byte0: 0xB0
 //
+// CMD_GET_DATETIME
+// byte0: 0x86
+//
 // CMD_SET_DATETIME
 // byte0: 0x88
 // byte1: unixtime[31:24]
@@ -220,6 +224,7 @@ const uint8_t PAYLOAD_SIZE = 51;
 #define CMD_SET_SLEEP_INTERVAL          0xA8
 #define CMD_SET_SLEEP_INTERVAL_LONG     0xA9
 #define CMD_RESET_RAINGAUGE             0xB0
+#define CMD_GET_DATETIME                0x86
 #define CMD_SET_DATETIME                0x88
 
 void printDateTime(void);
@@ -274,6 +279,18 @@ public:
      * \param State Session state data structure
      */
     void printSessionState(const SessionState &State);
+
+    /*!
+     * TODO
+     */
+    void doCfgUplink(void);
+
+    bool isBusy(void) {
+      return m_fBusy;
+    }
+    
+private:
+    bool m_fBusy;                       // set true while sending an uplink
     
 protected:
     // you'll need to provide implementation for this.
@@ -371,6 +388,9 @@ public:
      */
     void loop();
 
+    bool isBusy(void) {
+      return m_fBusy;
+    }
     
 private:
     void doUplink();
@@ -479,6 +499,9 @@ static uint8_t loraData[PAYLOAD_SIZE]; //!< LoRaWAN uplink payload buffer
 
 /// Sleep request (set in NetTxComplete();
 bool sleepReq = false;
+
+/// Uplink request - command received via downlink
+uint8_t uplinkReq = 0;
 
 /// Force sleep mode after <code>sleepTimeout</code> has been reached (if FORCE_SLEEP is defined) 
 ostime_t sleepTimeout; //!
@@ -601,6 +624,9 @@ void loop() {
     mySensor.loop();
     myEventLog.loop();
 
+    if (uplinkReq != 0) {
+      myLoRaWAN.doCfgUplink();
+    }
     #ifdef SLEEP_EN
         if (sleepReq & !rtcSyncReq) {
             myLoRaWAN.Shutdown();
@@ -646,6 +672,10 @@ void ReceiveCb(
         }
         log_v("Data: %s", buf);
 
+        if ((pBuffer[0] == CMD_GET_DATETIME) && (nBuffer == 1)) {
+            log_d("Get date/time");
+            uplinkReq = CMD_GET_DATETIME;
+        }
         if ((pBuffer[0] == CMD_SET_DATETIME) && (nBuffer == 5)) {
             
             time_t set_time = pBuffer[4] | (pBuffer[3] << 8) | (pBuffer[2] << 16) | (pBuffer[1] << 24);
@@ -780,7 +810,9 @@ cMyLoRaWAN::NetJoin(
 void
 cMyLoRaWAN::NetTxComplete(void) {
     DEBUG_PRINTF_TS("");
-    sleepReq = true;
+    if (uplinkReq == 0) {
+        sleepReq = true;
+    }
 }
 
 // Print session info for debugging
@@ -1027,6 +1059,102 @@ cMyLoRaWAN::requestNetworkTime(void) {
     LMIC_requestNetworkTime(UserRequestNetworkTimeCb, &userUTCTime);
 }
 
+
+void
+cMyLoRaWAN::doCfgUplink(void) {
+    // if busy uplinking, just skip
+    if (this->m_fBusy || mySensor.isBusy()) {
+        //log_d("busy");
+        return;
+    }
+    // if LMIC is busy, just skip
+    //if (LMIC.opmode & (OP_POLL | OP_TXDATA | OP_TXRXPEND)) {
+    //    log_v("LMIC.opmode: 0x%02X", LMIC.opmode);
+    //    return;
+    //}
+    if (!GetTxReady())
+        return;
+
+    log_d("--- Uplink Configuration/Status ---");
+    
+    uint8_t uplink_payload[5];
+    uint8_t port;
+
+    //
+    // Encode data as byte array for LoRaWAN transmission
+    //
+    LoraEncoder encoder(uplink_payload);
+
+    //switch (uplinkReq) {
+    //  case CMD_GET_DATETIME:
+    if (uplinkReq == CMD_GET_DATETIME) {
+        log_d("Date/Time");
+        port = 2;
+        time_t t_now = rtc.getLocalEpoch();
+        //encoder.writeUnixtime(rtc.getLocalEpoch());
+        encoder.writeUint8((t_now >> 24) & 0xff);
+        encoder.writeUint8((t_now >> 16) & 0xff);
+        encoder.writeUint8((t_now >>  8) & 0xff);
+        encoder.writeUint8( t_now        & 0xff);
+
+        // time source & status, see below
+        //
+        // bits 0..3 time source
+        //    0x00 = GPS
+        //    0x01 = RTC
+        //    0x02 = LORA
+        //    0x03 = unsynched
+        //    0x04 = set (source unknown)
+        //
+        // bits 4..7 esp32 sntp time status (not used)
+        // TODO add flags for succesful LORA time sync/manual sync
+        encoder.writeUint8((rtcSyncReq) ? 0x03 : 0x02);
+        //break;
+        log_v("Size: %d", encoder.getLength());
+    } else {
+      log_v("");
+        return;
+    }
+
+    //encoder.writeBitmap(longSleep,
+    //                    rtcSyncReq, 
+    //                   runtimeExpired);
+    //encoder.writeUint32(0);
+    //encoder.writeUint16(0);
+    //encoder.writeUint8(0);
+
+    this->m_fBusy = true;
+    log_v("Trying SendBuffer: port=%d, size=%d", port, encoder.getLength());
+
+    for (int i=0; i<5; i++) {
+      Serial.printf("%02X ", uplink_payload[i]);
+    }
+    Serial.println();
+    
+    // Schedule transmission
+    if (! myLoRaWAN.SendBuffer(
+        uplink_payload,
+        encoder.getLength(),
+        // this is the completion function:
+        [](void *pClientData, bool fSucccess) -> void {
+            auto const pThis = (cMyLoRaWAN *)pClientData;
+            pThis->m_fBusy = false;
+            uplinkReq = 0;
+            log_v("Sending successful");
+        },
+        (void *)this,
+        /* confirmed */ true,
+        /* port */ port
+        )) {
+        // sending failed; callback has not been called and will not
+        // be called. Reset busy flag.
+        this->m_fBusy = false;
+        uplinkReq = 0;
+        log_v("Sending failed");
+    }
+}
+
+
 /****************************************************************************\
 |
 |	Sensor methods
@@ -1209,7 +1337,7 @@ cSensor::getTemperature(void)
 void
 cSensor::doUplink(void) {
     // if busy uplinking, just skip
-    if (this->m_fBusy) {
+    if (this->m_fBusy || myLoRaWAN.isBusy()) {
         DEBUG_PRINTF_TS("busy");
         return;
     }
