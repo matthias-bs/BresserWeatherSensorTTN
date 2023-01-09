@@ -86,6 +86,7 @@
 // 20221230 Added compile time option to enter deep sleep mode
 //          if receiving weather sensor data was not successful
 // 20221231 Added setting of RTC via downlink
+// 20230101 Added remote configuration via LoRaWAN downlink
 //
 // ToDo:
 // -  
