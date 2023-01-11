@@ -163,7 +163,7 @@ If you are using an Integration at the network side (such as an MQTT Integration
 | CMD_RESET_RAINGAUGE           | 0xB0 |         |                 |                 |                 |                 |
 | CMD_SET_DATETIME              | 0x88 | epoch   | unixtime[31:24] | unixtime[23:16] | unixtime[15:8] | unixtime[7:0] |
 
-:warning: Confirmed downlinks should not be used! 
+:warning: Confirmed downlinks should not be used! (see [here](https://www.thethingsnetwork.org/forum/t/how-to-purge-a-scheduled-confirmed-downlink/56849/7) for an explanation.)
 
 ### Example 1: Set SLEEP_INTERVAL to 360 seconds
 1. Convert interval to hex: 360 = 0x0168
