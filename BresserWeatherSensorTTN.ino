@@ -130,7 +130,7 @@
 
 
 #ifdef RAINDATA_EN
-#include "RainGauge.h"
+    #include "RainGauge.h"
 #endif
 
 #if (not(LMIC_ENABLE_DeviceTimeReq))
