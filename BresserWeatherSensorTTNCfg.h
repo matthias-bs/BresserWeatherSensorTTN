@@ -45,6 +45,10 @@
 // 20221228 Modified DEBUG_PRINTF/DEBUG_PRINTF_TS macros to use
 //          Arduino logging functions
 // 20221230 Added WEATHERSENSOR_DATA_REQUIRED
+// 20220112 Removed LMIC_ENABLE_DeviceTimeReq; must be defined in 
+//          ~/Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/
+//          lmic_project_config.h
+//          in order to be recognized!!!
 //
 // ToDo:
 // - 
@@ -67,9 +71,6 @@
 // see mcci-cathena/arduino-lorawan issue #185 "Add Helium EU868 support"
 // (https://github.com/mcci-catena/arduino-lorawan/issues/185)
 #define ARDUINO_LMIC_CFG_NETWORK_GENERIC 0
-
-// Enable Device_Time_Req MAC command
-#define LMIC_ENABLE_DeviceTimeReq 1
 
 // Enable LORAWAN debug mode - this generates dummy weather data and skips weather sensor reception 
 //#define LORAWAN_DEBUG
