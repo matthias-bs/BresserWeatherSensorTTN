@@ -87,6 +87,7 @@
 //          if receiving weather sensor data was not successful
 // 20221231 Added setting of RTC via downlink
 // 20230101 Added remote configuration via LoRaWAN downlink
+// 20230112 Fixed rain gauge update in case RTC was set by LoRaWAN downlink
 //
 // ToDo:
 // -  
@@ -651,6 +652,7 @@ void ReceiveCb(
             
             time_t set_time = pBuffer[4] | (pBuffer[3] << 8) | (pBuffer[2] << 16) | (pBuffer[1] << 24);
             rtc.setTime(set_time);
+            rtcLastClockSync = rtc.getLocalEpoch();
             #if CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG
                 char tbuf[25];
                 struct tm timeinfo;
