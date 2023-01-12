@@ -88,6 +88,7 @@
 // 20221231 Added setting of RTC via downlink
 // 20230101 Added remote configuration via LoRaWAN downlink
 // 20230112 Fixed rain gauge update in case RTC was set by LoRaWAN downlink
+//          Added note regarding LMIC_ENABLE_DeviceTimeReq
 //
 // ToDo:
 // -  
@@ -133,6 +134,8 @@
     #include "RainGauge.h"
 #endif
 
+// NOTE: Add #define LMIC_ENABLE_DeviceTimeReq 1
+//        in ~/Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h
 #if (not(LMIC_ENABLE_DeviceTimeReq))
     #warning "LMIC_ENABLE_DeviceTimeReq is not set - will not be able to retrieve network time!"
 #endif
