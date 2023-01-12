@@ -37,10 +37,15 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 
 ## Software Build Setup
 
-* Install the Arduino ESP32 board package (V1.0.6 or V2.0.5) in the Arduino IDE (V1.8.19) -<br>
-     **Note:** When using the ESP32 board package V2.0.5, you have to apply two fixes in arduino-lorawan and arduino-lmic, respectively (see below)
+* Install the Arduino ESP32 board package (V1.0.6 or V2.0.X) in the Arduino IDE (V1.8.19) -<br>
+     **Note:** When using the ESP32 board package >=V2.0.5, you have to apply two fixes in arduino-lorawan and arduino-lmic, respectively (see below)
 * Select the desired ESP32 board
 * Install all libraries as listed in the section [Library Dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/edit/main/README.md#library-dependencies) via the Arduino IDE Library Manager
+* Add the following line to `Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h`:
+
+    `#define LMIC_ENABLE_DeviceTimeReq 1`
+    
+    (Otherwise requesting the time from the LoRaWAN network will not work, even if supported by the network.)
 * Apply fixes if using ESP32 board package >= v2.0.5  
    * https://github.com/mcci-catena/arduino-lorawan/pull/204
    * https://github.com/mcci-catena/arduino-lmic/issues/714#issuecomment-822051171
