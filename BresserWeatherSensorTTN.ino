@@ -723,22 +723,22 @@ cMyLoRaWAN::setup() {
                     0,
                     // the print-out function
                     [](cEventLog::EventNode_t const *pEvent) -> void {
-                        //Serial.print("TX: ");
-                        //myEventLog.printCh(std::uint8_t(pEvent->getData(0)));
-                        //myEventLog.printRps(rps_t(pEvent->getData(1)));
-                        //Serial.println();
                         #if CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_INFO
-                            rps_t rps = rps_t(pEvent->getData(1));
+                            //rps_t _rps = rps_t(pEvent->getData(1));
+                            //Serial.printf("rps (1): %02X\n", _rps);
+                            uint8_t rps = pEvent->getData(1);
+                            uint32_t tstamp = osticks2ms(pEvent->getTime());
                         #endif
                         // see MCCI_Arduino_LoRaWAN_Library/src/lib/arduino_lorawan_cEventLog.cpp
-                        log_i("TX: ch=%d rps=0x%04x (%s %s %s %s IH=%d)", 
+                        log_i("TX @%u ms: ch=%d rps=0x%02x (%s %s %s %s IH=%d)", 
+                            tstamp,
                             std::uint8_t(pEvent->getData(0)),
                             rps,
                             myEventLog.getSfName(rps),
                             myEventLog.getBwName(rps),
                             myEventLog.getCrName(rps),
                             myEventLog.getCrcName(rps),
-                            unsigned(getIh(rps)));                    
+                            unsigned(getIh(rps)));      
                     }
                 );
             }
