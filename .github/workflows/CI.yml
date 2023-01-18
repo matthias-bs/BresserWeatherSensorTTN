@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         board:
-          # workaround for linker error with Arduino core for ESP32 v2.0.x (see https://github.com/matthias-bs/BresserWeatherSensorTTN/issues/6)
           - esp32:esp32@1.0.6
           - esp32:esp32:esp32
 
