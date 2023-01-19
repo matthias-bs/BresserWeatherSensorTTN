@@ -20,8 +20,8 @@ The RFM95W/SX1276 radio transceiver is used in FSK mode to receive weather senso
 
 ## Hardware
 * Please see my [LoRaWAN_Node](https://github.com/matthias-bs/LoRaWAN_Node) project.
-* Presumably [Adafruit Feather ESP32](https://www.adafruit.com/product/3405) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) should work (confimation/configuration files welcome)
-* Presumably [LILYGO® TTGO LORA32](http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1326&FId=t3:50060:3) should work (confimation/configuration files welcome)
+* Presumably [Adafruit Feather ESP32](https://www.adafruit.com/product/3405) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) should work (confirmation/configuration files welcome)
+* Presumably [LILYGO® TTGO LORA32](http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1326&FId=t3:50060:3) should work (confirmation/configuration files welcome)
 
 ### ESP32 Module
 [DFRobot FireBeetle ESP32 IoT](https://www.dfrobot.com/product-1590.html) (DFR0478) recomended due to its good low power design (but other boards will work, too)
