@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>BresserWeatherSensorTTN: Related Pages</title>
+<title>BresserWeatherSensorTTN: Debug Output Configuration in Arduino IDE</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,7 +63,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('pages.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('md__d_e_b_u_g__o_u_t_p_u_t.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -81,20 +81,28 @@ $(document).ready(function(){initNavTree('pages.html',''); initResizable(); });
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Related Pages</div>  </div>
+<div class="title">Debug Output Configuration in Arduino IDE </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all related documentation pages:</div><div class="directory">
-<table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="md__c_o_d_e__o_f__c_o_n_d_u_c_t.html" target="_self">Contributor Covenant Code of Conduct</a></td><td class="desc"></td></tr>
-<tr id="row_1_"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="md__d_e_b_u_g__o_u_t_p_u_t.html" target="_self">Debug Output Configuration in Arduino IDE</a></td><td class="desc"></td></tr>
-<tr id="row_2_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="md__r_e_a_d_m_e.html" target="_self">BresserWeatherSensorTTN</a></td><td class="desc"></td></tr>
-<tr id="row_3_"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="md_src__readme.html" target="_self">Readme</a></td><td class="desc"></td></tr>
-</table>
-</div><!-- directory -->
-</div><!-- contents -->
+<div class="textblock"><h1>ESP32</h1>
+<ol type="1">
+<li><p class="startli">Select appropriate (USB-)serial port for your board</p>
+<p class="startli"><img src="https://user-images.githubusercontent.com/83612361/210953111-3381fcb4-0d39-43f5-bcfe-5d381bc04c00.png" alt="ESP32 Port Selection" width="500" class="inline"/></p>
+</li>
+<li><p class="startli">Select desired debug level</p>
+<p class="startli"><img src="https://user-images.githubusercontent.com/83612361/210953437-b35a0bb3-df71-4292-ad0b-9e50846d6cc8.png" alt="ESP32 Core Debug Level" width="500" class="inline"/></p>
+<p class="startli">This passes the define <code>CORE_DEBUG_LEVEL</code>to the compiler accordingly.</p>
+</li>
+</ol>
+<p>Refer to the following for some background information</p><ul>
+<li><a href="https://thingpulse.com/esp32-logging/">https://thingpulse.com/esp32-logging/</a></li>
+<li><a href="https://www.mischianti.org/2020/09/20/esp32-manage-multiple-serial-and-logging-for-debugging-3/">https://www.mischianti.org/2020/09/20/esp32-manage-multiple-serial-and-logging-for-debugging-3/</a></li>
+<li><a href="https://github.com/espressif/arduino-esp32/blob/master/cores/esp32/esp32-hal-log.h">https://github.com/espressif/arduino-esp32/blob/master/cores/esp32/esp32-hal-log.h</a> </li>
+</ul>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

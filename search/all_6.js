@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['onewire_14',['oneWire',['../_bresser_weather_sensor_t_t_n_8ino.html#a988a13c4fd0ed4eba1d6dff73d064914',1,'oneWire():&#160;BresserWeatherSensorTTN.ino'],['../_bresser_weather_sensor_t_t_n_8ino.html#a1adb9131e79d1a1a94f258bf329e31d6',1,'oneWire(PIN_ONEWIRE_BUS):&#160;BresserWeatherSensorTTN.ino']]]
+  ['magicflag1_12',['magicFlag1',['../_bresser_weather_sensor_t_t_n_8ino.html#ad2284c3fa8ab7465ec0b9c0afa8ec66e',1,'BresserWeatherSensorTTN.ino']]],
+  ['magicflag2_13',['magicFlag2',['../_bresser_weather_sensor_t_t_n_8ino.html#a9bdc927fe3706302971df5480c644832',1,'BresserWeatherSensorTTN.ino']]],
+  ['mithermometer_14',['miThermometer',['../_bresser_weather_sensor_t_t_n_8ino.html#a3a363f8e423a2f44842e97967d4271eb',1,'BresserWeatherSensorTTN.ino']]]
 ];

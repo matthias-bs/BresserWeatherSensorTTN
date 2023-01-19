@@ -26,6 +26,7 @@ var NAVTREE =
 [
   [ "BresserWeatherSensorTTN", "index.html", [
     [ "Contributor Covenant Code of Conduct", "md__c_o_d_e__o_f__c_o_n_d_u_c_t.html", null ],
+    [ "Debug Output Configuration in Arduino IDE", "md__d_e_b_u_g__o_u_t_p_u_t.html", null ],
     [ "BresserWeatherSensorTTN", "md__r_e_a_d_m_e.html", null ],
     [ "Readme", "md_src__readme.html", null ],
     [ "Classes", "annotated.html", [
