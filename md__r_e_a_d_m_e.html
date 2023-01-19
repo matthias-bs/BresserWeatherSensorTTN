@@ -122,6 +122,11 @@ $(document).ready(function(){initNavTree('md__r_e_a_d_m_e.html',''); initResizab
  <b>Note:</b> When using the ESP32 board package &gt;=V2.0.5, you have to apply two fixes in arduino-lorawan and arduino-lmic, respectively (see below)</li>
 <li>Select the desired ESP32 board</li>
 <li>Install all libraries as listed in the section <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/edit/main/README.md#library-dependencies">Library Dependencies</a> via the Arduino IDE Library Manager</li>
+<li>Configure <code>Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h</code>:<ul>
+<li>select you appropriate region</li>
+<li><code>#define CFG_sx1276_radio 1</code></li>
+</ul>
+</li>
 <li><p class="startli">Add the following line to <code>Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h</code>:</p>
 <p class="startli"><code>#define LMIC_ENABLE_DeviceTimeReq 1</code></p>
 <p class="startli">(Otherwise requesting the time from the LoRaWAN network will not work, even if supported by the network.)</p>
