@@ -158,11 +158,11 @@ Make sure that you do not exceed the size of the LoRaWAN uplink payload buffer `
 
 If you are using an Integration at the network side (such as an MQTT Integration), make sure you adjust your changes there as well - otherwise decoding the receiving/decoding the messages will fail. 
 
-# Debug Output Configuration
+## Debug Output Configuration
 
 See [Debug Output Configuration in Arduino IDE](DEBUG_OUTPUT.md)
 
-# Remote Configuration via LoRaWAN Downlink
+## Remote Configuration via LoRaWAN Downlink
 
 | Command                       | Cmd  | Unit    | Data0           | Data1           | Data2           | Data3           |
 | ----------------------------- | ---- | ------- | --------------- | --------------- | --------------- | --------------- |
