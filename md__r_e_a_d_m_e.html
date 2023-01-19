@@ -241,22 +241,22 @@ o: optional    </th></tr>
 <td class="markdownTableBodyNone">CMD_SET_DATETIME   </td><td class="markdownTableBodyNone">0x88   </td><td class="markdownTableBodyNone">epoch   </td><td class="markdownTableBodyNone">unixtime[31:24]   </td><td class="markdownTableBodyNone">unixtime[23:16]   </td><td class="markdownTableBodyNone">unixtime[15:8]   </td><td class="markdownTableBodyNone">unixtime[7:0]   </td></tr>
 </table>
 <p>:warning: Confirmed downlinks should not be used! (see <a href="https://www.thethingsnetwork.org/forum/t/how-to-purge-a-scheduled-confirmed-downlink/56849/7">here</a> for an explanation.)</p>
-<h3>Example 1: Set SLEEP_INTERVAL to 360 seconds</h3>
+<h2>Example 1: Set SLEEP_INTERVAL to 360 seconds</h2>
 <ol type="1">
 <li>Convert interval to hex: 360 = 0x0168</li>
 <li>Build command sequence: "CMD_SET_SLEEP_INTERVAL 360 secs" -&gt; 0xA8 0x01 0x68</li>
 <li>Convert command sequence to Base64 encoding: 0xA8 0x01 0x68 -&gt; "qAFo" (<a href="https://base64.guru/converter/encode/hex">Base64 Guru</a>)</li>
 <li>Send command sequence e.g. via Helium Console <img src="https://user-images.githubusercontent.com/83612361/210183244-a2d109bc-6782-4f83-b406-7f6e0b17eda1.png" alt="Helium_Add_Downlink_Payload" class="inline"/></li>
 </ol>
-<h3>Example 2: Set Date/Time</h3>
+<h2>Example 2: Set Date/Time</h2>
 <ol type="1">
 <li>Get epoch (e.g. from <a href="https://www.epochconverter.com/hex">https://www.epochconverter.com/hex</a>) (Example: 0x63B2BC32); add an offset (estimated) for time until received (Example: + 64 / 0x40 seconds =&gt; 0x63B2BC**7**2)</li>
 <li>Build command sequence: "CMD_SET_DATETIME 0x63B2BC72" -&gt; 0x88 0x63 0xB2 0xBC 0x72</li>
 <li>Convert command sequence to Base64 encoding: 0x88 0x63 0xB2 0xBC 0x72 -&gt; "iGOyvHI="</li>
 <li>Send command sequence e.g. via Helium Console</li>
 </ol>
-<h2>MQTT Integration</h2>
-<h3>The Things Network MQTT Integration and Message Decoder</h3>
+<h1>MQTT Integration</h1>
+<h2>The Things Network MQTT Integration and Message Decoder</h2>
 <p>Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing: paste <a href="ttn_decoder_fp.js">ttn_decoder_fp.js</a> as "Custom Javascript formatter" to "Payload Formatters" -&gt; "Uplink" on The Things Network Console.</p>
 <p><b>Note:</b> The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210">ttn_decoder_fp.js line 176ff</a>).</p>
 <p>TTN provides an MQTT broker. How to receive and decode the payload with an MQTT client - see <a href="https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2">https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2</a></p>
@@ -268,7 +268,7 @@ o: optional    </th></tr>
 <div class="line">&lt;payload&gt; = .uplink_message.frm_payload</div>
 </div><!-- fragment --><p>JSON-Path with Uplink-Decoder (see <a href="ttn_decoder_fp.js">ttn_decoder_fp.js</a>)</p>
 <p><code>.uplink_message.decoded_payload.bytes.&lt;variable&gt;</code></p>
-<h3>Helium Network MQTT Integration and Message Decoder</h3>
+<h2>Helium Network MQTT Integration and Message Decoder</h2>
 <p>Please refer to <a href="https://docs.helium.com/use-the-network/console/integrations/mqtt/">https://docs.helium.com/use-the-network/console/integrations/mqtt/</a>.</p>
 <p>Add an MQTT integration in the Helium console - the "Endpoint" is in fact an MQTT broker you have to provide: <img src="https://user-images.githubusercontent.com/83612361/195050719-8562ad0e-5523-436f-8b61-e4b15b08d6de.png" alt="Helium_MQTT_Integration" class="inline"/></p>
 <p>Add <a href="helium_decoder.js">helium_decoder.js</a> in the Helium console as custom function: <img src="https://user-images.githubusercontent.com/83612361/195045593-d6c76e0c-1d87-410a-b941-8636b35d601a.png" alt="Helium_Decoder_Function" class="inline"/></p>
@@ -278,9 +278,9 @@ o: optional    </th></tr>
 <div class="line">&quot;status&quot;:{&quot;ble_ok&quot;:true,&quot;res&quot;:false,&quot;rtc_sync_req&quot;:true,&quot;runtime_expired&quot;:true,&quot;s1_batt_ok&quot;:false,&quot;s1_dec_ok&quot;:false,&quot;ws_batt_ok&quot;:true,&quot;ws_dec_ok&quot;:true},</div>
 <div class="line">&quot;supply_v&quot;:4210,&quot;water_temp_c&quot;:&quot;-30.0&quot;,&quot;wind_avg_meter_sec&quot;:&quot;1.9&quot;,&quot;wind_direction_deg&quot;:&quot;282.0&quot;,&quot;wind_gust_meter_sec&quot;:&quot;2.0&quot;},</div>
 <div class="line">&quot;status&quot;:&quot;success&quot;}, [...]</div>
-</div><!-- fragment --><h2>Doxygen Generated Source Code Documentation</h2>
+</div><!-- fragment --><h1>Doxygen Generated Source Code Documentation</h1>
 <p><a href="https://matthias-bs.github.io/BresserWeatherSensorTTN/index.html">https://matthias-bs.github.io/BresserWeatherSensorTTN/index.html</a></p>
-<h2>References</h2>
+<h1>References</h1>
 <p>Based on</p><ul>
 <li><a href="https://github.com/matthias-bs/BresserWeatherSensorReceiver">BresserWeatherSensorReceiver</a> by Matthias Prinke</li>
 <li><a href="https://github.com/jgromes/RadioLib">RadioLib</a> by Jan Gromeš</li>
