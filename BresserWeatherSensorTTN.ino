@@ -89,6 +89,7 @@
 // 20230101 Added remote configuration via LoRaWAN downlink
 // 20230112 Fixed rain gauge update in case RTC was set by LoRaWAN downlink
 //          Added note regarding LMIC_ENABLE_DeviceTimeReq
+// 20230121 Added configuration for TTGO LoRa32 V1
 //
 // ToDo:
 // -  
@@ -169,11 +170,25 @@
 // Pin mapping for ESP32 (MCCI Arduino LoRaWAN Library)
 // Note: Pin mapping for BresserWeatherSensorReceiver is done in WeatherSensorCfg.h!
 // SPI2 is used on ESP32 per default! (e.g. see https://github.com/espressif/arduino-esp32/tree/master/variants/doitESP32devkitV1)
-#define PIN_LMIC_NSS      14
-#define PIN_LMIC_RST      12
-#define PIN_LMIC_DIO0     4
-#define PIN_LMIC_DIO1     16
-#define PIN_LMIC_DIO2     17
+#if defined(ARDUINO_TTGO_LoRa32_V1)
+    // https://github.com/espressif/arduino-esp32/blob/master/variants/ttgo-lora32-v1/pins_arduino.h
+    // http://www.lilygo.cn/prod_view.aspx?TypeId=50003&Id=1130&FId=t3:50003:3
+    // https://github.com/Xinyuan-LilyGo/TTGO-LoRa-Series
+    // https://github.com/LilyGO/TTGO-LORA32/blob/master/schematic1in6.pdf
+    #define PIN_LMIC_NSS      LORA_CS
+    #define PIN_LMIC_RST      LORA_RST
+    #define PIN_LMIC_DIO0     LORA_IRQ
+    #define PIN_LMIC_DIO1     33
+    #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+#else
+    // LoRaWAN_Node board
+    // https://github.com/matthias-bs/LoRaWAN_Node
+    #define PIN_LMIC_NSS      14
+    #define PIN_LMIC_RST      12
+    #define PIN_LMIC_DIO0     4
+    #define PIN_LMIC_DIO1     16
+    #define PIN_LMIC_DIO2     17
+#endif
 
 
 // Uplink message payload size
