@@ -49,6 +49,7 @@
 //          ~/Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/
 //          lmic_project_config.h
 //          in order to be recognized!!!
+// 20230121 Added configuration for TTGO LoRa32 V1
 //
 // ToDo:
 // - 
@@ -62,6 +63,12 @@
 // Arduino IDE: Tools->Core Debug Level: "Debug|Verbose"
 //#define CORE_DEBUG_LEVEL ARDUHAL_LOG_LEVEL_DEBUG
 //#define CORE_DEBUG_LEVEL ARDUHAL_LOG_LEVEL_VERBOSE
+
+//--- Select Board ---
+#ifndef ARDUINO_TTGO_LoRa32_V1
+    // Use pinning for LoRaWAN Node 
+    #define LORAWAN_NODE
+#endif
 
 //--- Select LoRaWAN Network ---
 // The Things Network
@@ -137,16 +144,24 @@
 
 // ADC for supply/battery voltage measurement
 // default: on-board connection to VB on FireBeetle ESP32 (with R10+R11 assembled)
+//          on-board connection to VBAT on TTGO LoRa32
 #ifdef ADC_EN
-    #define PIN_ADC_IN        A0
+    #if defined(ARDUINO_TTGO_LoRa32_V1)
+        #define PIN_ADC_IN        35
+    #else
+        #define PIN_ADC_IN        A0
+    #endif
     //#define PIN_ADC_IN        34
 #endif
+
 
 // Additional ADC pins (default: FireBeetle ESP32) 
 //#define PIN_ADC0_IN         A0
 //#define PIN_ADC1_IN         A1
 //#define PIN_ADC2_IN         A2
-#define PIN_ADC3_IN         A3
+#ifdef LORAWAN_NODE
+  #define PIN_ADC3_IN         A3
+#endif
 
 #ifdef PIN_ADC0_IN
     // Voltage divider R1 / (R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)
@@ -173,7 +188,11 @@
 #endif
 
 #ifdef ONEWIRE_EN
-    #define PIN_ONEWIRE_BUS   5
+    #if defined(ARDUINO_TTGO_LoRa32_V1)
+        #define PIN_ONEWIRE_BUS   21
+    #else
+        #define PIN_ONEWIRE_BUS   5
+    #endif
 #endif
 
 #ifdef ADC_EN
