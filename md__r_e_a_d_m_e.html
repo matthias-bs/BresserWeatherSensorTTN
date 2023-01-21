@@ -104,7 +104,7 @@ $(document).ready(function(){initNavTree('md__r_e_a_d_m_e.html',''); initResizab
 <ul>
 <li>Please see my <a href="https://github.com/matthias-bs/LoRaWAN_Node">LoRaWAN_Node</a> project.</li>
 <li><a href="http://www.lilygo.cn/prod_view.aspx?TypeId=50060&amp;Id=1326&amp;FId=t3:50060:3">LILYGO® TTGO LORA32</a> (deep-sleep current measurement wanted!)</li>
-<li>Presumably <a href="https://www.adafruit.com/product/3405">Adafruit Feather ESP32</a> with <a href="https://www.adafruit.com/product/3231">Adafruit LoRa Radio FeatherWing</a> should work (confirmation/configuration files welcome)</li>
+<li><em>Presumably</em> <a href="https://www.adafruit.com/product/3405">Adafruit Feather ESP32</a> with <a href="https://www.adafruit.com/product/3231">Adafruit LoRa Radio FeatherWing</a> should work (confirmation/configuration files welcome)</li>
 </ul>
 <h2>ESP32 Module</h2>
 <p><a href="https://www.dfrobot.com/product-1590.html">DFRobot FireBeetle ESP32 IoT</a> (DFR0478) recomended due to its good low power design (but other boards will work, too)</p>
@@ -194,7 +194,8 @@ o: optional    </th></tr>
 <div class="line">#define PIN_LMIC_DIO0     4</div>
 <div class="line">#define PIN_LMIC_DIO1     16</div>
 <div class="line">#define PIN_LMIC_DIO2     17</div>
-</div><!-- fragment --></li>
+</div><!-- fragment --><p> <b>Note:</b> For LILYGO TTGO LoRa32 V1, the correct pin configuration will be set with the board selection in the Arduino IDE.</p>
+</li>
 <li><p class="startli"><b>BresserWeatherSensorReceiver Software Part</b></p>
 <p class="startli">Change the default configuration in the directory <b>Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h</b>!!!</p>
 <p class="startli">Changing <b>BresserWeatherSensorTTN/WeatherSensorCfg.h</b> will have no effect! </p><div class="fragment"><div class="line">#define PIN_RECEIVER_CS   14</div>
