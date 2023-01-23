@@ -39,7 +39,7 @@ function ttn_decoder_fp(bytes) {
         throw new Error('int must have exactly 2 bytes');
     }
     var res = bytesToInt(bytes) * 0.1;
-    return res.toFixed(1);
+    return res;
     };
     uint16fp1.BYTES = 2;
 
@@ -112,7 +112,7 @@ function ttn_decoder_fp(bytes) {
     var e = bits>>>23 & 0xff;
     var m = (e === 0) ? (bits & 0x7fffff)<<1 : (bits & 0x7fffff) | 0x800000;
     var f = sign * m * Math.pow(2, e - 150);
-    return f.toFixed(1);
+    return f;
     }
     rawfloat.BYTES = 4;
 
