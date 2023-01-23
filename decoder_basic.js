@@ -85,7 +85,7 @@ function ttn_decoder_fp(bytes) {
         t = -t;
     }
     t = t / 1e2;
-    return t.toFixed(1);
+    return t;
     };
     temperature.BYTES = 2;
 
