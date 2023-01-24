@@ -219,7 +219,7 @@ function ttn_decoder_fp(bytes) {
        rawfloat,      uint16,          uint16,          rawfloat,    rawfloat,              rawfloat,             rawfloat
       ],
       ['id',          'status',        'air_temp_c',    'humidity',  'wind_gust_meter_sec', 'wind_avg_meter_sec', 'wind_direction_deg',
-       'rain_mm',     'supply_v',      'battery_v'      'rain_hr',   'rain_day',            'rain_week',          'rain_mon'
+       'rain_mm',     'supply_v',      'battery_v',     'rain_hr',   'rain_day',            'rain_week',          'rain_mon'
       ]
     );
 }
