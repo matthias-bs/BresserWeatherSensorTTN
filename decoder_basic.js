@@ -202,21 +202,24 @@ function ttn_decoder_fp(bytes) {
     // ADC_EN defined
     // -> #9: supply_v              uint16
     //
+    // ADC_EN defined and PIN_ADC3_IN defined
+    // -> #10: battery_v            uint16
+    //
     // RAINDATA_EN defined
-    // -> #10: rain_hr              rawfloat
-    // -> #11: rain_day             rawfloat
-    // -> #12: rain_week            rawfloat
-    // -> #13: rain_mon             rawfloat
+    // -> #11: rain_hr              rawfloat
+    // -> #12: rain_day             rawfloat
+    // -> #13: rain_week            rawfloat
+    // -> #14: rain_mon             rawfloat
     
     // SensorID, Status, Weather Sensor, Supply Voltage,
     //   Hourly (past 60 minutes)/Daily/Weekly/Monthly Rainfall
     return decode(
       bytes,
       [uint32,        bitmap,          temperature,     uint8,       uint16fp1,             uint16fp1,            uint16fp1,
-       rawfloat,      uint16,          rawfloat,        rawfloat,    rawfloat,              rawfloat
+       rawfloat,      uint16,          uint16,          rawfloat,    rawfloat,              rawfloat,             rawfloat
       ],
       ['id',          'status',        'air_temp_c',    'humidity',  'wind_gust_meter_sec', 'wind_avg_meter_sec', 'wind_direction_deg',
-       'rain_mm',     'supply_v',      'rain_hr',       'rain_day',  'rain_week',           'rain_mon'
+       'rain_mm',     'supply_v',      'battery_v'      'rain_hr',   'rain_day',            'rain_week',          'rain_mon'
       ]
     );
 }
