@@ -186,8 +186,9 @@
     #define PIN_LMIC_NSS      LORA_CS
     #define PIN_LMIC_RST      LORA_RST
     #define PIN_LMIC_DIO0     LORA_IRQ
-    #define PIN_LMIC_DIO1     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+    #define PIN_LMIC_DIO1     33
     #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+    #pragma message("LoRa DIO1 must be wired to GPIO33 manually!")
 #elif defined(ARDUINO_TTGO_LoRa32_v21new)
     // https://github.com/espressif/arduino-esp32/blob/master/variants/ttgo-lora32-v21new/pins_arduino.h
     #define PIN_LMIC_NSS      LORA_CS
