@@ -90,6 +90,7 @@
 // 20230112 Fixed rain gauge update in case RTC was set by LoRaWAN downlink
 //          Added note regarding LMIC_ENABLE_DeviceTimeReq
 // 20230121 Added configuration for TTGO LoRa32 V1
+// 20230208 Added configurations for TTGO LoRa32 V2 and V2.1
 //
 // ToDo:
 // -  
@@ -180,6 +181,20 @@
     #define PIN_LMIC_DIO0     LORA_IRQ
     #define PIN_LMIC_DIO1     33
     #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+#elif defined(ARDUINO_TTGO_LoRa32_V2)
+    // https://github.com/espressif/arduino-esp32/blob/master/variants/ttgo-lora32-v2/pins_arduino.h
+    #define PIN_LMIC_NSS      LORA_CS
+    #define PIN_LMIC_RST      LORA_RST
+    #define PIN_LMIC_DIO0     LORA_IRQ
+    #define PIN_LMIC_DIO1     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+    #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+#elif defined(defined(ARDUINO_TTGO_LoRa32_v21new)
+    // https://github.com/espressif/arduino-esp32/blob/master/variants/ttgo-lora32-v21new/pins_arduino.h
+    #define PIN_LMIC_NSS      LORA_CS
+    #define PIN_LMIC_RST      LORA_RST
+    #define PIN_LMIC_DIO0     LORA_IRQ
+    #define PIN_LMIC_DIO1     LORA_D1
+    #define PIN_LMIC_DIO2     LORA_D2
 #else
     // LoRaWAN_Node board
     // https://github.com/matthias-bs/LoRaWAN_Node
