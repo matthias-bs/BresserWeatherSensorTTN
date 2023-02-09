@@ -161,7 +161,7 @@
 #include "WeatherSensorCfg.h"
 #include "WeatherSensor.h"
 
-#ifdef MITHERMOMETER_EN
+#if !defined(ADAFRUIT_FEATHER_ESP32S2) && defined(MITHERMOMETER_EN)
     // BLE Temperature/Humidity Sensor
     #include <ATC_MiThermometer.h>
 #endif
