@@ -181,6 +181,7 @@
     #define PIN_LMIC_DIO0     LORA_IRQ
     #define PIN_LMIC_DIO1     33
     #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+
 #elif defined(ARDUINO_TTGO_LoRa32_V2)
     // https://github.com/espressif/arduino-esp32/blob/master/variants/ttgo-lora32-v2/pins_arduino.h
     #define PIN_LMIC_NSS      LORA_CS
@@ -189,6 +190,7 @@
     #define PIN_LMIC_DIO1     33
     #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
     #pragma message("LoRa DIO1 must be wired to GPIO33 manually!")
+
 #elif defined(ARDUINO_TTGO_LoRa32_v21new)
     // https://github.com/espressif/arduino-esp32/blob/master/variants/ttgo-lora32-v21new/pins_arduino.h
     #define PIN_LMIC_NSS      LORA_CS
@@ -196,6 +198,16 @@
     #define PIN_LMIC_DIO0     LORA_IRQ
     #define PIN_LMIC_DIO1     LORA_D1
     #define PIN_LMIC_DIO2     LORA_D2
+
+#elif defined(ADAFRUIT_FEATHER_ESP32S2)
+    #define PIN_LMIC_NSS      6
+    #define PIN_LMIC_RST      9
+    #define PIN_LMIC_DIO0     5
+    #define PIN_LMIC_DIO1     11
+    #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+    #pragma message("ARDUINO_ADAFRUIT_FEATHER_ESP32S2 defined; assuming RFM95W FeatherWing will be used")
+    #pragma message("Required wiring: E to IRQ, D to CS, C to RST, A to DI01")
+
 #else
     // LoRaWAN_Node board
     // https://github.com/matthias-bs/LoRaWAN_Node
@@ -204,6 +216,7 @@
     #define PIN_LMIC_DIO0     4
     #define PIN_LMIC_DIO1     16
     #define PIN_LMIC_DIO2     17
+
 #endif
 
 
