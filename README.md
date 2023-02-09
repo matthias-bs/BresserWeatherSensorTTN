@@ -28,6 +28,8 @@ The RFM95W/SX1276 radio transceiver is used in FSK mode to receive weather senso
 
 See [The Things Network's](https://www.thethingsnetwork.org) [Big ESP32 + SX127x topic part 2](https://www.thethingsnetwork.org/forum/t/big-esp32-sx127x-topic-part-2/11973) for some hardware options.
 
+See [Leonel Lopes Parente's](https://github.com/lnlp) collection of [LoRa development boards pinout-diagrams](https://github.com/lnlp/pinout-diagrams/tree/main/LoRa%20development%20boards).
+
 ### ESP32 Module
 [DFRobot FireBeetle ESP32 IoT](https://www.dfrobot.com/product-1590.html) (DFR0478) recomended due to its good low power design (but other boards will work, too)
 
@@ -120,7 +122,7 @@ See [Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts](https://
    #define PIN_LMIC_DIO1     16
    #define PIN_LMIC_DIO2     17
    ```
-   **Note:** For LILYGO TTGO LoRa32 V1, the correct pin configuration will be set with the board selection in the Arduino IDE. 
+   **Note:** For LILYGO TTGO LoRa32 V1/V2/V21new and Adafruit Feather ESP32-S2 (no Bluetooth!), the correct pin configuration will be set with the board selection in the Arduino IDE. 
 
 2. **BresserWeatherSensorReceiver Software Part**
 
