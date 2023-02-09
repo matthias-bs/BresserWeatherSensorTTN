@@ -140,8 +140,12 @@
 #define ONEWIRE_EN
 
 // Enable BLE temperature/humidity measurement
-// Note: BLE requires a lot of program memory!
-#define MITHERMOMETER_EN
+// Notes: 
+// * BLE requires a lot of program memory!
+// * ESP32-S2 does not provide BLE!
+#ifndef ADAFRUIT_FEATHER_ESP32S2
+    #define MITHERMOMETER_EN
+#endif
 
 // Enable Bresser Soil Temperature/Moisture Sensor
 #define SOILSENSOR_EN
