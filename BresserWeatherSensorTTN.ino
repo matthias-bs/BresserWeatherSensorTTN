@@ -91,6 +91,7 @@
 //          Added note regarding LMIC_ENABLE_DeviceTimeReq
 // 20230121 Added configuration for TTGO LoRa32 V1
 // 20230208 Added configurations for TTGO LoRa32 V2 and V2.1
+// 20230209 Added configuration for Adafruit Feather ESP32-S2 with RFM95W FeatherWing
 //
 // ToDo:
 // -  
