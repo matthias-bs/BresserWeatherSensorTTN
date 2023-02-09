@@ -154,8 +154,9 @@
 // default: on-board connection to VB on FireBeetle ESP32 (with R10+R11 assembled)
 //          on-board connection to VBAT on TTGO LoRa32
 //          on-board connection to VBAT on Adafruit Feather ESP32
+//          no VBAT input circuit on Adafruit Feather ESP32-S2
 #ifdef ADC_EN
-    #if defined(ARDUINO_TTGO_LoRa32_V1)
+    #if defined(ARDUINO_TTGO_LoRa32_V1) || defined(ARDUINO_TTGO_LoRa32_V2) || defined(ARDUINO_TTGO_LoRa32_v21new)
         #define PIN_ADC_IN        35
     #elif defined(ARDUINO_FEATHER_ESP32)
         #define PIN_ADC_IN        A13
