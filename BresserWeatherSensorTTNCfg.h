@@ -153,6 +153,7 @@
 // ADC for supply/battery voltage measurement
 // default: on-board connection to VB on FireBeetle ESP32 (with R10+R11 assembled)
 //          on-board connection to VBAT on TTGO LoRa32
+//          on-board connection to VBAT on Adafruit Feather ESP32
 #ifdef ADC_EN
     #if defined(ARDUINO_TTGO_LoRa32_V1)
         #define PIN_ADC_IN        35
