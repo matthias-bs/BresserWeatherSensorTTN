@@ -65,7 +65,8 @@
 //#define CORE_DEBUG_LEVEL ARDUHAL_LOG_LEVEL_VERBOSE
 
 //--- Select Board ---
-#ifndef ARDUINO_TTGO_LoRa32_V1
+#if !defined(ARDUINO_TTGO_LoRa32_V1)     && !defined(ARDUINO_TTGO_LoRa32_V2) && \
+    !defined(ARDUINO_TTGO_LoRa32_v21new) && !defined(ADAFRUIT_FEATHER_ESP32S2)
     // Use pinning for LoRaWAN Node 
     #define LORAWAN_NODE
 #endif
@@ -148,7 +149,8 @@
 #ifdef ADC_EN
     #if defined(ARDUINO_TTGO_LoRa32_V1)
         #define PIN_ADC_IN        35
-    #else
+    #endif
+    #ifdef LORAWAN_NODE
         #define PIN_ADC_IN        A0
     #endif
     //#define PIN_ADC_IN        34
@@ -190,7 +192,8 @@
 #ifdef ONEWIRE_EN
     #if defined(ARDUINO_TTGO_LoRa32_V1)
         #define PIN_ONEWIRE_BUS   21
-    #else
+    #endif
+    #ifdef LORAWAN_NODE
         #define PIN_ONEWIRE_BUS   5
     #endif
 #endif
