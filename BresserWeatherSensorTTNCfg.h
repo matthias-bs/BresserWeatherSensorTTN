@@ -50,6 +50,8 @@
 //          lmic_project_config.h
 //          in order to be recognized!!!
 // 20230121 Added configuration for TTGO LoRa32 V1
+// 20230209 Added configurations for TTGO LoRa32 V2/V21new,
+//          Adafruit Feather ESP32-S2 and Adafruit Feather ESP32
 //
 // ToDo:
 // - 
@@ -66,7 +68,8 @@
 
 //--- Select Board ---
 #if !defined(ARDUINO_TTGO_LoRa32_V1)     && !defined(ARDUINO_TTGO_LoRa32_V2) && \
-    !defined(ARDUINO_TTGO_LoRa32_v21new) && !defined(ADAFRUIT_FEATHER_ESP32S2)
+    !defined(ARDUINO_TTGO_LoRa32_v21new) && !defined(ADAFRUIT_FEATHER_ESP32S2) && \
+    !defined(ARDUINO_FEATHER_ESP32)
     // Use pinning for LoRaWAN Node 
     #define LORAWAN_NODE
 #endif
