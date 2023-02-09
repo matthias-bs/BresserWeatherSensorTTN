@@ -92,6 +92,7 @@
 // 20230121 Added configuration for TTGO LoRa32 V1
 // 20230208 Added configurations for TTGO LoRa32 V2 and V2.1
 // 20230209 Added configuration for Adafruit Feather ESP32-S2 with RFM95W FeatherWing
+//          Added configuration for Adafruit Huzzah ESP32 Feather with RFM95W FeatherWing
 //
 // ToDo:
 // -  
@@ -208,6 +209,16 @@
     #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
     #pragma message("ARDUINO_ADAFRUIT_FEATHER_ESP32S2 defined; assuming RFM95W FeatherWing will be used")
     #pragma message("Required wiring: E to IRQ, D to CS, C to RST, A to DI01")
+
+#elif defined(ARDUINO_FEATHER_ESP32)
+    #define PIN_LMIC_NSS      14
+    #define PIN_LMIC_RST      27
+    #define PIN_LMIC_DIO0     32
+    #define PIN_LMIC_DIO1     33
+    #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+    #pragma message("NOT TESTED!!!")
+    #pragma message("ARDUINO_ADAFRUIT_FEATHER_ESP32 defined; assuming RFM95W FeatherWing will be used")
+    #pragma message("Required wiring: A to RST, B to DIO1, D to DIO0, E to CS")
 
 #else
     // LoRaWAN_Node board
