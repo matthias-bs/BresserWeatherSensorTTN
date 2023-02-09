@@ -156,12 +156,13 @@
 #ifdef ADC_EN
     #if defined(ARDUINO_TTGO_LoRa32_V1)
         #define PIN_ADC_IN        35
-    #elif definded(ARDUINO_FEATHER_ESP32)
+    #elif defined(ARDUINO_FEATHER_ESP32)
         #define PIN_ADC_IN        A13
     #elif defined(LORAWAN_NODE)
         #define PIN_ADC_IN        A0
+    #else
+        #define PIN_ADC_IN        34
     #endif
-    //#define PIN_ADC_IN        34
 #endif
 
 
@@ -204,6 +205,8 @@
         #define PIN_ONEWIRE_BUS   15
     #elif defined(LORAWAN_NODE)
         #define PIN_ONEWIRE_BUS   5
+    #else
+        #define PIN_ONEWIRE_BUS   0
     #endif
 #endif
 
