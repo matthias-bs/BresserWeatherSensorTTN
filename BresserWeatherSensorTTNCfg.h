@@ -68,7 +68,7 @@
 
 //--- Select Board ---
 #if !defined(ARDUINO_TTGO_LoRa32_V1)     && !defined(ARDUINO_TTGO_LoRa32_V2) && \
-    !defined(ARDUINO_TTGO_LoRa32_v21new) && !defined(ADAFRUIT_FEATHER_ESP32S2) && \
+    !defined(ARDUINO_TTGO_LoRa32_v21new) && !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) && \
     !defined(ARDUINO_FEATHER_ESP32)
     // Use pinning for LoRaWAN Node 
     #define LORAWAN_NODE
