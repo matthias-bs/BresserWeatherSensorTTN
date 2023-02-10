@@ -289,7 +289,7 @@ $(document).ready(function(){initNavTree('_bresser_weather_sensor_t_t_n_cfg_8h_s
 <div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="preprocessor">#ifdef ONEWIRE_EN</span></div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="preprocessor">    #if defined(ARDUINO_TTGO_LoRa32_V1)</span></div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="preprocessor">        #define PIN_ONEWIRE_BUS   21</span></div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="preprocessor">    #elif defined(ARDUINO_FEATHER_ESP32)</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="preprocessor">    #elif defined(ARDUINO_FEATHER_ESP32) || defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)</span></div>
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="preprocessor">        #define PIN_ONEWIRE_BUS   15</span></div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="preprocessor">    #elif defined(LORAWAN_NODE)</span></div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="preprocessor">        #define PIN_ONEWIRE_BUS   5</span></div>
