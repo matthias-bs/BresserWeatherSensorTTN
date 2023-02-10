@@ -143,7 +143,7 @@
 // Notes: 
 // * BLE requires a lot of program memory!
 // * ESP32-S2 does not provide BLE!
-#ifndef ADAFRUIT_FEATHER_ESP32S2
+#ifndef ARDUINO_ADAFRUIT_FEATHER_ESP32S2
     #define MITHERMOMETER_EN
 #endif
 
