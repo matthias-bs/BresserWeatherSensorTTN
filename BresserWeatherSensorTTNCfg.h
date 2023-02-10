@@ -203,7 +203,7 @@
 #ifdef ONEWIRE_EN
     #if defined(ARDUINO_TTGO_LoRa32_V1)
         #define PIN_ONEWIRE_BUS   21
-    #elif defined(ARDUINO_FEATHER_ESP32)
+    #elif defined(ARDUINO_FEATHER_ESP32) || defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
         #define PIN_ONEWIRE_BUS   15
     #elif defined(LORAWAN_NODE)
         #define PIN_ONEWIRE_BUS   5
