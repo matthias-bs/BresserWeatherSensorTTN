@@ -162,7 +162,7 @@
 #include "WeatherSensorCfg.h"
 #include "WeatherSensor.h"
 
-#if !defined(ADAFRUIT_FEATHER_ESP32S2) && defined(MITHERMOMETER_EN)
+#if !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) && defined(MITHERMOMETER_EN)
     // BLE Temperature/Humidity Sensor
     #include <ATC_MiThermometer.h>
 #endif
@@ -201,7 +201,7 @@
     #define PIN_LMIC_DIO1     LORA_D1
     #define PIN_LMIC_DIO2     LORA_D2
 
-#elif defined(ADAFRUIT_FEATHER_ESP32S2)
+#elif defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
     #define PIN_LMIC_NSS      6
     #define PIN_LMIC_RST      9
     #define PIN_LMIC_DIO0     5
