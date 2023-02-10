@@ -162,7 +162,7 @@
 #include "WeatherSensorCfg.h"
 #include "WeatherSensor.h"
 
-#if !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) && defined(MITHERMOMETER_EN)
+#if  defined(MITHERMOMETER_EN)
     // BLE Temperature/Humidity Sensor
     #include <ATC_MiThermometer.h>
 #endif
@@ -209,6 +209,7 @@
     #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
     #pragma message("ARDUINO_ADAFRUIT_FEATHER_ESP32S2 defined; assuming RFM95W FeatherWing will be used")
     #pragma message("Required wiring: E to IRQ, D to CS, C to RST, A to DI01")
+    #pragma message("BLE is not available!")
 
 #elif defined(ARDUINO_FEATHER_ESP32)
     #define PIN_LMIC_NSS      14
