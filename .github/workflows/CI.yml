@@ -13,15 +13,15 @@ jobs:
     strategy:
       matrix:
         board:
-          #- esp32:esp32@1.0.6
-          #- esp32:esp32:esp32:DebugLevel=none
-          #- esp32:esp32:esp32:DebugLevel=verbose
-          #- esp32:esp32:firebeetle32
+          - esp32:esp32@1.0.6
+          - esp32:esp32:esp32:DebugLevel=none
+          - esp32:esp32:esp32:DebugLevel=verbose
+          - esp32:esp32:firebeetle32
           #- esp32:esp32:ttgo-lora32:Revision=TTGO_LoRa32_V1
           #- esp32:esp32:ttgo-lora32:Revision=TTGO_LoRa32_V2
-          #- esp32:esp32:ttgo-lora32:Revision=TTGO_LoRa32_v21new
-          #- esp32:esp32:featheresp32
-          - esp32:esp32:adafruit_feather_esp32s2 #FIXME
+          - esp32:esp32:ttgo-lora32:Revision=TTGO_LoRa32_v21new
+          - esp32:esp32:featheresp32
+          - esp32:esp32:adafruit_feather_esp32s2
 
     runs-on: ubuntu-latest
     name: ${{ matrix.board }}
@@ -77,8 +77,8 @@ jobs:
             "ESP32AnalogRead@0.2.1"
             "OneWireNg@0.13.0"
             "DallasTemperature@3.9.0")
-            #"NimBLE-Arduino@1.4.1"
-            #"ATC_MiThermometer@0.1.0")
+            "NimBLE-Arduino@1.4.1"
+            "ATC_MiThermometer@0.1.0")
           #"OneWire@2.3.7"
           for i in "${required_libs[@]}"
           do
