@@ -52,7 +52,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_bresser_weather_sensor_t_t_n_8ino.html"
+"_ble_sensors_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

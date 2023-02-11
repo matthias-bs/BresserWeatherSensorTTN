@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['gettemperature_47',['getTemperature',['../classc_sensor.html#a3e28d4817e205860da28d3809ff6c511',1,'cSensor']]],
-  ['getvoltage_48',['getVoltage',['../classc_sensor.html#a40d2dbd8a699fdbf2f2126593aefb3ca',1,'cSensor']]]
+  ['clearscanresults_65',['clearScanResults',['../class_ble_sensors.html#a02b6268f0eb8262bd19d4647b34fd588',1,'BleSensors']]],
+  ['csensor_66',['cSensor',['../classc_sensor.html#a5dbac65bd830ca7f6b8a2ac43d34ba0d',1,'cSensor']]]
 ];

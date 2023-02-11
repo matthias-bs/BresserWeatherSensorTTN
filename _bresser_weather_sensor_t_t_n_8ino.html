@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('_bresser_weather_sensor_t_t_n_8ino.htm
 <code>#include &lt;ESP32AnalogRead.h&gt;</code><br />
 <code>#include &quot;WeatherSensorCfg.h&quot;</code><br />
 <code>#include &quot;WeatherSensor.h&quot;</code><br />
-<code>#include &lt;ATC_MiThermometer.h&gt;</code><br />
+<code>#include &quot;src/BleSensors/BleSensors.h&quot;</code><br />
 <code>#include &lt;LoraMessage.h&gt;</code><br />
 <code>#include &quot;secrets.h&quot;</code><br />
 </div><table class="memberdecls">
@@ -181,10 +181,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bre
 OneWire&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a1adb9131e79d1a1a94f258bf329e31d6">oneWire</a> (PIN_ONEWIRE_BUS)</td></tr>
 <tr class="memdesc:a1adb9131e79d1a1a94f258bf329e31d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">OneWire bus. <br /></td></tr>
 <tr class="separator:a1adb9131e79d1a1a94f258bf329e31d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a363f8e423a2f44842e97967d4271eb"><td class="memItemLeft" align="right" valign="top"><a id="a3a363f8e423a2f44842e97967d4271eb"></a>
-ATC_MiThermometer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a3a363f8e423a2f44842e97967d4271eb">miThermometer</a> (knownBLEAddresses)</td></tr>
-<tr class="memdesc:a3a363f8e423a2f44842e97967d4271eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mijia Bluetooth Low Energy Thermo-/Hygrometer. <br /></td></tr>
-<tr class="separator:a3a363f8e423a2f44842e97967d4271eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top"><a id="a4fc01d736fe50cf5b977f755b675f11d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
 <tr class="memdesc:a4fc01d736fe50cf5b977f755b675f11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arduino setup. <br /></td></tr>
@@ -283,6 +279,12 @@ RainGauge&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 DallasTemperature temp_sensors &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a988a13c4fd0ed4eba1d6dff73d064914">oneWire</a></td></tr>
 <tr class="memdesc:a988a13c4fd0ed4eba1d6dff73d064914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dallas temperature sensors connected to OneWire bus. <br /></td></tr>
 <tr class="separator:a988a13c4fd0ed4eba1d6dff73d064914"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a134e5b815ce8cf8454c451c1f5bfb81d"><td class="memItemLeft" align="right" valign="top"><a id="a134e5b815ce8cf8454c451c1f5bfb81d"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>knownBLEAddresses</b> = KNOWN_BLE_ADDRESSES</td></tr>
+<tr class="separator:a134e5b815ce8cf8454c451c1f5bfb81d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a568aac4540a80387844b398aa821ceb2"><td class="memItemLeft" align="right" valign="top"><a id="a568aac4540a80387844b398aa821ceb2"></a>
+<a class="el" href="class_ble_sensors.html">BleSensors</a>&#160;</td><td class="memItemRight" valign="bottom"><b>bleSensors</b> (knownBLEAddresses)</td></tr>
+<tr class="separator:a568aac4540a80387844b398aa821ceb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6a553cefc7cf2dddb686b3bd2631bc5"><td class="memItemLeft" align="right" valign="top"><a id="af6a553cefc7cf2dddb686b3bd2631bc5"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#af6a553cefc7cf2dddb686b3bd2631bc5">sleepReq</a> = false</td></tr>
 <tr class="memdesc:af6a553cefc7cf2dddb686b3bd2631bc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sleep request (set in NetTxComplete();. <br /></td></tr>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['preferences_65',['preferences',['../_bresser_weather_sensor_t_t_n_8ino.html#a6ea06cf7b8092a0adaf07614d7ece59d',1,'BresserWeatherSensorTTN.ino']]]
+  ['longsleep_85',['longSleep',['../_bresser_weather_sensor_t_t_n_8ino.html#ab8da6c078e11175c8c78c576fbb1da6f',1,'BresserWeatherSensorTTN.ino']]]
 ];

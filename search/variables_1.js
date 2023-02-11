@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['longsleep_61',['longSleep',['../_bresser_weather_sensor_t_t_n_8ino.html#ab8da6c078e11175c8c78c576fbb1da6f',1,'BresserWeatherSensorTTN.ino']]]
+  ['batt_5flevel_82',['batt_level',['../struct_ble_data_s.html#a625a619a3a728bfde61a48a14b0bbcff',1,'BleDataS']]]
 ];

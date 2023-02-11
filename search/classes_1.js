@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['sprefs_44',['sPrefs',['../structs_prefs.html',1,'']]]
+  ['cmylorawan_58',['cMyLoRaWAN',['../classc_my_lo_ra_w_a_n.html',1,'']]],
+  ['csensor_59',['cSensor',['../classc_sensor.html',1,'']]]
 ];

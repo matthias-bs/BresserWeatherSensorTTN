@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['onewire_64',['oneWire',['../_bresser_weather_sensor_t_t_n_8ino.html#a988a13c4fd0ed4eba1d6dff73d064914',1,'BresserWeatherSensorTTN.ino']]]
+  ['humidity_84',['humidity',['../struct_ble_data_s.html#abc21c394d7aba233293a6ba15237d780',1,'BleDataS']]]
 ];
