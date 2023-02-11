@@ -52,6 +52,8 @@
 // 20230121 Added configuration for TTGO LoRa32 V1
 // 20230209 Added configurations for TTGO LoRa32 V2/V21new,
 //          Adafruit Feather ESP32-S2 and Adafruit Feather ESP32
+// 20230211 Added integration of Theengs Decoder (https://github.com/theengs/decoder)
+//          for support of additional BLE sensors
 //
 // ToDo:
 // - 
@@ -144,7 +146,8 @@
 // * BLE requires a lot of program memory!
 // * ESP32-S2 does not provide BLE!
 #ifndef ARDUINO_ADAFRUIT_FEATHER_ESP32S2
-    #define MITHERMOMETER_EN
+    //#define MITHERMOMETER_EN
+    #define THEENGSDECODER_EN
 #endif
 
 // Enable Bresser Soil Temperature/Moisture Sensor
@@ -218,12 +221,12 @@
     const uint8_t UBATT_SAMPLES   = 10;
 #endif
 
-#ifdef MITHERMOMETER_EN
+#if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
     // BLE scan time in seconds
-    const int bleScanTime = 10;
+    #define BLE_SCAN_TIME 31
 
     // List of known sensors' BLE addresses
-    std::vector<std::string> knownBLEAddresses = {"a4:c1:38:b8:1f:7f"};
+    #define KNOWN_BLE_ADDRESSES {"a4:c1:38:b8:1f:7f"}
 #endif
 
 // Enter your time zone (https://remotemonitoringsystems.ca/time-zone-abbreviations.php)
