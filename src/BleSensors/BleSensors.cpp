@@ -145,7 +145,7 @@ void BleSensors::resetData(void)
 }
 
 /**
- * \brief Get local sensor data
+ * \brief Get BLE sensor data
  */
 unsigned BleSensors::getData(uint32_t duration) {
     // From https://github.com/theengs/decoder/blob/development/examples/ESP32/ScanAndDecode/ScanAndDecode.ino:
