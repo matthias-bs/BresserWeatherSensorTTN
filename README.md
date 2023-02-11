@@ -15,6 +15,7 @@ The RFM95W/SX1276 radio transceiver is used in FSK mode to receive weather senso
 * Low Power Design (using ESP32 Deep Sleep Mode)
 * Fast LoRaWAN Joining after Deep Sleep (using ESP32 RTC RAM)
 * ATC MiThermometer Bluetooth Low Energy Thermometer/Hygrometer Integration (optional)
+* Theengs Decoder Bluetooth Low Energy Sensors Integration (optional)
 * OneWire Temperature Sensor Integration (optional)
 * ESP32 Analog Digital Converter Integration (optional)
 
@@ -79,6 +80,7 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 | OneWireNg                          | o                            |
 | DallasTemperature                  | o                            |
 | NimBLE-Arduino + ATC_MiThermometer | o                            |
+| NimBle-Arduino + Theengs Decoder   | o                            |
 
 
 See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies) for required/tested versions.
@@ -108,6 +110,8 @@ See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/networ
 
 ### Configure the RF Transceiver GPIO Wiring
 
+**Note:** For LILYGO TTGO LoRa32 V1/V2/V21new and Adafruit Feather ESP32-S2 (no Bluetooth!) with RFM95W FeatherWing, the correct pin configuration will be set with the board selection in the Arduino IDE. 
+
 See [Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts](https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/pinouts).
 
 **Note:** If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in **two** places!
@@ -122,7 +126,6 @@ See [Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts](https://
    #define PIN_LMIC_DIO1     16
    #define PIN_LMIC_DIO2     17
    ```
-   **Note:** For LILYGO TTGO LoRa32 V1/V2/V21new and Adafruit Feather ESP32-S2 (no Bluetooth!), the correct pin configuration will be set with the board selection in the Arduino IDE. 
 
 2. **BresserWeatherSensorReceiver Software Part**
 
@@ -272,3 +275,4 @@ Based on
 * [OneWireNg](https://github.com/pstolarz/OneWireNg) by Piotr Stolarz
 * [DallasTemperature / Arduino-Temperature-Control-Library](https://github.com/milesburton/Arduino-Temperature-Control-Library) by Miles Burton
 * [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) by h2zero
+* [Theengs Decoder](https://github.com/theengs/decoder) by Koen Vervloesem
