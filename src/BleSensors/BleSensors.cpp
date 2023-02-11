@@ -46,7 +46,6 @@
 #include "BleSensors.h"
 
 class MyAdvertisedDeviceCallbacks: public NimBLEAdvertisedDeviceCallbacks {
-
 public:
   NimBLEScan*                   m_pBLEScan;
   std::vector<std::string>      m_knownBLEAddresses;
