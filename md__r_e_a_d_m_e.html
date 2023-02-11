@@ -97,6 +97,7 @@ $(document).ready(function(){initNavTree('md__r_e_a_d_m_e.html',''); initResizab
 <li>Low Power Design (using ESP32 Deep Sleep Mode)</li>
 <li>Fast LoRaWAN Joining after Deep Sleep (using ESP32 RTC RAM)</li>
 <li>ATC MiThermometer Bluetooth Low Energy Thermometer/Hygrometer Integration (optional)</li>
+<li>Theengs Decoder Bluetooth Low Energy Sensors Integration (optional)</li>
 <li>OneWire Temperature Sensor Integration (optional)</li>
 <li>ESP32 Analog Digital Converter Integration (optional)</li>
 </ul>
@@ -171,7 +172,9 @@ o: optional    </th></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">DallasTemperature   </td><td class="markdownTableBodyNone">o    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">NimBLE-Arduino + ATC_MiThermometer   </td><td class="markdownTableBodyNone">o   </td></tr>
+<td class="markdownTableBodyNone">NimBLE-Arduino + ATC_MiThermometer   </td><td class="markdownTableBodyNone">o    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">NimBle-Arduino + Theengs Decoder   </td><td class="markdownTableBodyNone">o   </td></tr>
 </table>
 <p>See <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies">dependencies</a> for required/tested versions.</p>
 <h1>Software Customization</h1>
@@ -189,6 +192,7 @@ o: optional    </th></tr>
 </li>
 </ul>
 <h2>Configure the RF Transceiver GPIO Wiring</h2>
+<p><b>Note:</b> For LILYGO TTGO LoRa32 V1/V2/V21new and Adafruit Feather ESP32-S2 (no Bluetooth!) with RFM95W FeatherWing, the correct pin configuration will be set with the board selection in the Arduino IDE.</p>
 <p>See <a href="https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/pinouts">Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts</a>.</p>
 <p><b>Note:</b> If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in <b>two</b> places!</p>
 <ol type="1">
@@ -198,8 +202,7 @@ o: optional    </th></tr>
 <div class="line">#define PIN_LMIC_DIO0     4</div>
 <div class="line">#define PIN_LMIC_DIO1     16</div>
 <div class="line">#define PIN_LMIC_DIO2     17</div>
-</div><!-- fragment --><p> <b>Note:</b> For LILYGO TTGO LoRa32 V1/V2/V21new and Adafruit Feather ESP32-S2 (no Bluetooth!), the correct pin configuration will be set with the board selection in the Arduino IDE.</p>
-</li>
+</div><!-- fragment --></li>
 <li><p class="startli"><b>BresserWeatherSensorReceiver Software Part</b></p>
 <p class="startli">Change the default configuration in the directory <b>Arduino/libraries/BresserWeatherSensorReceiver/src/WeatherSensorCfg.h</b>!!!</p>
 <p class="startli">Changing <b>BresserWeatherSensorTTN/WeatherSensorCfg.h</b> will have no effect! </p><div class="fragment"><div class="line">#define PIN_RECEIVER_CS   14</div>
@@ -301,7 +304,8 @@ o: optional    </th></tr>
 <li><a href="https://github.com/madhephaestus/ESP32AnalogRead">ESP32AnalogRead</a> by Kevin Harrington (madhephaestus)</li>
 <li><a href="https://github.com/pstolarz/OneWireNg">OneWireNg</a> by Piotr Stolarz</li>
 <li><a href="https://github.com/milesburton/Arduino-Temperature-Control-Library">DallasTemperature / Arduino-Temperature-Control-Library</a> by Miles Burton</li>
-<li><a href="https://github.com/h2zero/NimBLE-Arduino">NimBLE-Arduino</a> by h2zero </li>
+<li><a href="https://github.com/h2zero/NimBLE-Arduino">NimBLE-Arduino</a> by h2zero</li>
+<li><a href="https://github.com/theengs/decoder">Theengs Decoder</a> by Koen Vervloesem </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
