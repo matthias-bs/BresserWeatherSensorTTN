@@ -37,7 +37,8 @@
 // OneWireNg                            0.13.0 (optional)
 // DallasTemperature                    3.9.1 (optional)
 // NimBLE-Arduino                       1.4.1 (optional)
-// ATC MiThermometer Library            0.1.0 (optional)
+// ATC MiThermometer                    0.1.0 (optional)
+// Theengs Decoder                      1.1.0 (optional)
 //
 //
 // created: 06/2022
@@ -93,6 +94,8 @@
 // 20230208 Added configurations for TTGO LoRa32 V2 and V2.1
 // 20230209 Added configuration for Adafruit Feather ESP32-S2 with RFM95W FeatherWing
 //          Added configuration for Adafruit Huzzah ESP32 Feather with RFM95W FeatherWing
+// 20230211 Added integration of Theengs Decoder (https://github.com/theengs/decoder)
+//          for support of additional BLE sensors
 //
 // ToDo:
 // -  
@@ -162,9 +165,12 @@
 #include "WeatherSensorCfg.h"
 #include "WeatherSensor.h"
 
-#if  defined(MITHERMOMETER_EN)
+#if defined(MITHERMOMETER_EN)
     // BLE Temperature/Humidity Sensor
     #include <ATC_MiThermometer.h>
+#endif
+#if defined(THEENGSDECODER_EN)
+    #include "src/BleSensors/BleSensors.h"
 #endif
 
 // LoRa_Serialization
@@ -531,9 +537,16 @@ uint16_t  sleep_interval_long;  //!< preferences: sleep interval long
     DallasTemperature temp_sensors(&oneWire); //!< Dallas temperature sensors connected to OneWire bus
 #endif
 
+#if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
+    std::vector<std::string> knownBLEAddresses = KNOWN_BLE_ADDRESSES;
+#endif
+
 #ifdef MITHERMOMETER_EN
     // Setup BLE Temperature/Humidity Sensors
-    ATC_MiThermometer miThermometer(knownBLEAddresses); //!< Mijia Bluetooth Low Energy Thermo-/Hygrometer
+    ATC_MiThermometer bleSensors(knownBLEAddresses); //!< Mijia Bluetooth Low Energy Thermo-/Hygrometer
+#endif
+#ifdef THEENGSDECODER_EN
+    BleSensors bleSensors(knownBLEAddresses);
 #endif
 
 /// LoRaWAN uplink payload buffer
@@ -1117,8 +1130,8 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
         adc3.attach(PIN_ADC3_IN);
     #endif
     
-    #ifdef MITHERMOMETER_EN
-        miThermometer.begin();
+    #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
+        bleSensors.begin();
     #endif
     
     #ifndef LORAWAN_DEBUG
@@ -1301,17 +1314,16 @@ cSensor::doUplink(void) {
         uint16_t  battery_voltage     = getVoltage(adc3, ADC3_SAMPLES, ADC3_DIV);
     #endif
     bool          mithermometer_valid = false;
-    #ifdef MITHERMOMETER_EN
+    #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN) 
         float     indoor_temp_c;
         float     indoor_humidity;
     
         // Set sensor data invalid
-        miThermometer.resetData();
+        bleSensors.resetData();
         
         // Get sensor data - run BLE scan for <bleScanTime>
-        miThermometer.getData(bleScanTime);
+        bleSensors.getData(BLE_SCAN_TIME);
     #endif
-
     //
     // Find Bresser sensor data in array 
     //
@@ -1365,13 +1377,19 @@ cSensor::doUplink(void) {
     #if defined(ADC_EN) && defined(PIN_ADC3_IN)
         DEBUG_PRINTF("Battery Voltage:   %4d   mV",       battery_voltage);
     #endif
-    #ifdef MITHERMOMETER_EN
-        if (miThermometer.data[0].valid) {
+    
+    #if defined(MITHERMOMETER_EN)
+        float div = 100.0;
+    #elif defined(THEENGSDECODER_EN)
+        float div = 1.0;
+    #endif
+    #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
+        if (bleSensors.data[0].valid) {
             mithermometer_valid = true;
-            indoor_temp_c   = miThermometer.data[0].temperature/100.0;
-            indoor_humidity = miThermometer.data[0].humidity/100.0;
-            DEBUG_PRINTF("Indoor Air Temp.:   % 3.1f °C", miThermometer.data[0].temperature/100.0);
-            DEBUG_PRINTF("Indoor Humidity:     %3.1f %%", miThermometer.data[0].humidity/100.0);
+            indoor_temp_c   = bleSensors.data[0].temperature/div;
+            indoor_humidity = bleSensors.data[0].humidity/div;
+            DEBUG_PRINTF("Indoor Air Temp.:   % 3.1f °C", bleSensors.data[0].temperature/div);
+            DEBUG_PRINTF("Indoor Humidity:     %3.1f %%", bleSensors.data[0].humidity/div);
         } else {
             DEBUG_PRINTF("Indoor Air Temp.:    --.- °C");
             DEBUG_PRINTF("Indoor Humidity:     --   %%");
@@ -1444,12 +1462,12 @@ cSensor::doUplink(void) {
     #ifdef ONEWIRE_EN
         encoder.writeTemperature(water_temp_c);
     #endif
-    #ifdef MITHERMOMETER_EN
+    #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
         encoder.writeTemperature(indoor_temp_c);
         encoder.writeUint8((uint8_t)(indoor_humidity+0.5));
 
         // BLE Tempoerature/Humidity Sensor: delete results fromBLEScan buffer to release memory
-        miThermometer.clearScanResults();
+        bleSensors.clearScanResults();
     #endif    
 
     // Soil sensor data
