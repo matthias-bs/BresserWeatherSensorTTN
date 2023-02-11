@@ -1380,7 +1380,7 @@ cSensor::doUplink(void) {
     
     #if defined(MITHERMOMETER_EN)
         float div = 100.0;
-    #else
+    #elif defined(THEENGSDECODER_EN)
         float div = 1.0;
     #endif
     #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
