@@ -41,6 +41,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#if !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
+
 #include "BleSensors.h"
 
 class MyAdvertisedDeviceCallbacks: public NimBLEAdvertisedDeviceCallbacks {
@@ -178,3 +180,4 @@ unsigned BleSensors::getData(uint32_t duration) {
     return 0;
 }
 
+#endif
