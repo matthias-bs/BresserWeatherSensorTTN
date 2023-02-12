@@ -116,7 +116,10 @@ $(document).ready(function(){initNavTree('md__r_e_a_d_m_e.html',''); initResizab
 <p><a href="https://www.dfrobot.com/product-1590.html">DFRobot FireBeetle ESP32 IoT</a> (DFR0478) recomended due to its good low power design (but other boards will work, too)</p>
 <h2>RFM95W- or SX1276-based Radio Transceiver Module</h2>
 <ul>
-<li><a href="https://www.adafruit.com/product/3072">Adafruit RFM95W LoRa Radio Transceiver Breakout</a> (ADA3072) - 868/915 MHz version (868 MHz is used for both LoRaWAN and Bresser Weather Sensor in Europe)</li>
+<li><a href="https://www.adafruit.com/product/3072">Adafruit RFM95W LoRa Radio Transceiver Breakout</a> (ADA3072) - 868/915 MHz version (868 MHz is used for both LoRaWAN and Bresser Weather Sensor in Europe)<ul>
+<li>See <a href="https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/pinouts">Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts</a>.</li>
+</ul>
+</li>
 <li>RF connector (u.FL or SMA as desired)</li>
 <li>Antenna (<a href="https://www.delock.de/produkt/89769/merkmale.html?setLanguage=en">Delock 89769 - LoRa 868 MHz Antenna SMA plug 3 dBi omnidirectional</a> has been used with good results)</li>
 </ul>
@@ -192,9 +195,36 @@ o: optional    </th></tr>
 </ul>
 </li>
 </ul>
-<h2>Configure the RF Transceiver GPIO Wiring</h2>
-<p><b>Note:</b> For LILYGO TTGO LoRa32 V1/V2/V21new and Adafruit Feather ESP32-S2 (no Bluetooth!) with RFM95W FeatherWing, the correct pin configuration will be set with the board selection in the Arduino IDE.</p>
-<p>See <a href="https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/pinouts">Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts</a>.</p>
+<h2>Configure the ESP32 / RF Transceiver GPIO Wiring</h2>
+<h3>Pinout Configuration by selecting a supported Board in the Arduino IDE</h3>
+<p>By selecting a Board and a Board Revision (if available) in the Arduino IDE, a define is passed to the preprocessor/compiler. For the boards in the table below, the default configuration is assumed based in this define.</p>
+<p>If you are not using the Arduino IDE, you can use the defines in the table below with your specific tool chain to get the same result.</p>
+<p>If this is not what you need, you have to switch to Manual Configuration.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Setup   </th><th class="markdownTableHeadNone">Board   </th><th class="markdownTableHeadNone">Board Revision   </th><th class="markdownTableHeadNone">Define   </th><th class="markdownTableHeadNone">Radio Module   </th><th class="markdownTableHeadNone">Notes    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://github.com/Xinyuan-LilyGo/TTGO-LoRa-Series">LILYGO®TTGO-LORA32 V1</a>   </td><td class="markdownTableBodyNone">"TTGO LoRa32-OLED"   </td><td class="markdownTableBodyNone">"TTGO LoRa32 V1 (No TFCard)"   </td><td class="markdownTableBodyNone">ARDUINO_TTGO_LORA32_V1   </td><td class="markdownTableBodyNone">SX1276 (HPD13A)   </td><td class="markdownTableBodyNone">-    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/LilyGO/TTGO-LORA32">LILYGO®TTGO-LORA32 V2</a>   </td><td class="markdownTableBodyNone">"TTGO LoRa32-OLED"   </td><td class="markdownTableBodyNone">"TTGO LoRa32 V2"   </td><td class="markdownTableBodyNone">ARDUINO_TTGO_LoRa32_V2   </td><td class="markdownTableBodyNone">SX1276 (HPD13A)   </td><td class="markdownTableBodyNone">Wire DIO1 to GPIO33    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="http://www.lilygo.cn/prod_view.aspx?TypeId=50060&amp;Id=1271&amp;FId=t3:50060:3">LILYGO®TTGO-LORA32 V2.1</a>   </td><td class="markdownTableBodyNone">"TTGO LoRa32-OLED"   </td><td class="markdownTableBodyNone">"TTGO LoRa32 V2.1 (1.6.1)"   </td><td class="markdownTableBodyNone">ARDUINO_TTGO_LoRa32_v21new   </td><td class="markdownTableBodyNone">SX1276 (HPD13A)   </td><td class="markdownTableBodyNone">-    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://github.com/matthias-bs/LoRaWAN_Node">LoRaWAN_Node</a>   </td><td class="markdownTableBodyNone">"FireBeetle-ESP32"   </td><td class="markdownTableBodyNone">n.a.   </td><td class="markdownTableBodyNone">ARDUINO_ESP32_DEV -&gt; LORAWAN_NODE   </td><td class="markdownTableBodyNone">SX1276 (RFM95W)   </td><td class="markdownTableBodyNone">-    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://github.com/matthias-bs/BresserWeatherSensorReceiver#adafruit-feather-esp32s2-with-adafruit-lora-radio-featherwing">Adafruit Feather ESP32S2 with Adafruit LoRa Radio FeatherWing</a>   </td><td class="markdownTableBodyNone">"Adafruit Feather ESP32-S2"   </td><td class="markdownTableBodyNone">n.a.   </td><td class="markdownTableBodyNone">ARDUINO_ADAFRUIT_FEATHER_ESP32S2   </td><td class="markdownTableBodyNone">SX1276 (RFM95W)   </td><td class="markdownTableBodyNone"><b>No Bluetooth available!</b><br  />
+Wiring on the Featherwing:<br  />
+E to IRQ<br  />
+D to CS<br  />
+C to RST<br  />
+A to DI01   </td></tr>
+</table>
+<p>The preprosessor will provide some output regarding the selected configuration if enabled in the Preferences ("Verbose Output"), e.g.</p>
+<div class="fragment"><div class="line">ARDUINO_ADAFRUIT_FEATHER_ESP32S2 defined; assuming RFM95W FeatherWing will be used</div>
+<div class="line">[...]</div>
+<div class="line">Receiver chip: [SX1276]</div>
+<div class="line">Pin config: RST-&gt;0 , CS-&gt;6 , GD0/G0/IRQ-&gt;5 , GDO2/G1/GPIO-&gt;11</div>
+</div><!-- fragment --><h3>Manual Pinout Configuration</h3>
 <p><b>Note:</b> If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in <b>two</b> places!</p>
 <ol type="1">
 <li><p class="startli"><b>LoRaWAN Software Part</b></p>
@@ -226,7 +256,7 @@ o: optional    </th></tr>
 <li>Select the desired LoRaWAN network by (un)-commenting <code>ARDUINO_LMIC_CFG_NETWORK_TTN</code> or <code>ARDUINO_LMIC_CFG_NETWORK_GENERIC</code></li>
 <li>Disable features which you do not want to use</li>
 <li>Configure the timing parameters (if you think this is needed)</li>
-<li>If enabled, configure your ATC MiThermometer's BLE MAC Addressby by editing <code>knownBLEAddresses</code></li>
+<li>If enabled, configure your ATC MiThermometer's / Theengs Decoder's BLE MAC Address by by editing <code>KNOWN_BLE_ADDRESSES</code></li>
 <li>Configure your time zone by editing <code>TZ_INFO</code></li>
 <li>Configure the ADC's input pins, dividers and oversampling settings as needed</li>
 </ul>
