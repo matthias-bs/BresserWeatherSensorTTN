@@ -14,7 +14,7 @@ The RFM95W/SX1276 radio transceiver is used in FSK mode to receive weather senso
 * Supports multiple 868 MHz Sensors (e.g. Weather Sensor and Soil Moisture Sensor or Indoor Thermometer/Hygrometer)
 * Low Power Design (using ESP32 Deep Sleep Mode)
 * Fast LoRaWAN Joining after Deep Sleep (using ESP32 RTC RAM)
-* ATC MiThermometer Bluetooth Low Energy Thermometer/Hygrometer Integration (optional)
+* [ATC MiThermometer](https://github.com/pvvx/ATC_MiThermometer) Bluetooth Low Energy Thermometer/Hygrometer Integration (optional)
 * [Theengs Decoder](https://github.com/theengs/decoder) Bluetooth Low Energy Sensors Integration (optional)
 * OneWire Temperature Sensor Integration (optional)
 * ESP32 Analog Digital Converter Integration (optional)
