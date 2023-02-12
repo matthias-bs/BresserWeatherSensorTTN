@@ -39,6 +39,7 @@ See [Leonel Lopes Parente's](https://github.com/lnlp) collection of [LoRa develo
 ### RFM95W- or SX1276-based Radio Transceiver Module
 
 * [Adafruit RFM95W LoRa Radio Transceiver Breakout](https://www.adafruit.com/product/3072) (ADA3072) - 868/915 MHz version (868 MHz is used for both LoRaWAN and Bresser Weather Sensor in Europe)
+    * See [Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts](https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/pinouts).
 * RF connector (u.FL or SMA as desired)
 * Antenna ([Delock 89769 - LoRa 868 MHz Antenna SMA plug 3 dBi omnidirectional](https://www.delock.de/produkt/89769/merkmale.html?setLanguage=en) has been used with good results)
 
@@ -110,12 +111,34 @@ See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/networ
      static const std::uint8_t appkey[] = { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x00 };
      ```
 
-### Configure the RF Transceiver GPIO Wiring
+### Configure the ESP32 / RF Transceiver GPIO Wiring
 
-**Note:** For LILYGO TTGO LoRa32 V1/V2/V21new and Adafruit Feather ESP32-S2 (no Bluetooth!) with RFM95W FeatherWing, the correct pin configuration will be set with the board selection in the Arduino IDE. 
+#### Pinout Configuration by selecting a supported Board in the Arduino IDE
 
-See [Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts](https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/pinouts).
+By selecting a Board and a Board Revision (if available) in the Arduino IDE, a define is passed to the preprocessor/compiler. For the boards in the table below, the default configuration is assumed based in this define.
 
+If you are not using the Arduino IDE, you can use the defines in the table below with your specific tool chain to get the same result.
+
+If this is not what you need, you have to switch to Manual Configuration.
+
+  | Setup                                                          | Board              | Board Revision               | Define                 | Radio Module | Notes    |
+   | -------------------------------------------------------------- | ------------------ | ---------------------------- | ---------------------- | -------- | ------- |
+   | [LILYGO®TTGO-LORA32 V1](https://github.com/Xinyuan-LilyGo/TTGO-LoRa-Series) | "TTGO LoRa32-OLED" | "TTGO LoRa32 V1 (No TFCard)" | ARDUINO_TTGO_LORA32_V1 | SX1276 (HPD13A) | -   |
+   | [LILYGO®TTGO-LORA32 V2](https://github.com/LilyGO/TTGO-LORA32) | "TTGO LoRa32-OLED" | "TTGO LoRa32 V2"             | ARDUINO_TTGO_LoRa32_V2 | SX1276 (HPD13A) | Wire DIO1 to GPIO33 |
+   | [LILYGO®TTGO-LORA32 V2.1](http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1271&FId=t3:50060:3) | "TTGO LoRa32-OLED" | "TTGO LoRa32 V2.1 (1.6.1)" | ARDUINO_TTGO_LoRa32_v21new |  SX1276 (HPD13A) | - |
+   | [LoRaWAN_Node](https://github.com/matthias-bs/LoRaWAN_Node)      | "FireBeetle-ESP32" | n.a.                       | ARDUINO_ESP32_DEV -> LORAWAN_NODE     | SX1276 (RFM95W) | -      |
+   | [Adafruit Feather ESP32S2 with Adafruit LoRa Radio FeatherWing](https://github.com/matthias-bs/BresserWeatherSensorReceiver#adafruit-feather-esp32s2-with-adafruit-lora-radio-featherwing)                                | "Adafruit Feather ESP32-S2" | n.a.               | ARDUINO_ADAFRUIT_FEATHER_ESP32S2   | SX1276 (RFM95W) | **No Bluetooth available!**<br>Wiring on the Featherwing:<br>E to IRQ<br>D to CS<br>C to RST<br>A to DI01 |
+
+The preprosessor will provide some output regarding the selected configuration if enabled in the Preferences ("Verbose Output"), e.g.
+
+```
+ARDUINO_ADAFRUIT_FEATHER_ESP32S2 defined; assuming RFM95W FeatherWing will be used
+[...]
+Receiver chip: [SX1276]
+Pin config: RST->0 , CS->6 , GD0/G0/IRQ->5 , GDO2/G1/GPIO->11
+```
+
+#### Manual Pinout Configuration
 **Note:** If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in **two** places!
 
 1. **LoRaWAN Software Part**
@@ -159,7 +182,7 @@ In [BresserWeatherSensorTTNCfg.h](https://github.com/matthias-bs/BresserWeatherS
 * Select the desired LoRaWAN network by (un)-commenting `ARDUINO_LMIC_CFG_NETWORK_TTN` or `ARDUINO_LMIC_CFG_NETWORK_GENERIC`
 * Disable features which you do not want to use
 * Configure the timing parameters (if you think this is needed) 
-* If enabled, configure your ATC MiThermometer's BLE MAC Addressby by editing `knownBLEAddresses`
+* If enabled, configure your ATC MiThermometer's / Theengs Decoder's BLE MAC Address by by editing `KNOWN_BLE_ADDRESSES`
 * Configure your time zone by editing `TZ_INFO`
 * Configure the ADC's input pins, dividers and oversampling settings as needed
 
