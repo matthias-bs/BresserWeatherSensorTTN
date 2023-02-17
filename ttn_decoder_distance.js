@@ -239,7 +239,6 @@ function ttn_decoder_fp(bytes) {
 
 }
 
-
 function decodeUplink(input) {
   return {
     data: {
