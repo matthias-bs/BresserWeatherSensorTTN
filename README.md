@@ -18,6 +18,7 @@ The RFM95W/SX1276 radio transceiver is used in FSK mode to receive weather senso
 * [Theengs Decoder](https://github.com/theengs/decoder) Bluetooth Low Energy Sensors Integration (optional)
 * OneWire Temperature Sensor Integration (optional)
 * ESP32 Analog Digital Converter Integration (optional)
+* [A02YYUW / DFRobot SEN0311 Ultrasonic Distance Sensor](https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311) (30...4500mm) (optional)
 
 ## Hardware
 * Please see my [LoRaWAN_Node](https://github.com/matthias-bs/LoRaWAN_Node) project.
@@ -84,7 +85,7 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 | DallasTemperature                  | o                            |
 | NimBLE-Arduino + ATC_MiThermometer | o                            |
 | NimBle-Arduino + Theengs Decoder   | o                            |
-
+| DistanceSensor_A02YYUW             | o                            |
 
 See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies) for required/tested versions.
 
@@ -301,3 +302,4 @@ Based on
 * [DallasTemperature / Arduino-Temperature-Control-Library](https://github.com/milesburton/Arduino-Temperature-Control-Library) by Miles Burton
 * [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) by h2zero
 * [Theengs Decoder](https://github.com/theengs/decoder) by Koen Vervloesem
+* [DistanceSensor_A02YYUW](https://github.com/pportelaf/DistanceSensor_A02YYUW) by Pablo Portela 
