@@ -51,6 +51,7 @@ var _bresser_weather_sensor_t_t_n_8ino =
     [ "rtcSavedSessionState", "_bresser_weather_sensor_t_t_n_8ino.html#a6e410fc410377db756bbe398b4636d8d", null ],
     [ "rtcSyncReq", "_bresser_weather_sensor_t_t_n_8ino.html#a2525adfaa9bcf416f565b423a40a32a6", null ],
     [ "runtimeExpired", "_bresser_weather_sensor_t_t_n_8ino.html#a1ac3506d3d8af7ec9d55da6acfa1aad4", null ],
+    [ "Serial2", "_bresser_weather_sensor_t_t_n_8ino.html#a34f088ef484f88fb981a5ab4887ec919", null ],
     [ "sleepReq", "_bresser_weather_sensor_t_t_n_8ino.html#af6a553cefc7cf2dddb686b3bd2631bc5", null ],
     [ "sleepTimeout", "_bresser_weather_sensor_t_t_n_8ino.html#aac96bf5854bc0dc7bf2a09e651cd5bfa", null ],
     [ "userUTCTime", "_bresser_weather_sensor_t_t_n_8ino.html#af54b986e7fb69847e038a07179fb74cc", null ],
