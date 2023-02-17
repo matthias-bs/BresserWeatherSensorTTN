@@ -54,6 +54,9 @@
 //          Adafruit Feather ESP32-S2 and Adafruit Feather ESP32
 // 20230211 Added integration of Theengs Decoder (https://github.com/theengs/decoder)
 //          for support of additional BLE sensors
+// 20230217 Added integration of A02YYUW (DFRobot SEN0311) 
+//          ultrasonic distance sensor 
+//          (https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311)
 //
 // ToDo:
 // - 
@@ -153,6 +156,11 @@
 // Enable Bresser Soil Temperature/Moisture Sensor
 #define SOILSENSOR_EN
 
+// Enable Ultrasonic Distance Sensor
+#if defined(LORAWAN_NODE)
+    #define DISTANCESENSOR_EN
+#endif
+
 // ADC for supply/battery voltage measurement
 // default: on-board connection to VB on FireBeetle ESP32 (with R10+R11 assembled)
 //          on-board connection to VBAT on TTGO LoRa32
@@ -212,6 +220,15 @@
         #define PIN_ONEWIRE_BUS   5
     #else
         #define PIN_ONEWIRE_BUS   0
+    #endif
+#endif
+
+#ifdef DISTANCESENSOR_EN
+    #if defined(LORAWAN_NODE)
+        #define DISTANCESENSOR_TX       0  // pull-up/open: processed value / low: real-time value
+        #define DISTANCESENSOR_RX       26
+        #define DISTANCESENSOR_PWR      25
+        #define DISTANCESENSOR_RETRIES  5
     #endif
 #endif
 

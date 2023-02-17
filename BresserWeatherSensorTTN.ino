@@ -40,6 +40,8 @@
 // ATC MiThermometer                    0.1.0 (optional)
 // Theengs Decoder                      1.1.0 (optional)
 //
+// (installed from ZIP file:)
+// DistanceSensor_A02YYUW               1.0.2 (optional)
 //
 // created: 06/2022
 //
@@ -96,6 +98,9 @@
 //          Added configuration for Adafruit Huzzah ESP32 Feather with RFM95W FeatherWing
 // 20230211 Added integration of Theengs Decoder (https://github.com/theengs/decoder)
 //          for support of additional BLE sensors
+// 20230217 Added integration of A02YYUW (DFRobot SEN0311) 
+//          ultrasonic distance sensor 
+//          (https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311)
 //
 // ToDo:
 // -  
@@ -154,6 +159,11 @@
 #ifdef ONEWIRE_EN
     // Dallas/Maxim OneWire Temperature Sensor
     #include <DallasTemperature.h>
+#endif
+
+#ifdef DISTANCESENSOR_EN
+    // A02YYUW / DFRobot SEN0311 Ultrasonic Distance Sensor
+    #include <DistanceSensor_A02YYUW.h>
 #endif
 
 #ifdef ADC_EN
@@ -539,6 +549,10 @@ uint16_t  sleep_interval_long;  //!< preferences: sleep interval long
 
 #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
     std::vector<std::string> knownBLEAddresses = KNOWN_BLE_ADDRESSES;
+#endif
+
+#ifdef DISTANCESENSOR_EN
+    DistanceSensor_A02YYUW distanceSensor(&Serial2);
 #endif
 
 #ifdef MITHERMOMETER_EN
@@ -1115,6 +1129,12 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
     this->m_uplinkPeriodMs = uplinkPeriodMs;
     this->m_tReference = millis();
 
+    #ifdef DISTANCESENSOR_EN
+        Serial2.begin(9600, SERIAL_8N1, DISTANCESENSOR_RX, DISTANCESENSOR_TX);
+        pinMode(DISTANCESENSOR_PWR, OUTPUT);
+        digitalWrite(DISTANCESENSOR_PWR, LOW);
+    #endif
+
     #ifdef ADC_EN
         // Use ADC with PIN_ADC_IN
         adc.attach(PIN_ADC_IN);
@@ -1307,6 +1327,34 @@ cSensor::doUplink(void) {
     #ifdef ONEWIRE_EN
         float     water_temp_c        = getTemperature();
     #endif
+    #ifdef DISTANCESENSOR_EN
+        // Sensor power on
+        digitalWrite(DISTANCESENSOR_PWR, HIGH);
+        delay(500);
+        
+        int retries = 0;
+        DistanceSensor_A02YYUW_MEASSUREMENT_STATUS dstStatus;
+        do {
+            dstStatus = distanceSensor.meassure();
+
+            if (dstStatus != DistanceSensor_A02YYUW_MEASSUREMENT_STATUS_OK) {
+                DEBUG_PRINTF("Distance Sensor Error: %d", dstStatus);
+            }
+        } while (
+            (dstStatus != DistanceSensor_A02YYUW_MEASSUREMENT_STATUS_OK) &&
+            (++retries < DISTANCESENSOR_RETRIES)
+        );
+        
+        uint16_t  distance_mm;
+        if (dstStatus == DistanceSensor_A02YYUW_MEASSUREMENT_STATUS_OK) {
+            distance_mm = distanceSensor.getDistance();
+        } else {
+            distance_mm = 0;
+        }
+        
+        // Sensor power off
+        digitalWrite(DISTANCESENSOR_PWR, LOW);
+    #endif
     #ifdef ADC_EN
         uint16_t  supply_voltage      = getVoltage();
     #endif
@@ -1369,6 +1417,13 @@ cSensor::doUplink(void) {
         } else {
             DEBUG_PRINTF("Water Temperature:   --.- °C");
             water_temp_c = -30.0;
+        }
+    #endif
+    #ifdef DISTANCESENSOR_EN
+        if (distance_mm > 0) {
+            DEBUG_PRINTF("Distance:          %4d mm", distance_mm);
+        } else {
+            DEBUG_PRINTF("Distance:         ---- mm");
         }
     #endif
     #ifdef ADC_EN
@@ -1479,7 +1534,7 @@ cSensor::doUplink(void) {
         } else {
             // fill with suspicious dummy values
             encoder.writeTemperature(-30);
-            encoder.writeUint8(0);      
+            encoder.writeUint8(0);
         }
     #endif
 
@@ -1502,7 +1557,9 @@ cSensor::doUplink(void) {
             encoder.writeRawFloat(-1);            
         }
     #endif
-
+    #ifdef DISTANCESENSOR_EN
+        encoder.writeUint16(distance_mm);
+    #endif
     //encoder.writeRawFloat(radio.getRSSI()); // NOTE: int8_t would be more efficient
 
     this->m_fBusy = true;
