@@ -303,5 +303,5 @@ Based on
 * [OneWireNg](https://github.com/pstolarz/OneWireNg) by Piotr Stolarz
 * [DallasTemperature / Arduino-Temperature-Control-Library](https://github.com/milesburton/Arduino-Temperature-Control-Library) by Miles Burton
 * [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) by h2zero
-* [Theengs Decoder](https://github.com/theengs/decoder) by Koen Vervloesem
+* [Theengs Decoder](https://github.com/theengs/decoder) by [Theengs Project](https://github.com/theengs)
 * [DistanceSensor_A02YYUW](https://github.com/pportelaf/DistanceSensor_A02YYUW) by Pablo Portela 
