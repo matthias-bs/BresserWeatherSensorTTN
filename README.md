@@ -28,6 +28,7 @@ Auxiliary sensor data can be integrated via Bluetooth Low Energy (BLE), OneWire,
     
     [TTGO LoRa32 V2.1.6 Pinout](https://github.com/lnlp/pinout-diagrams/blob/main/LoRa%20development%20boards/TTGO%20LoRa32%20V2.1.6%20Pinout%20(LLP).pdf) 
 
+* *Presumably* [Heltec Wireless Stick](https://heltec.org/project/wireless-stick/) should work (confirmation wanted!!!)
 * *Presumably* [Adafruit Feather ESP32-S2](https://www.adafruit.com/product/4769) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) should work (confirmation wanted!!!)
 
 * *Presumably* [Adafruit Feather ESP32](https://www.adafruit.com/product/3405) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) should work (confirmation wanted!!!)
