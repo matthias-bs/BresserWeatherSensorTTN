@@ -101,6 +101,7 @@
 // 20230217 Added integration of A02YYUW (DFRobot SEN0311) 
 //          ultrasonic distance sensor 
 //          (https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311)
+// 20230304 Added configuration for Heltec Wireless Stick
 //
 // ToDo:
 // -  
@@ -125,7 +126,7 @@
 // - settimeofday()/gettimeofday() must be used to access the ESP32's RTC time
 // - Arduino ESP32 package has built-in time zone handling, see 
 //   https://github.com/SensorsIot/NTP-time-for-ESP8266-and-ESP32/blob/master/NTP_Example/NTP_Example.ino
-// - Apply fixes if using Arduino ESP32 board package v2.0.5
+// - Apply fixes if using Arduino ESP32 board package v2.0.x
 //     - mcci-catena/arduino-lorawan#204
 //       (https://github.com/mcci-catena/arduino-lorawan/pull/204)
 //     - mcci-catena/arduino-lmic#714 
@@ -216,6 +217,14 @@
     #define PIN_LMIC_DIO0     LORA_IRQ
     #define PIN_LMIC_DIO1     LORA_D1
     #define PIN_LMIC_DIO2     LORA_D2
+
+#elif defined(ARDUINO_heltec_wireless_stick)
+    // https://github.com/espressif/arduino-esp32/blob/master/variants/heltec_wireless_stick/pins_arduino.h
+    #define PIN_LMIC_NSS      SS
+    #define PIN_LMIC_RST      RST_LoRa
+    #define PIN_LMIC_DIO0     DIO0
+    #define PIN_LMIC_DIO1     DIO1
+    #define PIN_LMIC_DIO2     DIO2
 
 #elif defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
     #define PIN_LMIC_NSS      6
