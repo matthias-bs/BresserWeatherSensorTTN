@@ -307,3 +307,7 @@ Based on
 * [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) by h2zero
 * [Theengs Decoder](https://github.com/theengs/decoder) by [Theengs Project](https://github.com/theengs)
 * [DistanceSensor_A02YYUW](https://github.com/pportelaf/DistanceSensor_A02YYUW) by Pablo Portela 
+
+# Legal
+
+> This project is in no way affiliated with, authorized, maintained, sponsored or endorsed by Bresser GmbH or any of its affiliates or subsidiaries.
