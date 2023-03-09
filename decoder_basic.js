@@ -211,7 +211,7 @@ function ttn_decoder_fp(bytes) {
     // -> #13: rain_week            rawfloat
     // -> #14: rain_mon             rawfloat
     
-    // SensorID, Status, Weather Sensor, Supply Voltage,
+    // SensorID, Status, Weather Sensor, Supply Voltage, Battery Voltage, 
     //   Hourly (past 60 minutes)/Daily/Weekly/Monthly Rainfall
     return decode(
       bytes,
