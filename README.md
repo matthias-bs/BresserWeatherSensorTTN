@@ -29,9 +29,11 @@ Auxiliary sensor data can be integrated via Bluetooth Low Energy (BLE), OneWire,
     [TTGO LoRa32 V2.1.6 Pinout](https://github.com/lnlp/pinout-diagrams/blob/main/LoRa%20development%20boards/TTGO%20LoRa32%20V2.1.6%20Pinout%20(LLP).pdf) 
 
 * [Heltec Wireless Stick](https://heltec.org/project/wireless-stick/)
-* *Presumably* [Adafruit Feather ESP32-S2](https://www.adafruit.com/product/4769) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) should work (confirmation wanted!!!)
+* *Presumably* [Adafruit Feather ESP32-S2](https://www.adafruit.com/product/4769) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) (confirmation wanted!!!)
 
-* *Presumably* [Adafruit Feather ESP32](https://www.adafruit.com/product/3405) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) should work (confirmation wanted!!!)
+* *Presumably* [Adafruit Feather ESP32](https://www.adafruit.com/product/3405) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) (confirmation wanted!!!)
+
+* *Presumably* [DFRobot FireBeetle ESP32 IoT Microcontroller](https://www.dfrobot.com/product-1590.html) with [FireBeetle Cover LoRa Radio 868MHz](https://www.dfrobot.com/product-1831.html) (confirmation wanted!!!)
 
 See [The Things Network's](https://www.thethingsnetwork.org) [Big ESP32 + SX127x topic part 2](https://www.thethingsnetwork.org/forum/t/big-esp32-sx127x-topic-part-2/11973) for some hardware options.
 
