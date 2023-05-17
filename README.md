@@ -293,6 +293,16 @@ rx = {[...],"decoded":{"payload":{"air_temp_c":"13.5","battery_v":4197,"humidity
 "supply_v":4210,"water_temp_c":"-30.0","wind_avg_meter_sec":"1.9","wind_direction_deg":"282.0","wind_gust_meter_sec":"2.0"},
 "status":"success"}, [...]
 ```
+## Datacake Integration
+
+### Desktop Dashboard
+
+![Datacake_Dashboard_Desktop](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/2a876ba1-06b9-4ea3-876c-2fad3d559b01)
+
+### Mobile Dashboard
+![Datacake_Dashboard_Mobile](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/fbc0948c-bfd8-4d7d-9780-c113d576d3cf)
+
+[Datacake Payload Decoder](datacake_decoder.js)
 
 ## Doxygen Generated Source Code Documentation
 
