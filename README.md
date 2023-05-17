@@ -302,6 +302,10 @@ rx = {[...],"decoded":{"payload":{"air_temp_c":"13.5","battery_v":4197,"humidity
 ### Mobile Dashboard
 ![Datacake_Dashboard_Mobile](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/fbc0948c-bfd8-4d7d-9780-c113d576d3cf)
 
+### Datacake/TTN Setup
+
+YouTube Video: [Get started for free with LoRaWaN on The Things Network and Datacake IoT Platform](https://youtu.be/WGVFgYp3k3s)
+
 [Datacake Payload Decoder](datacake_decoder.js)
 
 ## Doxygen Generated Source Code Documentation
