@@ -219,7 +219,7 @@
     #define PIN_LMIC_DIO1     LORA_D1
     #define PIN_LMIC_DIO2     LORA_D2
 
-#elif defined(ARDUINO_heltec_wireless_stick) || || defined(ARDUINO_heltec_wifi_lora_32_V2)
+#elif defined(ARDUINO_heltec_wireless_stick) || defined(ARDUINO_heltec_wifi_lora_32_V2)
     // https://github.com/espressif/arduino-esp32/blob/master/variants/heltec_wireless_stick/pins_arduino.h
     // https://github.com/espressif/arduino-esp32/tree/master/variants/heltec_wifi_lora_32_V2/pins_ardiono.h
     #define PIN_LMIC_NSS      SS
