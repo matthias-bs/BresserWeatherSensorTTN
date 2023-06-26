@@ -1,4 +1,4 @@
-{
+⁹{
   "name": "BresserWeatherSensorTTN",
   "version": "0.7.0",
   "description": "Bresser 5-in-1/6-in-1/7-in-1 868 MHz Weather Sensor Radio Receiver; provides data via LoRaWAN to The Things Network",
@@ -31,6 +31,6 @@
     "Arduino-Temperature-Control-Library": "milesburton/Arduino-Temperature-Control-Library#semver:^3.9.1",
     "NimBLE-Arduino": "h2zero/NimBLE-Arduino#semver:^1.4.1",
     "ATC_MiThermometer": "matthias-bs/ATC_MiThermometer#semver:^0.2.1",
-    "TheengsDecoder": "theengs/decoder#semver:^1.5.1"
+    "TheengsDecoder": "theengs/decoder#semver:^1.5.5"
   }
 }
