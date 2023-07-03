@@ -82,7 +82,7 @@ jobs:
             "DallasTemperature@3.9.0"
             "NimBLE-Arduino@1.4.1"
             "ATC_MiThermometer@0.2.1"
-            "TheengsDecoder@1.5.5")
+            "TheengsDecoder@1.5.7")
           for i in "${required_libs[@]}"
           do
             arduino-cli lib install "$i"
