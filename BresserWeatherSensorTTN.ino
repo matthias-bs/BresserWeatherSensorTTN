@@ -29,16 +29,16 @@
 // MCCI Arduino Development Kit ADK     0.2.2
 // MCCI LoRaWAN LMIC library            4.1.1
 // MCCI Arduino LoRaWAN Library         0.9.2
-// RadioLib                             6.0.0
+// RadioLib                             6.1.0
 // LoRa_Serialization                   3.2.1
-// ESP32Time                            2.0.0
-// BresserWeatherSensorReceiver         0.9.3
+// ESP32Time                            2.0.1
+// BresserWeatherSensorReceiver         0.10.0
 // ESP32AnalogRead                      0.2.1 (optional)
 // OneWireNg                            0.13.1 (optional)
 // DallasTemperature                    3.9.0 (optional)
 // NimBLE-Arduino                       1.4.1 (optional)
 // ATC MiThermometer                    0.2.1 (optional)
-// Theengs Decoder                      1.4.2 (optional)
+// Theengs Decoder                      1.5.7 (optional)
 //
 // (installed from ZIP file:)
 // DistanceSensor_A02YYUW               1.0.2 (optional)
@@ -103,6 +103,7 @@
 //          (https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311)
 // 20230304 Added configuration for Heltec Wireless Stick
 // 20230614 Added configuration for Heltec WiFi LoRa 32
+// 20230705 Updated library versions
 //
 // ToDo:
 // -  
