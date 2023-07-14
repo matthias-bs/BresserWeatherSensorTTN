@@ -1597,12 +1597,12 @@ cSensor::doUplink(void) {
     #ifdef LIGHTNINGSENSOR_EN
         if (ls > -1) {
             // Lightning sensor data available
-            endoder.writeUint16(weatherSensor.sensor[ls].lightning_count);
-            encoder.writeUnit8(weatherSensor.sensor[ls].lightning_distance_km);
+            encoder.writeUint16(weatherSensor.sensor[ls].lightning_count);
+            encoder.writeUint8(weatherSensor.sensor[ls].lightning_distance_km);
         } else {
             // Fill with suspicious dummy values
-            endoder.writeUint16(-1);
-            endoder.writeUint16(-1);
+            encoder.writeUint16(-1);
+            encoder.writeUint16(-1);
         }
     #endif
     //encoder.writeRawFloat(radio.getRSSI()); // NOTE: int8_t would be more efficient
