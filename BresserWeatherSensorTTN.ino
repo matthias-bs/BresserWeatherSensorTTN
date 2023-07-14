@@ -1396,14 +1396,16 @@ cSensor::doUplink(void) {
       ws = weatherSensor.findType(SENSOR_TYPE_WEATHER1);
     }
 
+    int s1 = -1;
     #ifdef SOILSENSOR_EN
       // Try to find SENSOR_TYPE_SOIL
-      int s1 = weatherSensor.findType(SENSOR_TYPE_SOIL, 1);
+      s1 = weatherSensor.findType(SENSOR_TYPE_SOIL, 1);
     #endif
 
+    int ls = -1;
     #ifdef LIGHTNINGSENSOR_EN
       // Try to find SENSOR_TYPE_LIGHTNING
-      int ls = weatherSensor.findType(SENSOR_TYPE_LIGHTNING);
+      ls = weatherSensor.findType(SENSOR_TYPE_LIGHTNING);
     #endif
     
     DEBUG_PRINTF("--- Uplink Data ---");
@@ -1496,11 +1498,21 @@ cSensor::doUplink(void) {
         }
     #endif
 
-    // Status flags
-    encoder.writeBitmap(longSleep,
+    // TTN node status flags
+    encoder.writeBitmap(0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        longSleep,
                         rtcSyncReq, 
-                        runtimeExpired,
+                        runtimeExpired);
+
+    // Sensor status flags
+    encoder.writeBitmap(0,
                         mithermometer_valid,
+                        (ls > -1) ? weatherSensor.sensor[ls].valid : false,
+                        (ls > -1) ? weatherSensor.sensor[ls].battery_ok : false,
                         (s1 > -1) ? weatherSensor.sensor[s1].valid : false,
                         (s1 > -1) ? weatherSensor.sensor[s1].battery_ok : false,
                         (ws > -1) ? weatherSensor.sensor[ws].valid : false,
