@@ -1433,8 +1433,8 @@ cSensor::doUplink(void) {
     // Debug output for lightning sensor data
     #ifdef LIGHTNINGSENSOR_EN
       if (ls > -1) {
-        DEBUG_PRINTF("Lightning counter: %3d",  weatherSensor.sensor[ls].lightning_count);
-        DEBUG_PRINTF("Lightning distance: %2d   km",  weatherSensor.sensor[ls].lightning_distance_km);      
+        DEBUG_PRINTF("Lightning counter:  %3d",  weatherSensor.sensor[ls].lightning_count);
+        DEBUG_PRINTF("Lightning distance:  %2d   km",  weatherSensor.sensor[ls].lightning_distance_km);      
       } else {
         DEBUG_PRINTF("-- Lightning Sensor Failure");
       }
