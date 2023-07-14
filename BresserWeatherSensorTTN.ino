@@ -1614,7 +1614,7 @@ cSensor::doUplink(void) {
         } else {
             // Fill with suspicious dummy values
             encoder.writeUint16(-1);
-            encoder.writeUint16(-1);
+            encoder.writeUint8(-1);
         }
     #endif
     //encoder.writeRawFloat(radio.getRSSI()); // NOTE: int8_t would be more efficient
