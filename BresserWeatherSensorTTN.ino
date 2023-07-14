@@ -31,8 +31,8 @@
 // MCCI Arduino LoRaWAN Library         0.9.2
 // RadioLib                             6.1.0
 // LoRa_Serialization                   3.2.1
-// ESP32Time                            2.0.1
-// BresserWeatherSensorReceiver         0.10.0
+// ESP32Time                            2.0.3
+// BresserWeatherSensorReceiver         0.12.1
 // ESP32AnalogRead                      0.2.1 (optional)
 // OneWireNg                            0.13.1 (optional)
 // DallasTemperature                    3.9.0 (optional)
@@ -104,6 +104,7 @@
 // 20230304 Added configuration for Heltec Wireless Stick
 // 20230614 Added configuration for Heltec WiFi LoRa 32
 // 20230705 Updated library versions
+// 20230714 Added integration of Bresser Lightning Sensor
 //
 // ToDo:
 // -  
@@ -1394,10 +1395,19 @@ cSensor::doUplink(void) {
       // Try to find SENSOR_TYPE_WEATHER1
       ws = weatherSensor.findType(SENSOR_TYPE_WEATHER1);
     }
-    
-    // Try to find SENSOR_TYPE_SOIL
-    int s1 = weatherSensor.findType(SENSOR_TYPE_SOIL, 1);
 
+    int s1 = -1;
+    #ifdef SOILSENSOR_EN
+      // Try to find SENSOR_TYPE_SOIL
+      s1 = weatherSensor.findType(SENSOR_TYPE_SOIL, 1);
+    #endif
+
+    int ls = -1;
+    #ifdef LIGHTNINGSENSOR_EN
+      // Try to find SENSOR_TYPE_LIGHTNING
+      ls = weatherSensor.findType(SENSOR_TYPE_LIGHTNING);
+    #endif
+    
     DEBUG_PRINTF("--- Uplink Data ---");
     
     // Debug output for weather sensor data
@@ -1415,13 +1425,23 @@ cSensor::doUplink(void) {
     // Debug output for soil sensor data
     #ifdef SOILSENSOR_EN
       if (s1 > -1) {
-        DEBUG_PRINTF("Soil Temperature 1: % 3.1f °C",  weatherSensor.sensor[s1].temp_c);
+        DEBUG_PRINTF("Soil Temperature 1: %3.1f °C",  weatherSensor.sensor[s1].temp_c);
         DEBUG_PRINTF("Soil Moisture 1:     %2d   %%",  weatherSensor.sensor[s1].moisture);      
       } else {
         DEBUG_PRINTF("-- Soil Sensor 1 Failure");
       }
     #endif
 
+    // Debug output for lightning sensor data
+    #ifdef LIGHTNINGSENSOR_EN
+      if (ls > -1) {
+        DEBUG_PRINTF("Lightning counter:  %3d",  weatherSensor.sensor[ls].lightning_count);
+        DEBUG_PRINTF("Lightning distance:  %2d   km",  weatherSensor.sensor[ls].lightning_distance_km);      
+      } else {
+        DEBUG_PRINTF("-- Lightning Sensor Failure");
+      }
+    #endif
+    
     #ifdef ONEWIRE_EN
         // Debug output for auxiliary sensors/voltages
         if (water_temp_c != DEVICE_DISCONNECTED_C) {
@@ -1478,11 +1498,21 @@ cSensor::doUplink(void) {
         }
     #endif
 
-    // Status flags
-    encoder.writeBitmap(longSleep,
+    // TTN node status flags
+    encoder.writeBitmap(0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        longSleep,
                         rtcSyncReq, 
-                        runtimeExpired,
+                        runtimeExpired);
+
+    // Sensor status flags
+    encoder.writeBitmap(0,
                         mithermometer_valid,
+                        (ls > -1) ? weatherSensor.sensor[ls].valid : false,
+                        (ls > -1) ? weatherSensor.sensor[ls].battery_ok : false,
                         (s1 > -1) ? weatherSensor.sensor[s1].valid : false,
                         (s1 > -1) ? weatherSensor.sensor[s1].battery_ok : false,
                         (ws > -1) ? weatherSensor.sensor[ws].valid : false,
@@ -1569,8 +1599,23 @@ cSensor::doUplink(void) {
             encoder.writeRawFloat(-1);            
         }
     #endif
+
+    // Distance sensor data
     #ifdef DISTANCESENSOR_EN
         encoder.writeUint16(distance_mm);
+    #endif
+
+    // Lightning sensor data
+    #ifdef LIGHTNINGSENSOR_EN
+        if (ls > -1) {
+            // Lightning sensor data available
+            encoder.writeUint16(weatherSensor.sensor[ls].lightning_count);
+            encoder.writeUint8(weatherSensor.sensor[ls].lightning_distance_km);
+        } else {
+            // Fill with suspicious dummy values
+            encoder.writeUint16(-1);
+            encoder.writeUint8(-1);
+        }
     #endif
     //encoder.writeRawFloat(radio.getRSSI()); // NOTE: int8_t would be more efficient
 

@@ -57,6 +57,7 @@
 // 20230217 Added integration of A02YYUW (DFRobot SEN0311) 
 //          ultrasonic distance sensor 
 //          (https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311)
+// 20230714 Added LIGHTNINGSENSOR_EN
 //
 // ToDo:
 // - 
@@ -155,6 +156,9 @@
 
 // Enable Bresser Soil Temperature/Moisture Sensor
 #define SOILSENSOR_EN
+
+// Enable Bresser Lightning Sensor
+#define LIGHTNINGSENSOR_EN
 
 // Enable Ultrasonic Distance Sensor
 #if defined(LORAWAN_NODE)
