@@ -21,6 +21,7 @@
 # History:
 #
 # 20230221 Created
+# 20230716 Added lightning sensor data, split status bitmap in status_node and status
 #
 # To Do:
 # - 
