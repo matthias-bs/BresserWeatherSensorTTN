@@ -62,6 +62,7 @@ features = [
 #   <datatype>  : decoder datatype (or rather name of decoding function)
 generator = {
     'id' : {'cond': 'SENSORID_EN', 'type': 'uint32'},
+    'status_node' : {'cond': '', 'type': 'bitmap'},
     'status' : {'cond': '', 'type': 'bitmap'},
     'air_temp_c': {'cond': '', 'type': 'temperature'},
     'humidity': {'cond': '', 'type': 'uint8'},
@@ -86,6 +87,8 @@ generator = {
     'adc1_v': {'cond': 'PIN_ADC1_IN', 'type': 'uint16'},
     'adc2_v': {'cond': 'PIN_ADC2_IN', 'type': 'uint16'},
     'distance_mm': {'cond': 'DISTANCESENSOR_EN', 'type': 'uint16'},
+    'lightning_count': {'cond': 'LIGHTNINGSENSOR_EN', 'type': 'uint16'},
+    'lightning_distance_km': {'cond': 'LIGHTNINGSENSOR_EN', 'type': 'uint8'},
 }
 
 header = '''
