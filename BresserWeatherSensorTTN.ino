@@ -105,6 +105,7 @@
 // 20230614 Added configuration for Heltec WiFi LoRa 32
 // 20230705 Updated library versions
 // 20230714 Added integration of Bresser Lightning Sensor
+// 20230717 Added sensor startup to rain gauge
 //
 // ToDo:
 // -  
@@ -1206,7 +1207,7 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
 
             // If weather sensor has be found and rain data is valid, update statistics
             if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].rain_ok) {
-                rainGauge.update(timeinfo, weatherSensor.sensor[ws].rain_mm, rg_overflow);
+                rainGauge.update(timeinfo, weatherSensor.sensor[ws].rain_mm, , weatherSensor.sensor[ws].startup, rg_overflow);
             }
         }
     #endif
