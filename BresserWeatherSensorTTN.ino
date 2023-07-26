@@ -1032,7 +1032,7 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
 /// Print date and time (i.e. local time)
 void printDateTime(void) {
         struct tm timeinfo;
-        char tbuf[26];
+        char tbuf[25];
         
         time_t tnow = rtc.getLocalEpoch();
         localtime_r(&tnow, &timeinfo);
