@@ -151,6 +151,10 @@
     #include "RainGauge.h"
 #endif
 
+#ifdef LIGHTNINGSENSOR_EN
+    #include "Lightning.h"
+#endif
+
 // NOTE: Add #define LMIC_ENABLE_DeviceTimeReq 1
 //        in ~/Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h
 #if (not(LMIC_ENABLE_DeviceTimeReq))
@@ -551,6 +555,11 @@ uint16_t  sleep_interval_long;  //!< preferences: sleep interval long
 #ifdef RAINDATA_EN
     /// Rain data statistics 
     RainGauge rainGauge;
+#endif
+
+#ifdef LIGHTNINGSENSOR_EN
+    /// Lightning sensor post-processing
+    Lightning lightningProc;
 #endif
 
 #ifdef ONEWIRE_EN
@@ -1211,6 +1220,22 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
             }
         }
     #endif
+
+    #ifdef LIGHTNINGSENSOR_EN
+                // Check if time is valid
+        if (rtcLastClockSync > 0) {
+            // Get local date and time
+            time_t tnow = rtc.getLocalEpoch();
+
+            // Find lightning sensor
+            int ls = weatherSensor.findType(SENSOR_TYPE_LIGHTNING);
+
+            // If lightning sensor has be found and data is valid, run post-processing
+            if ((ls > -1) && weatherSensor.sensor[ls].valid && weatherSensor.sensor[ls].lightning_ok) {
+                lightningProc.update(tnow, weatherSensor.sensor[ls].lightning_count, weatherSensor.sensor[ls].lightning_distance_km, weatherSensor.sensor[ls].startup);
+            }         
+        }
+    #endif
 }
 
 
@@ -1386,6 +1411,12 @@ cSensor::doUplink(void) {
         // Get sensor data - run BLE scan for <bleScanTime>
         bleSensors.getData(BLE_SCAN_TIME);
     #endif
+    #ifdef LIGHTNINGSENSOR_EN
+        time_t  lightn_ts;
+        int     lightn_events;
+        uint8_t lightn_distance;
+    #endif
+    
     //
     // Find Bresser sensor data in array 
     //
@@ -1437,9 +1468,22 @@ cSensor::doUplink(void) {
     #ifdef LIGHTNINGSENSOR_EN
       if (ls > -1) {
         DEBUG_PRINTF("Lightning counter:  %3d",  weatherSensor.sensor[ls].lightning_count);
-        DEBUG_PRINTF("Lightning distance:  %2d   km",  weatherSensor.sensor[ls].lightning_distance_km);      
+        DEBUG_PRINTF("Lightning distance:  %2d   km",  weatherSensor.sensor[ls].lightning_distance_km);
+        DEBUG_PRINTF()     
       } else {
         DEBUG_PRINTF("-- Lightning Sensor Failure");
+      }
+      if (lightningProc.lastEvent(lightn_ts, lightn_events, lightn_distance)) {
+            #if CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG
+                struct tm timeinfo;
+                char tbuf[25];
+
+                localtime_r(&lightn_ts, &timeinfo);
+                strftime(tbuf, 25, "%Y-%m-%d %H:%M:%S", &timeinfo);
+            #endif
+            DEBUG_PRINTF("Last lightning event @%s: %d events, %d km", tbuf, lightn_events, lightn_distance);
+      } else {
+        DEBUG_PRINTF("-- No Lightning Event Data Available");
       }
     #endif
     
@@ -1610,12 +1654,14 @@ cSensor::doUplink(void) {
     #ifdef LIGHTNINGSENSOR_EN
         if (ls > -1) {
             // Lightning sensor data available
-            encoder.writeUint16(weatherSensor.sensor[ls].lightning_count);
-            encoder.writeUint8(weatherSensor.sensor[ls].lightning_distance_km);
+            encoder.writeUnixtime(lightn_ts);
+            encoder.writeUint16(lightn_events);
+            encoder.writeUint8(lightn_distance);
         } else {
             // Fill with suspicious dummy values
-            encoder.writeUint16(-1);
-            encoder.writeUint8(-1);
+            encoder.writeUnixtime(0);
+            encoder.writeUint16(0);
+            encoder.writeUint8(0);
         }
     #endif
     //encoder.writeRawFloat(radio.getRSSI()); // NOTE: int8_t would be more efficient

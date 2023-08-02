@@ -162,7 +162,7 @@
 
 // Enable Ultrasonic Distance Sensor
 #if defined(LORAWAN_NODE)
-    #define DISTANCESENSOR_EN
+    //#define DISTANCESENSOR_EN
 #endif
 
 // ADC for supply/battery voltage measurement
