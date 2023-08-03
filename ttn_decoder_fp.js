@@ -14,7 +14,9 @@ function ttn_decoder_fp(bytes) {
         if (bytes.length !== unixtime.BYTES) {
             throw new Error('Unix time must have exactly 4 bytes');
         }
-        return bytesToInt(bytes);
+        //return bytesToInt(bytes);
+        dateObj = new Date(bytesToInt(bytes) * 1000);
+        return dateObj.toISOString();
     };
     unixtime.BYTES = 4;
 
@@ -210,14 +212,14 @@ function ttn_decoder_fp(bytes) {
             rawfloat,           uint16,             uint16,         temperature,
             temperature,        uint8,              temperature,    uint8, 
             rawfloat,           rawfloat,           rawfloat,       rawfloat,           
-            uint16,             uint8
+            unixtime,           uint16,             uint8
         ],
         [   'status_node',      'status',           'air_temp_c',   'humidity',
             'wind_gust_meter_sec', 'wind_avg_meter_sec', 'wind_direction_deg',
             'rain_mm',          'supply_v',         'battery_v',    'water_temp_c', 
             'indoor_temp_c',    'indoor_humidity',  'soil_temp_c',  'soil_moisture', 
             'rain_hr',          'rain_day',         'rain_week',    'rain_mon',
-            'lightning_count',  'lightning_distance_km'
+            'lightning_time',   'lightning_events',  'lightning_distance_km'
         ]
     );
 
