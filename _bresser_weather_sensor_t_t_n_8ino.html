@@ -98,8 +98,8 @@ $(document).ready(function(){initNavTree('_bresser_weather_sensor_t_t_n_8ino.htm
 <code>#include &lt;Preferences.h&gt;</code><br />
 <code>#include &lt;ESP32Time.h&gt;</code><br />
 <code>#include &quot;RainGauge.h&quot;</code><br />
+<code>#include &quot;Lightning.h&quot;</code><br />
 <code>#include &lt;DallasTemperature.h&gt;</code><br />
-<code>#include &lt;DistanceSensor_A02YYUW.h&gt;</code><br />
 <code>#include &lt;ESP32AnalogRead.h&gt;</code><br />
 <code>#include &quot;WeatherSensorCfg.h&quot;</code><br />
 <code>#include &quot;WeatherSensor.h&quot;</code><br />
@@ -276,6 +276,10 @@ struct <a class="el" href="structs_prefs.html">sPrefs</a>&#160;</td><td class="m
 RainGauge&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a6965ff1ec8f32647b494bd1a458575f9">rainGauge</a></td></tr>
 <tr class="memdesc:a6965ff1ec8f32647b494bd1a458575f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rain data statistics. <br /></td></tr>
 <tr class="separator:a6965ff1ec8f32647b494bd1a458575f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2829a7a314e4e8bb9e316ecdd47dd547"><td class="memItemLeft" align="right" valign="top"><a id="a2829a7a314e4e8bb9e316ecdd47dd547"></a>
+Lightning&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a2829a7a314e4e8bb9e316ecdd47dd547">lightningProc</a></td></tr>
+<tr class="memdesc:a2829a7a314e4e8bb9e316ecdd47dd547"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lightning sensor post-processing. <br /></td></tr>
+<tr class="separator:a2829a7a314e4e8bb9e316ecdd47dd547"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a988a13c4fd0ed4eba1d6dff73d064914"><td class="memItemLeft" align="right" valign="top"><a id="a988a13c4fd0ed4eba1d6dff73d064914"></a>
 DallasTemperature temp_sensors &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a988a13c4fd0ed4eba1d6dff73d064914">oneWire</a></td></tr>
 <tr class="memdesc:a988a13c4fd0ed4eba1d6dff73d064914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dallas temperature sensors connected to OneWire bus. <br /></td></tr>
@@ -283,9 +287,6 @@ DallasTemperature temp_sensors &amp;&#160;</td><td class="memItemRight" valign="
 <tr class="memitem:a134e5b815ce8cf8454c451c1f5bfb81d"><td class="memItemLeft" align="right" valign="top"><a id="a134e5b815ce8cf8454c451c1f5bfb81d"></a>
 std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>knownBLEAddresses</b> = KNOWN_BLE_ADDRESSES</td></tr>
 <tr class="separator:a134e5b815ce8cf8454c451c1f5bfb81d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34f088ef484f88fb981a5ab4887ec919"><td class="memItemLeft" align="right" valign="top"><a id="a34f088ef484f88fb981a5ab4887ec919"></a>
-DistanceSensor_A02YYUW distanceSensor &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Serial2</b></td></tr>
-<tr class="separator:a34f088ef484f88fb981a5ab4887ec919"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a568aac4540a80387844b398aa821ceb2"><td class="memItemLeft" align="right" valign="top"><a id="a568aac4540a80387844b398aa821ceb2"></a>
 <a class="el" href="class_ble_sensors.html">BleSensors</a>&#160;</td><td class="memItemRight" valign="bottom"><b>bleSensors</b> (knownBLEAddresses)</td></tr>
 <tr class="separator:a568aac4540a80387844b398aa821ceb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
