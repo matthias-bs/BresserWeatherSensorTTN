@@ -88,6 +88,7 @@ generator = {
     'adc1_v': {'cond': 'PIN_ADC1_IN', 'type': 'uint16'},
     'adc2_v': {'cond': 'PIN_ADC2_IN', 'type': 'uint16'},
     'distance_mm': {'cond': 'DISTANCESENSOR_EN', 'type': 'uint16'},
+    'lightning_time': {'cond': 'LIGHTNINGSENSOR_EN', 'type': 'unixtime'},
     'lightning_count': {'cond': 'LIGHTNINGSENSOR_EN', 'type': 'uint16'},
     'lightning_distance_km': {'cond': 'LIGHTNINGSENSOR_EN', 'type': 'uint8'},
 }
