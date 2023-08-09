@@ -40,6 +40,7 @@ features = [
     'SOILSENSOR_EN',
     'MITHERMOMETER_EN',
     'DISTANCESENSOR_EN',
+    'LIGHTNINGSENSOR_EN',
     'ADC_EN',
     'PIN_ADC_IN',
     'PIN_ADC0_IN',
