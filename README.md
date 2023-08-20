@@ -216,13 +216,17 @@ See [Debug Output Configuration in Arduino IDE](DEBUG_OUTPUT.md)
 
 ## Remote Configuration via LoRaWAN Downlink
 
-| Command                       | Cmd  | Unit    | Data0           | Data1           | Data2           | Data3           |
-| ----------------------------- | ---- | ------- | --------------- | --------------- | --------------- | --------------- |
-| CMD_SET_WEATHERSENSOR_TIMEOUT | 0xA0 | seconds | timeout[7:0]    |                 |                 |                 |
-| CMD_SET_SLEEP_INTERVAL        | 0xA8 | seconds | interval[15: 8] | interval[ 7: 0] |                 |                 |
-| CMD_SET_SLEEP_INTERVAL_LONG   | 0xA9 | seconds | interval[15: 8] | interval[ 7: 0] |                 |                 |
-| CMD_RESET_RAINGAUGE           | 0xB0 |         |                 |                 |                 |                 |
-| CMD_SET_DATETIME              | 0x88 | epoch   | unixtime[31:24] | unixtime[23:16] | unixtime[15:8] | unixtime[7:0] |
+| Command / Response            | Cmd  | Port | Unit    | Data0           | Data1           | Data2           | Data3           |
+| ----------------------------- | ---- | ---- | ------- | --------------- | --------------- | --------------- | --------------- |
+| CMD_SET_WEATHERSENSOR_TIMEOUT | 0xA0 |      | seconds | timeout[7:0]    |                 |                 |                 |
+| CMD_SET_SLEEP_INTERVAL        | 0xA8 |      | seconds | interval[15: 8] | interval[ 7: 0] |                 |                 |
+| CMD_SET_SLEEP_INTERVAL_LONG   | 0xA9 |      | seconds | interval[15: 8] | interval[ 7: 0] |                 |                 |
+| CMD_RESET_RAINGAUGE           | 0xB0 |      |         | [flags]         |                 |                 |                 |
+| CMD_GET_CONFIG                | 0xB1 |         |                 |                 |                 |               |                 |                 |
+|    response:               |  |  3       | seconds   | ws_timeout[ 7: 0] | sleep_interval[15: 8] | sleep_interval[ 7: 0] | sleep_interval_long[15: 8] | sleep_interval[ 7: 0] |
+| CMD_GET_DATETIME              | 0x86 |         |                 |                 |                |                 |
+|   response:            |      | 2       | epoch   | unixtime[31:24] | unixtime[23:16] | unixtime[15:8] | unixtime[7:0] |
+| CMD_SET_DATETIME              | 0x88 |         |epoch   | unixtime[31:24] | unixtime[23:16] | unixtime[15:8] | unixtime[7:0] |
 
 :warning: Confirmed downlinks should not be used! (see [here](https://www.thethingsnetwork.org/forum/t/how-to-purge-a-scheduled-confirmed-downlink/56849/7) for an explanation.)
 
