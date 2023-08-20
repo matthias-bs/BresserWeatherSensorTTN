@@ -1,8 +1,7 @@
-// Bresser Weather Sensor Decoder
-function bws_decoder(bytes) {
+function ttn_decoder_fp(bytes) {
     // bytes is of type Buffer
 
-    // IMPORTANT: paste code from src/decoder.js here
+
     var bytesToInt = function (bytes) {
         var i = 0;
         for (var x = 0; x < bytes.length; x++) {
@@ -40,7 +39,7 @@ function bws_decoder(bytes) {
             throw new Error('int must have exactly 2 bytes');
         }
         var res = bytesToInt(bytes) * 0.1;
-        return res.toFixed(1);
+        return res;
     };
     uint16fp1.BYTES = 2;
 
@@ -86,7 +85,7 @@ function bws_decoder(bytes) {
             t = -t;
         }
         t = t / 1e2;
-        return t.toFixed(1);
+        return t;
     };
     temperature.BYTES = 2;
 
@@ -113,7 +112,7 @@ function bws_decoder(bytes) {
         var e = bits >>> 23 & 0xff;
         var m = (e === 0) ? (bits & 0x7fffff) << 1 : (bits & 0x7fffff) | 0x800000;
         var f = sign * m * Math.pow(2, e - 150);
-        return f.toFixed(1);
+        return f;
     }
     rawfloat.BYTES = 4;
 
@@ -190,61 +189,66 @@ function bws_decoder(bytes) {
         };
     }
 
-    // see assignment to 'bitmap' variable for status bit names 
-    //    return decode(
-    //    bytes,
-    //    [bitmap,   temperature,  uint8,       uint16,       uint16      ], // types
-    //    ['status', 'air_temp_c', 'humidity',  'supply_v',   'battery_v' ]  // JSON elements
-    //  );
+    // SENSORID_EN defined
+    // -> #1: id                    uint32
+    // 
+    // unconditional
+    // -> #2: status                bitmap
+    //
+    // unconditional
+    // -> #3: air_temp_c            temperature
+    //
+    // unconditional
+    // -> #4: humidity              uint8
+    // 
+    // ENCODE_AS_FLOAT defined
+    // -> #5: wind_gust_meter_sec   rawfloat
+    // -> #6: wind_avg_meter_sec    rawfloat
+    // -> #7: wind_direction_deg    rawfloat
+    //
+    // ENCODE_AS_FLOAT not defined
+    // (uint16fp1: unsigned integer 16 bytes; fixed point with 1 decimal)
+    // -> #5: wind_gust_meter_sec   uint16fp1
+    // -> #6: wind_avg_meter_sec    uint16fp1
+    // -> #7: wind_direction_deg    uint16fp1
+    //
+    // unconditional
+    // -> #8: rain_mm               rawfloat
+    //
+    // ADC_EN defined
+    // -> #9: supply_v              uint16
+    //
+    // ADC_EN defined and PIN_ADC3_IN defined
+    // -> #10: battery_v            uint16
+    //
+    // RAINDATA_EN defined
+    // -> #11: rain_hr              rawfloat
+    // -> #12: rain_day             rawfloat
+    // -> #13: rain_week            rawfloat
+    // -> #14: rain_mon             rawfloat
+
+    // SensorID, Status, Weather Sensor, Supply Voltage, Battery Voltage, 
+    //   Hourly (past 60 minutes)/Daily/Weekly/Monthly Rainfall
     return decode(
         bytes,
-        [   bitmap_node,        bitmap_sensors,     temperature,    uint8,
-            uint16fp1,          uint16fp1,          uint16fp1,
-            rawfloat,           uint16,             uint16,         temperature,
-            temperature,        uint8,              temperature,    uint8, 
-            rawfloat,           rawfloat,           rawfloat,       rawfloat,           
-            unixtime,           uint16,             uint8
+        [uint32, bitmap_node, bitmap_sensors, temperature, uint8,
+            uint16fp1, uint16fp1, uint16fp1,
+            rawfloat, uint16, uint16, rawfloat, rawfloat, rawfloat, rawfloat
         ],
-        [   'status_node',      'status',           'air_temp_c',   'humidity',
+        ['id', 'status_node', 'status', 'air_temp_c', 'humidity',
             'wind_gust_meter_sec', 'wind_avg_meter_sec', 'wind_direction_deg',
-            'rain_mm',          'supply_v',         'battery_v',    'water_temp_c', 
-            'indoor_temp_c',    'indoor_humidity',  'soil_temp_c',  'soil_moisture', 
-            'rain_hr',          'rain_day',         'rain_week',    'rain_mon',
-            'lightning_time',   'lightning_count',  'lightning_distance_km'
+            'rain_mm', 'supply_v', 'battery_v', 'rain_hr', 'rain_day', 'rain_week', 'rain_mon'
         ]
     );
-
 }
 
 
-function Decoder(bytes, port, uplink_info) {
-    var decoded = {};
-
-    decoded = bws_decoder(bytes);
-
-    /*
-      The uplink_info variable is an OPTIONAL third parameter that provides the following:
-    
-      uplink_info = {
-        type: "join",
-        uuid: <UUIDv4>,
-        id: <device id>,
-        name: <device name>,
-        dev_eui: <dev_eui>,
-        app_eui: <app_eui>,
-        metadata: {...},
-        fcnt: <integer>,
-        reported_at: <timestamp>,
-        port: <integer>,
-        devaddr: <devaddr>,
-        hotspots: {...},
-        hold_time: <integer>
-      }
-    */
-
-    if (uplink_info) {
-        // do something with uplink_info fields
-    }
-
-    return decoded;
+function decodeUplink(input) {
+    return {
+        data: {
+            bytes: ttn_decoder_fp(input.bytes)
+        },
+        warnings: [],
+        errors: []
+    };
 }

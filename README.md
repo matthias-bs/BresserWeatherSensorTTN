@@ -4,9 +4,11 @@
 [![GitHub release](https://img.shields.io/github/release/matthias-bs/BresserWeatherSensorTTN?maxAge=3600)](https://github.com/matthias-bs/BresserWeatherSensorTTN/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/LICENSE)
 
-Bresser 5-in-1/6-in-1 868 MHz Weather Sensor Radio Receiver based on ESP32 and RFM95W/SX1276 - sends data to a LoRaWAN Network (e.g. The Things Network)
+Bresser 5-in-1/6-in-1/7-in-1 868 MHz Weather Sensor Radio Receiver based on ESP32 and RFM95W/SX1276 - sends data to a LoRaWAN Network (e.g. The Things Network)
 
 The RFM95W/SX1276 radio transceiver is used in FSK mode to receive weather sensor data and in LoRaWAN mode to connect to a LoRaWAN Network.
+
+Auxiliary sensor data can be integrated via Bluetooth Low Energy (BLE), OneWire, UART, analog/digital inputs etc. 
 
 ## Features
 * Single 868 MHz Radio Transceiver for both Sensor Data Reception and LoRaWAN Connection
@@ -14,14 +16,31 @@ The RFM95W/SX1276 radio transceiver is used in FSK mode to receive weather senso
 * Supports multiple 868 MHz Sensors (e.g. Weather Sensor and Soil Moisture Sensor or Indoor Thermometer/Hygrometer)
 * Low Power Design (using ESP32 Deep Sleep Mode)
 * Fast LoRaWAN Joining after Deep Sleep (using ESP32 RTC RAM)
-* ATC MiThermometer Bluetooth Low Energy Thermometer/Hygrometer Integration (optional)
+* [ATC MiThermometer](https://github.com/pvvx/ATC_MiThermometer) Bluetooth Low Energy Thermometer/Hygrometer Integration (optional)
+* [Theengs Decoder](https://github.com/theengs/decoder) Bluetooth Low Energy Sensors Integration (optional)
 * OneWire Temperature Sensor Integration (optional)
 * ESP32 Analog Digital Converter Integration (optional)
+* [A02YYUW / DFRobot SEN0311 Ultrasonic Distance Sensor](https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311) (30...4500mm) (optional)
 
 ## Hardware
 * Please see my [LoRaWAN_Node](https://github.com/matthias-bs/LoRaWAN_Node) project.
-* Presumably [Adafruit Feather ESP32](https://www.adafruit.com/product/3405) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) should work (confimation/configuration files welcome)
-* Presumably [LILYGO® TTGO LORA32](http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1326&FId=t3:50060:3) should work (confimation/configuration files welcome)
+* [LILYGO® TTGO LORA32](http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1326&FId=t3:50060:3)
+    
+    [TTGO LoRa32 V2.1.6 Pinout](https://github.com/lnlp/pinout-diagrams/blob/main/LoRa%20development%20boards/TTGO%20LoRa32%20V2.1.6%20Pinout%20(LLP).pdf) 
+
+* [Heltec Wireless Stick](https://heltec.org/project/wireless-stick/)
+* *Resumably* [Heltec WiFi LoRa32](https://heltec.org/project/wifi-lora-32/) (confirmation wanted!!!)
+* *Presumably* [Adafruit Feather ESP32-S2](https://www.adafruit.com/product/4769) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) (confirmation wanted!!!)
+
+* *Presumably* [Adafruit Feather ESP32](https://www.adafruit.com/product/3405) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) (confirmation wanted!!!)
+
+* [Thingpulse ePulse Feather](https://thingpulse.com/product/epulse-feather-low-power-esp32-development-board/) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231) (**see** [**#56**](https://github.com/matthias-bs/BresserWeatherSensorTTN/issues/56))
+
+* [DFRobot FireBeetle ESP32 IoT Microcontroller](https://www.dfrobot.com/product-1590.html) with [FireBeetle Cover LoRa Radio 868MHz](https://www.dfrobot.com/product-1831.html)
+
+See [The Things Network's](https://www.thethingsnetwork.org) [Big ESP32 + SX127x topic part 2](https://www.thethingsnetwork.org/forum/t/big-esp32-sx127x-topic-part-2/11973) for some hardware options.
+
+See [Leonel Lopes Parente's](https://github.com/lnlp) collection of [LoRa development boards pinout-diagrams](https://github.com/lnlp/pinout-diagrams/tree/main/LoRa%20development%20boards).
 
 ### ESP32 Module
 [DFRobot FireBeetle ESP32 IoT](https://www.dfrobot.com/product-1590.html) (DFR0478) recomended due to its good low power design (but other boards will work, too)
@@ -29,6 +48,7 @@ The RFM95W/SX1276 radio transceiver is used in FSK mode to receive weather senso
 ### RFM95W- or SX1276-based Radio Transceiver Module
 
 * [Adafruit RFM95W LoRa Radio Transceiver Breakout](https://www.adafruit.com/product/3072) (ADA3072) - 868/915 MHz version (868 MHz is used for both LoRaWAN and Bresser Weather Sensor in Europe)
+    * See [Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts](https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/pinouts).
 * RF connector (u.FL or SMA as desired)
 * Antenna ([Delock 89769 - LoRa 868 MHz Antenna SMA plug 3 dBi omnidirectional](https://www.delock.de/produkt/89769/merkmale.html?setLanguage=en) has been used with good results)
 
@@ -37,11 +57,20 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 
 ## Software Build Setup
 
-* Install the Arduino ESP32 board package (V1.0.6 or V2.0.5) in the Arduino IDE (V1.8.19) -<br>
-     **Note:** When using the ESP32 board package V2.0.5, you have to apply two fixes in arduino-lorawan and arduino-lmic, respectively (see below)
+* Install the Arduino ESP32 board package (V1.0.6 or V2.0.X) in the Arduino IDE (V1.8.19) -<br>
+     **Note:** When using the ESP32 board package >=V2.0.5, you have to apply two fixes in arduino-lorawan and arduino-lmic, respectively (see below)
 * Select the desired ESP32 board
 * Install all libraries as listed in the section [Library Dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/edit/main/README.md#library-dependencies) via the Arduino IDE Library Manager
-* Apply fixes if using ESP32 board package v2.0.5  
+* Configure `Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h`:
+   * select you appropriate region
+   * `#define CFG_sx1276_radio 1`
+
+* Add the following line to `Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h`:
+
+    `#define LMIC_ENABLE_DeviceTimeReq 1`
+    
+    (Otherwise requesting the time from the LoRaWAN network will not work, even if supported by the network.)
+* Apply fixes if using ESP32 board package >= v2.0.5  
    * https://github.com/mcci-catena/arduino-lorawan/pull/204
    * https://github.com/mcci-catena/arduino-lmic/issues/714#issuecomment-822051171
 * Download and unpack the desired BresserWeatherSensorTTN release ([Releases](https://github.com/matthias-bs/BresserWeatherSensorTTN/releases))
@@ -63,7 +92,8 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 | OneWireNg                          | o                            |
 | DallasTemperature                  | o                            |
 | NimBLE-Arduino + ATC_MiThermometer | o                            |
-
+| NimBle-Arduino + Theengs Decoder   | o                            |
+| DistanceSensor_A02YYUW             | o                            |
 
 See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies) for required/tested versions.
 
@@ -90,10 +120,37 @@ See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/networ
      static const std::uint8_t appkey[] = { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x00 };
      ```
 
-### Configure the RF Transceiver GPIO Wiring
+### Configure the ESP32 / RF Transceiver GPIO Wiring
 
-See [Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts](https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/pinouts).
+#### Pinout Configuration by selecting a supported Board in the Arduino IDE
 
+By selecting a Board and a Board Revision (if available) in the Arduino IDE, a define is passed to the preprocessor/compiler. For the boards in the table below, the default configuration is assumed based in this define.
+
+If you are not using the Arduino IDE, you can use the defines in the table below with your specific tool chain to get the same result.
+
+If this is not what you need, you have to switch to Manual Configuration.
+
+  | Setup                                                          | Board              | Board Revision               | Define                 | Radio Module | Notes    |
+   | -------------------------------------------------------------- | ------------------ | ---------------------------- | ---------------------- | -------- | ------- |
+   | [LILYGO®TTGO-LORA32 V1](https://github.com/Xinyuan-LilyGo/TTGO-LoRa-Series) | "TTGO LoRa32-OLED" | "TTGO LoRa32 V1 (No TFCard)" | ARDUINO_TTGO_LORA32_V1 | SX1276 (HPD13A) | -   |
+   | [LILYGO®TTGO-LORA32 V2](https://github.com/LilyGO/TTGO-LORA32) | "TTGO LoRa32-OLED" | "TTGO LoRa32 V2"             | ARDUINO_TTGO_LoRa32_V2 | SX1276 (HPD13A) | Wire DIO1 to GPIO33 |
+   | [LILYGO®TTGO-LORA32 V2.1](http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1271&FId=t3:50060:3) | "TTGO LoRa32-OLED" | "TTGO LoRa32 V2.1 (1.6.1)" | ARDUINO_TTGO_LoRa32_v21new |  SX1276 (HPD13A) | - |
+   | [Heltec Wireless Stick](https://heltec.org/project/wireless-stick/) | "Heltec Wireless Stick" | n.a. | ARDUINO_heltec_wireless_stick |  SX1276  | - |
+   | [LoRaWAN_Node](https://github.com/matthias-bs/LoRaWAN_Node)      | "FireBeetle-ESP32" | n.a.                       | ARDUINO_ESP32_DEV -> LORAWAN_NODE     | SX1276 (RFM95W) | -      |
+   | [DFRobot FireBeetle ESP32 IoT Microcontroller](https://www.dfrobot.com/product-1590.html) with [FireBeetle Cover LoRa Radio 868MHz](https://www.dfrobot.com/product-1831.html) | "FireBeetle-ESP32" | n.a.                       | ARDUINO_ESP32_DEV & FIREBEETLE_ESP32_COVER_LORA | SX1276 (LoRa1276) | Wiring on the cover: <br>D2 to RESET<br>D3 to DIO0<br>D4 to CS<br>D5 to DIO1 |
+   | [Adafruit Feather ESP32S2 with Adafruit LoRa Radio FeatherWing](https://github.com/matthias-bs/BresserWeatherSensorReceiver#adafruit-feather-esp32s2-with-adafruit-lora-radio-featherwing)                                | "Adafruit Feather ESP32-S2" | n.a.               | ARDUINO_<br>ADAFRUIT_FEATHER_ESP32S2   | SX1276 (RFM95W) | **No Bluetooth available!**<br>Wiring on the Featherwing:<br>E to IRQ<br>D to CS<br>C to RST<br>A to DI01 |
+| [Thingpulse ePulse Feather](https://thingpulse.com/product/epulse-feather-low-power-esp32-development-board/) with [Adafruit LoRa Radio FeatherWing](https://www.adafruit.com/product/3231)     | "Adafruit ESP32 Feather" | n.a.               | ARDUINO_FEATHER_ESP32   | SX1276 (RFM95W) | Wiring on the Featherwing:<br>E to IRQ<br>D to CS<br>C to RST<br>A to DI01<br><br>**see** [**#55**](https://github.com/matthias-bs/BresserWeatherSensorTTN/issues/55) **and** [**#56**](https://github.com/matthias-bs/BresserWeatherSensorTTN/issues/56) |
+
+The preprosessor will provide some output regarding the selected configuration if enabled in the Preferences ("Verbose Output"), e.g.
+
+```
+ARDUINO_ADAFRUIT_FEATHER_ESP32S2 defined; assuming RFM95W FeatherWing will be used
+[...]
+Receiver chip: [SX1276]
+Pin config: RST->0 , CS->6 , GD0/G0/IRQ->5 , GDO2/G1/GPIO->11
+```
+
+#### Manual Pinout Configuration
 **Note:** If you are using the same RF transceiver for sensor data reception and LoRaWAN connection, you must change the pin definitions in **two** places!
 
 1. **LoRaWAN Software Part**
@@ -137,7 +194,7 @@ In [BresserWeatherSensorTTNCfg.h](https://github.com/matthias-bs/BresserWeatherS
 * Select the desired LoRaWAN network by (un)-commenting `ARDUINO_LMIC_CFG_NETWORK_TTN` or `ARDUINO_LMIC_CFG_NETWORK_GENERIC`
 * Disable features which you do not want to use
 * Configure the timing parameters (if you think this is needed) 
-* If enabled, configure your ATC MiThermometer's BLE MAC Addressby by editing `knownBLEAddresses`
+* If enabled, configure your ATC MiThermometer's / Theengs Decoder's BLE MAC Address by by editing `KNOWN_BLE_ADDRESSES`
 * Configure your time zone by editing `TZ_INFO`
 * Configure the ADC's input pins, dividers and oversampling settings as needed
 
@@ -153,6 +210,10 @@ Make sure that you do not exceed the size of the LoRaWAN uplink payload buffer `
 
 If you are using an Integration at the network side (such as an MQTT Integration), make sure you adjust your changes there as well - otherwise decoding the receiving/decoding the messages will fail. 
 
+## Debug Output Configuration
+
+See [Debug Output Configuration in Arduino IDE](DEBUG_OUTPUT.md)
+
 ## Remote Configuration via LoRaWAN Downlink
 
 | Command                       | Cmd  | Unit    | Data0           | Data1           | Data2           | Data3           |
@@ -162,6 +223,8 @@ If you are using an Integration at the network side (such as an MQTT Integration
 | CMD_SET_SLEEP_INTERVAL_LONG   | 0xA9 | seconds | interval[15: 8] | interval[ 7: 0] |                 |                 |
 | CMD_RESET_RAINGAUGE           | 0xB0 |         |                 |                 |                 |                 |
 | CMD_SET_DATETIME              | 0x88 | epoch   | unixtime[31:24] | unixtime[23:16] | unixtime[15:8] | unixtime[7:0] |
+
+:warning: Confirmed downlinks should not be used! (see [here](https://www.thethingsnetwork.org/forum/t/how-to-purge-a-scheduled-confirmed-downlink/56849/7) for an explanation.)
 
 ### Example 1: Set SLEEP_INTERVAL to 360 seconds
 1. Convert interval to hex: 360 = 0x0168
@@ -231,6 +294,20 @@ rx = {[...],"decoded":{"payload":{"air_temp_c":"13.5","battery_v":4197,"humidity
 "supply_v":4210,"water_temp_c":"-30.0","wind_avg_meter_sec":"1.9","wind_direction_deg":"282.0","wind_gust_meter_sec":"2.0"},
 "status":"success"}, [...]
 ```
+## Datacake Integration
+
+### Desktop Dashboard
+
+![Datacake_Dashboard_Desktop](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/2a876ba1-06b9-4ea3-876c-2fad3d559b01)
+
+### Mobile Dashboard
+![Datacake_Dashboard_Mobile](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/fbc0948c-bfd8-4d7d-9780-c113d576d3cf)
+
+### Datacake/TTN Setup
+
+YouTube Video: [Get started for free with LoRaWaN on The Things Network and Datacake IoT Platform](https://youtu.be/WGVFgYp3k3s)
+
+[Datacake Payload Decoder](datacake_decoder.js)
 
 ## Doxygen Generated Source Code Documentation
 
@@ -249,3 +326,9 @@ Based on
 * [OneWireNg](https://github.com/pstolarz/OneWireNg) by Piotr Stolarz
 * [DallasTemperature / Arduino-Temperature-Control-Library](https://github.com/milesburton/Arduino-Temperature-Control-Library) by Miles Burton
 * [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) by h2zero
+* [Theengs Decoder](https://github.com/theengs/decoder) by [Theengs Project](https://github.com/theengs)
+* [DistanceSensor_A02YYUW](https://github.com/pportelaf/DistanceSensor_A02YYUW) by Pablo Portela 
+
+# Legal
+
+> This project is in no way affiliated with, authorized, maintained, sponsored or endorsed by Bresser GmbH or any of its affiliates or subsidiaries.

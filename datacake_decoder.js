@@ -1,5 +1,4 @@
-// Bresser Weather Sensor Decoder
-function bws_decoder(bytes) {
+function Decoder(bytes, port) {
     // bytes is of type Buffer
 
     // IMPORTANT: paste code from src/decoder.js here
@@ -190,12 +189,56 @@ function bws_decoder(bytes) {
         };
     }
 
-    // see assignment to 'bitmap' variable for status bit names 
-    //    return decode(
-    //    bytes,
-    //    [bitmap,   temperature,  uint8,       uint16,       uint16      ], // types
-    //    ['status', 'air_temp_c', 'humidity',  'supply_v',   'battery_v' ]  // JSON elements
-    //  );
+    //   Weather Sensor, Battery Voltage and Water Temperature (OneWire)
+    //   return decode(
+    //     bytes,
+    //     [bitmap,   temperature,  uint8,      uint16fp1,             uint16fp1,              uint16fp1,
+    //     rawfloat,  uint16,       temperature],
+    //     ['status', 'air_temp_c', 'humidity', 'wind_gust_meter_sec', 'wind_avg_meter_sec',   'wind_direction_deg',
+    //     'rain_mm', 'battery_v',  'water_temp_c' ]
+    //   );
+
+    //   Weather Sensor, Supply Voltage, Battery Voltage, Water Temperature (OneWire), 
+    //     MiThermo Indoor Temperature+Humidity (BLE)
+    //   return decode(
+    //     bytes,
+    //     [bitmap,   temperature,  uint8,       uint16fp1,             uint16fp1,            uint16fp1,
+    //     rawfloat,  uint16,       uint16,      temperature,           temperature,          uint8 ],
+    //     ['status', 'air_temp_c', 'humidity',  'wind_gust_meter_sec', 'wind_avg_meter_sec', 'wind_direction_deg',
+    //     'rain_mm', 'supply_v',   'battery_v', 'water_temp_c',        'indoor_temp_c',      'indoor_humidity' ]
+    //   );
+    //     Weather Sensor, Supply Voltage, Battery Voltage, Water Temperature (OneWire), 
+    //       MiThermo Indoor Temperature+Humidity (BLE), Bresser Soil Temperature+Moisture
+    //     return decode(
+    //       bytes,
+    //       [bitmap,        temperature,     uint8,       uint16fp1,             uint16fp1,            uint16fp1,
+    //        rawfloat,      uint16,          uint16,      temperature,           temperature,          uint8,
+    //        temperature,   uint8,           rawfloat,    rawfloat,              rawfloat,             rawfloat
+    //       ],
+    //       ['status',      'air_temp_c',    'humidity',  'wind_gust_meter_sec', 'wind_avg_meter_sec', 'wind_direction_deg',
+    //        'rain_mm',     'supply_v',      'battery_v', 'water_temp_c',        'indoor_temp_c',      'indoor_humidity', 
+    //        'soil_temp_c', 'soil_moisture', 'rain_hr',   'rain_day',            'rain_week',          'rain_mon'
+    //       ]
+    //     );
+
+    // Weather Sensor, Supply Voltage, Battery Voltage, Water Temperature (OneWire), 
+    //   MiThermo Indoor Temperature+Humidity (BLE), Bresser Soil Temperature+Moisture,
+    //   Hourly (past 60 minutes)/Daily/Weekly/Monthly Rainfall
+    //     return decode(
+    //       bytes,
+    //       [bitmap,        temperature,     uint8,       uint16fp1,             uint16fp1,            uint16fp1,
+    //        rawfloat,      uint16,          uint16,      temperature,           temperature,          uint8,
+    //        temperature,   uint8,           rawfloat,    rawfloat,              rawfloat,             rawfloat
+    //       ],
+    //       ['status',      'air_temp_c',    'humidity',  'wind_gust_meter_sec', 'wind_avg_meter_sec', 'wind_direction_deg',
+    //        'rain_mm',     'supply_v',      'battery_v', 'water_temp_c',        'indoor_temp_c',      'indoor_humidity', 
+    //        'soil_temp_c', 'soil_moisture', 'rain_hr',   'rain_day',            'rain_week',          'rain_mon'
+    //       ]
+    //     );
+
+    // Weather Sensor, Supply Voltage, Battery Voltage, Water Temperature (OneWire), 
+    //   MiThermo Indoor Temperature+Humidity (BLE), Bresser Soil Temperature+Moisture,
+    //   Hourly (past 60 minutes)/Daily/Weekly/Monthly Rainfall, Distance (or Fill Level)
     return decode(
         bytes,
         [   bitmap_node,        bitmap_sensors,     temperature,    uint8,
@@ -214,37 +257,4 @@ function bws_decoder(bytes) {
         ]
     );
 
-}
-
-
-function Decoder(bytes, port, uplink_info) {
-    var decoded = {};
-
-    decoded = bws_decoder(bytes);
-
-    /*
-      The uplink_info variable is an OPTIONAL third parameter that provides the following:
-    
-      uplink_info = {
-        type: "join",
-        uuid: <UUIDv4>,
-        id: <device id>,
-        name: <device name>,
-        dev_eui: <dev_eui>,
-        app_eui: <app_eui>,
-        metadata: {...},
-        fcnt: <integer>,
-        reported_at: <timestamp>,
-        port: <integer>,
-        devaddr: <devaddr>,
-        hotspots: {...},
-        hold_time: <integer>
-      }
-    */
-
-    if (uplink_info) {
-        // do something with uplink_info fields
-    }
-
-    return decoded;
 }

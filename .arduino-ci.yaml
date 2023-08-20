@@ -6,11 +6,11 @@ compile:
     - MCCI Arduino Development Kit ADK
     - LoRa Serialization
     - ESP32Time
-    - Timezone
     - ESP32AnalogRead
-    - OneWire
+    - OneWireNg
     - DallasTemperature
-    - ATC MiThermometer Library
+    - ATC_MiThermometer
+    - TheengsDecoder
   platforms:
     - esp32
 
@@ -22,10 +22,10 @@ unittest:
     - MCCI Arduino Development Kit ADK
     - LoRa Serialization
     - ESP32Time
-    - Timezone
     - ESP32AnalogRead
-    - OneWire
+    - OneWireNg
     - DallasTemperature
-    - ATC MiThermometer Library
+    - ATC_MiThermometer
+    - TheengsDecoder
   platforms:
     - esp32

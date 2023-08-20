@@ -29,16 +29,19 @@
 // MCCI Arduino Development Kit ADK     0.2.2
 // MCCI LoRaWAN LMIC library            4.1.1
 // MCCI Arduino LoRaWAN Library         0.9.2
-// RadioLib                             5.5.0
+// RadioLib                             6.1.0
 // LoRa_Serialization                   3.2.1
-// ESP32Time                            2.0.0
-// BresserWeatherSensorReceiver         0.4.0
+// ESP32Time                            2.0.3
+// BresserWeatherSensorReceiver         0.12.1
 // ESP32AnalogRead                      0.2.1 (optional)
-// OneWireNg                            0.12.2 (optional)
-// DallasTemperature                    3.9.1 (optional)
+// OneWireNg                            0.13.1 (optional)
+// DallasTemperature                    3.9.0 (optional)
 // NimBLE-Arduino                       1.4.1 (optional)
-// ATC MiThermometer Library            0.1.0 (optional)
+// ATC MiThermometer                    0.2.1 (optional)
+// Theengs Decoder                      1.5.7 (optional)
 //
+// (installed from ZIP file:)
+// DistanceSensor_A02YYUW               1.0.2 (optional)
 //
 // created: 06/2022
 //
@@ -86,7 +89,23 @@
 // 20221230 Added compile time option to enter deep sleep mode
 //          if receiving weather sensor data was not successful
 // 20221231 Added setting of RTC via downlink
-// 20220107 Added doCfgUplink()
+// 20230101 Added remote configuration via LoRaWAN downlink
+// 20230112 Fixed rain gauge update in case RTC was set by LoRaWAN downlink
+//          Added note regarding LMIC_ENABLE_DeviceTimeReq
+// 20230121 Added configuration for TTGO LoRa32 V1
+// 20230208 Added configurations for TTGO LoRa32 V2 and V2.1
+// 20230209 Added configuration for Adafruit Feather ESP32-S2 with RFM95W FeatherWing
+//          Added configuration for Adafruit Huzzah ESP32 Feather with RFM95W FeatherWing
+// 20230211 Added integration of Theengs Decoder (https://github.com/theengs/decoder)
+//          for support of additional BLE sensors
+// 20230217 Added integration of A02YYUW (DFRobot SEN0311) 
+//          ultrasonic distance sensor 
+//          (https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311)
+// 20230304 Added configuration for Heltec Wireless Stick
+// 20230614 Added configuration for Heltec WiFi LoRa 32
+// 20230705 Updated library versions
+// 20230714 Added integration of Bresser Lightning Sensor
+// 20230717 Added sensor startup to rain gauge
 //
 // ToDo:
 // -  
@@ -111,7 +130,7 @@
 // - settimeofday()/gettimeofday() must be used to access the ESP32's RTC time
 // - Arduino ESP32 package has built-in time zone handling, see 
 //   https://github.com/SensorsIot/NTP-time-for-ESP8266-and-ESP32/blob/master/NTP_Example/NTP_Example.ino
-// - Apply fixes if using Arduino ESP32 board package v2.0.5
+// - Apply fixes if using Arduino ESP32 board package v2.0.x
 //     - mcci-catena/arduino-lorawan#204
 //       (https://github.com/mcci-catena/arduino-lorawan/pull/204)
 //     - mcci-catena/arduino-lmic#714 
@@ -129,9 +148,15 @@
 
 
 #ifdef RAINDATA_EN
-#include "RainGauge.h"
+    #include "RainGauge.h"
 #endif
 
+#ifdef LIGHTNINGSENSOR_EN
+    #include "Lightning.h"
+#endif
+
+// NOTE: Add #define LMIC_ENABLE_DeviceTimeReq 1
+//        in ~/Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/lmic_project_config.h
 #if (not(LMIC_ENABLE_DeviceTimeReq))
     #warning "LMIC_ENABLE_DeviceTimeReq is not set - will not be able to retrieve network time!"
 #endif
@@ -145,6 +170,11 @@
     #include <DallasTemperature.h>
 #endif
 
+#ifdef DISTANCESENSOR_EN
+    // A02YYUW / DFRobot SEN0311 Ultrasonic Distance Sensor
+    #include <DistanceSensor_A02YYUW.h>
+#endif
+
 #ifdef ADC_EN
     // ESP32 calibrated Analog Input Reading
     #include <ESP32AnalogRead.h>
@@ -154,9 +184,12 @@
 #include "WeatherSensorCfg.h"
 #include "WeatherSensor.h"
 
-#ifdef MITHERMOMETER_EN
+#if defined(MITHERMOMETER_EN)
     // BLE Temperature/Humidity Sensor
     #include <ATC_MiThermometer.h>
+#endif
+#if defined(THEENGSDECODER_EN)
+    #include "src/BleSensors/BleSensors.h"
 #endif
 
 // LoRa_Serialization
@@ -165,11 +198,73 @@
 // Pin mapping for ESP32 (MCCI Arduino LoRaWAN Library)
 // Note: Pin mapping for BresserWeatherSensorReceiver is done in WeatherSensorCfg.h!
 // SPI2 is used on ESP32 per default! (e.g. see https://github.com/espressif/arduino-esp32/tree/master/variants/doitESP32devkitV1)
-#define PIN_LMIC_NSS      14
-#define PIN_LMIC_RST      12
-#define PIN_LMIC_DIO0     4
-#define PIN_LMIC_DIO1     16
-#define PIN_LMIC_DIO2     17
+#if defined(ARDUINO_TTGO_LoRa32_V1)
+    // https://github.com/espressif/arduino-esp32/blob/master/variants/ttgo-lora32-v1/pins_arduino.h
+    // http://www.lilygo.cn/prod_view.aspx?TypeId=50003&Id=1130&FId=t3:50003:3
+    // https://github.com/Xinyuan-LilyGo/TTGO-LoRa-Series
+    // https://github.com/LilyGO/TTGO-LORA32/blob/master/schematic1in6.pdf
+    #define PIN_LMIC_NSS      LORA_CS
+    #define PIN_LMIC_RST      LORA_RST
+    #define PIN_LMIC_DIO0     LORA_IRQ
+    #define PIN_LMIC_DIO1     33
+    #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+
+#elif defined(ARDUINO_TTGO_LoRa32_V2)
+    // https://github.com/espressif/arduino-esp32/blob/master/variants/ttgo-lora32-v2/pins_arduino.h
+    #define PIN_LMIC_NSS      LORA_CS
+    #define PIN_LMIC_RST      LORA_RST
+    #define PIN_LMIC_DIO0     LORA_IRQ
+    #define PIN_LMIC_DIO1     33
+    #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+    #pragma message("LoRa DIO1 must be wired to GPIO33 manually!")
+
+#elif defined(ARDUINO_TTGO_LoRa32_v21new)
+    // https://github.com/espressif/arduino-esp32/blob/master/variants/ttgo-lora32-v21new/pins_arduino.h
+    #define PIN_LMIC_NSS      LORA_CS
+    #define PIN_LMIC_RST      LORA_RST
+    #define PIN_LMIC_DIO0     LORA_IRQ
+    #define PIN_LMIC_DIO1     LORA_D1
+    #define PIN_LMIC_DIO2     LORA_D2
+
+#elif defined(ARDUINO_heltec_wireless_stick) || defined(ARDUINO_heltec_wifi_lora_32_V2)
+    // https://github.com/espressif/arduino-esp32/blob/master/variants/heltec_wireless_stick/pins_arduino.h
+    // https://github.com/espressif/arduino-esp32/tree/master/variants/heltec_wifi_lora_32_V2/pins_ardiono.h
+    #define PIN_LMIC_NSS      SS
+    #define PIN_LMIC_RST      RST_LoRa
+    #define PIN_LMIC_DIO0     DIO0
+    #define PIN_LMIC_DIO1     DIO1
+    #define PIN_LMIC_DIO2     DIO2
+
+#elif defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
+    #define PIN_LMIC_NSS      6
+    #define PIN_LMIC_RST      9
+    #define PIN_LMIC_DIO0     5
+    #define PIN_LMIC_DIO1     11
+    #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+    #pragma message("ARDUINO_ADAFRUIT_FEATHER_ESP32S2 defined; assuming RFM95W FeatherWing will be used")
+    #pragma message("Required wiring: E to IRQ, D to CS, C to RST, A to DI01")
+    #pragma message("BLE is not available!")
+
+#elif defined(ARDUINO_FEATHER_ESP32)
+    #define PIN_LMIC_NSS      14
+    #define PIN_LMIC_RST      27
+    #define PIN_LMIC_DIO0     32
+    #define PIN_LMIC_DIO1     33
+    #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+    #pragma message("NOT TESTED!!!")
+    #pragma message("ARDUINO_ADAFRUIT_FEATHER_ESP32 defined; assuming RFM95W FeatherWing will be used")
+    #pragma message("Required wiring: A to RST, B to DIO1, D to DIO0, E to CS")
+
+#else
+    // LoRaWAN_Node board
+    // https://github.com/matthias-bs/LoRaWAN_Node
+    #define PIN_LMIC_NSS      14
+    #define PIN_LMIC_RST      12
+    #define PIN_LMIC_DIO0     4
+    #define PIN_LMIC_DIO1     16
+    #define PIN_LMIC_DIO2     17
+
+#endif
 
 
 // Uplink message payload size
@@ -481,6 +576,11 @@ uint16_t  sleep_interval_long;  //!< preferences: sleep interval long
     RainGauge rainGauge;
 #endif
 
+#ifdef LIGHTNINGSENSOR_EN
+    /// Lightning sensor post-processing
+    Lightning lightningProc;
+#endif
+
 #ifdef ONEWIRE_EN
     // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
     OneWire oneWire(PIN_ONEWIRE_BUS); //!< OneWire bus
@@ -489,9 +589,20 @@ uint16_t  sleep_interval_long;  //!< preferences: sleep interval long
     DallasTemperature temp_sensors(&oneWire); //!< Dallas temperature sensors connected to OneWire bus
 #endif
 
+#if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
+    std::vector<std::string> knownBLEAddresses = KNOWN_BLE_ADDRESSES;
+#endif
+
+#ifdef DISTANCESENSOR_EN
+    DistanceSensor_A02YYUW distanceSensor(&Serial2);
+#endif
+
 #ifdef MITHERMOMETER_EN
     // Setup BLE Temperature/Humidity Sensors
-    ATC_MiThermometer miThermometer(knownBLEAddresses); //!< Mijia Bluetooth Low Energy Thermo-/Hygrometer
+    ATC_MiThermometer bleSensors(knownBLEAddresses); //!< Mijia Bluetooth Low Energy Thermo-/Hygrometer
+#endif
+#ifdef THEENGSDECODER_EN
+    BleSensors bleSensors(knownBLEAddresses);
 #endif
 
 /// LoRaWAN uplink payload buffer
@@ -680,6 +791,7 @@ void ReceiveCb(
             
             time_t set_time = pBuffer[4] | (pBuffer[3] << 8) | (pBuffer[2] << 16) | (pBuffer[1] << 24);
             rtc.setTime(set_time);
+            rtcLastClockSync = rtc.getLocalEpoch();
             #if CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG
                 char tbuf[25];
                 struct tm timeinfo;
@@ -747,22 +859,22 @@ cMyLoRaWAN::setup() {
                     0,
                     // the print-out function
                     [](cEventLog::EventNode_t const *pEvent) -> void {
-                        //Serial.print("TX: ");
-                        //myEventLog.printCh(std::uint8_t(pEvent->getData(0)));
-                        //myEventLog.printRps(rps_t(pEvent->getData(1)));
-                        //Serial.println();
                         #if CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_INFO
-                            rps_t rps = rps_t(pEvent->getData(1));
+                            //rps_t _rps = rps_t(pEvent->getData(1));
+                            //Serial.printf("rps (1): %02X\n", _rps);
+                            uint8_t rps = pEvent->getData(1);
+                            uint32_t tstamp = osticks2ms(pEvent->getTime());
                         #endif
                         // see MCCI_Arduino_LoRaWAN_Library/src/lib/arduino_lorawan_cEventLog.cpp
-                        log_i("TX: ch=%d rps=0x%04x (%s %s %s %s IH=%d)", 
+                        log_i("TX @%u ms: ch=%d rps=0x%02x (%s %s %s %s IH=%d)", 
+                            tstamp,
                             std::uint8_t(pEvent->getData(0)),
                             rps,
                             myEventLog.getSfName(rps),
                             myEventLog.getBwName(rps),
                             myEventLog.getCrName(rps),
                             myEventLog.getCrcName(rps),
-                            unsigned(getIh(rps)));                    
+                            unsigned(getIh(rps)));      
                     }
                 );
             }
@@ -960,7 +1072,7 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
 /// Print date and time (i.e. local time)
 void printDateTime(void) {
         struct tm timeinfo;
-        char tbuf[26];
+        char tbuf[25];
         
         time_t tnow = rtc.getLocalEpoch();
         localtime_r(&tnow, &timeinfo);
@@ -1167,6 +1279,12 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
     this->m_uplinkPeriodMs = uplinkPeriodMs;
     this->m_tReference = millis();
 
+    #ifdef DISTANCESENSOR_EN
+        Serial2.begin(9600, SERIAL_8N1, DISTANCESENSOR_RX, DISTANCESENSOR_TX);
+        pinMode(DISTANCESENSOR_PWR, OUTPUT);
+        digitalWrite(DISTANCESENSOR_PWR, LOW);
+    #endif
+
     #ifdef ADC_EN
         // Use ADC with PIN_ADC_IN
         adc.attach(PIN_ADC_IN);
@@ -1182,8 +1300,8 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
         adc3.attach(PIN_ADC3_IN);
     #endif
     
-    #ifdef MITHERMOMETER_EN
-        miThermometer.begin();
+    #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
+        bleSensors.begin();
     #endif
     
     #ifndef LORAWAN_DEBUG
@@ -1225,8 +1343,24 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
 
             // If weather sensor has be found and rain data is valid, update statistics
             if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].rain_ok) {
-                rainGauge.update(timeinfo, weatherSensor.sensor[ws].rain_mm, rg_overflow);
+                rainGauge.update(timeinfo, weatherSensor.sensor[ws].rain_mm, weatherSensor.sensor[ws].startup, rg_overflow);
             }
+        }
+    #endif
+
+    #ifdef LIGHTNINGSENSOR_EN
+                // Check if time is valid
+        if (rtcLastClockSync > 0) {
+            // Get local date and time
+            time_t tnow = rtc.getLocalEpoch();
+
+            // Find lightning sensor
+            int ls = weatherSensor.findType(SENSOR_TYPE_LIGHTNING);
+
+            // If lightning sensor has be found and data is valid, run post-processing
+            if ((ls > -1) && weatherSensor.sensor[ls].valid && weatherSensor.sensor[ls].lightning_ok) {
+                lightningProc.update(tnow, weatherSensor.sensor[ls].lightning_count, weatherSensor.sensor[ls].lightning_distance_km, weatherSensor.sensor[ls].startup);
+            }         
         }
     #endif
 }
@@ -1359,6 +1493,34 @@ cSensor::doUplink(void) {
     #ifdef ONEWIRE_EN
         float     water_temp_c        = getTemperature();
     #endif
+    #ifdef DISTANCESENSOR_EN
+        // Sensor power on
+        digitalWrite(DISTANCESENSOR_PWR, HIGH);
+        delay(500);
+        
+        int retries = 0;
+        DistanceSensor_A02YYUW_MEASSUREMENT_STATUS dstStatus;
+        do {
+            dstStatus = distanceSensor.meassure();
+
+            if (dstStatus != DistanceSensor_A02YYUW_MEASSUREMENT_STATUS_OK) {
+                DEBUG_PRINTF("Distance Sensor Error: %d", dstStatus);
+            }
+        } while (
+            (dstStatus != DistanceSensor_A02YYUW_MEASSUREMENT_STATUS_OK) &&
+            (++retries < DISTANCESENSOR_RETRIES)
+        );
+        
+        uint16_t  distance_mm;
+        if (dstStatus == DistanceSensor_A02YYUW_MEASSUREMENT_STATUS_OK) {
+            distance_mm = distanceSensor.getDistance();
+        } else {
+            distance_mm = 0;
+        }
+        
+        // Sensor power off
+        digitalWrite(DISTANCESENSOR_PWR, LOW);
+    #endif
     #ifdef ADC_EN
         uint16_t  supply_voltage      = getVoltage();
     #endif
@@ -1366,17 +1528,22 @@ cSensor::doUplink(void) {
         uint16_t  battery_voltage     = getVoltage(adc3, ADC3_SAMPLES, ADC3_DIV);
     #endif
     bool          mithermometer_valid = false;
-    #ifdef MITHERMOMETER_EN
+    #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN) 
         float     indoor_temp_c;
         float     indoor_humidity;
     
         // Set sensor data invalid
-        miThermometer.resetData();
+        bleSensors.resetData();
         
         // Get sensor data - run BLE scan for <bleScanTime>
-        miThermometer.getData(bleScanTime);
+        bleSensors.getData(BLE_SCAN_TIME);
     #endif
-
+    #ifdef LIGHTNINGSENSOR_EN
+        time_t  lightn_ts;
+        int     lightn_events;
+        uint8_t lightn_distance;
+    #endif
+    
     //
     // Find Bresser sensor data in array 
     //
@@ -1387,10 +1554,19 @@ cSensor::doUplink(void) {
       // Try to find SENSOR_TYPE_WEATHER1
       ws = weatherSensor.findType(SENSOR_TYPE_WEATHER1);
     }
-    
-    // Try to find SENSOR_TYPE_SOIL
-    int s1 = weatherSensor.findType(SENSOR_TYPE_SOIL, 1);
 
+    int s1 = -1;
+    #ifdef SOILSENSOR_EN
+      // Try to find SENSOR_TYPE_SOIL
+      s1 = weatherSensor.findType(SENSOR_TYPE_SOIL, 1);
+    #endif
+
+    int ls = -1;
+    #ifdef LIGHTNINGSENSOR_EN
+      // Try to find SENSOR_TYPE_LIGHTNING
+      ls = weatherSensor.findType(SENSOR_TYPE_LIGHTNING);
+    #endif
+    
     DEBUG_PRINTF("--- Uplink Data ---");
     
     // Debug output for weather sensor data
@@ -1408,13 +1584,35 @@ cSensor::doUplink(void) {
     // Debug output for soil sensor data
     #ifdef SOILSENSOR_EN
       if (s1 > -1) {
-        DEBUG_PRINTF("Soil Temperature 1: % 3.1f °C",  weatherSensor.sensor[s1].temp_c);
+        DEBUG_PRINTF("Soil Temperature 1: %3.1f °C",  weatherSensor.sensor[s1].temp_c);
         DEBUG_PRINTF("Soil Moisture 1:     %2d   %%",  weatherSensor.sensor[s1].moisture);      
       } else {
         DEBUG_PRINTF("-- Soil Sensor 1 Failure");
       }
     #endif
 
+    // Debug output for lightning sensor data
+    #ifdef LIGHTNINGSENSOR_EN
+      if (ls > -1) {
+        DEBUG_PRINTF("Lightning counter:  %3d",  weatherSensor.sensor[ls].lightning_count);
+        DEBUG_PRINTF("Lightning distance:  %2d   km",  weatherSensor.sensor[ls].lightning_distance_km);    
+      } else {
+        DEBUG_PRINTF("-- Lightning Sensor Failure");
+      }
+      if (lightningProc.lastEvent(lightn_ts, lightn_events, lightn_distance)) {
+            #if CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG
+                struct tm timeinfo;
+                char tbuf[25];
+
+                localtime_r(&lightn_ts, &timeinfo);
+                strftime(tbuf, 25, "%Y-%m-%d %H:%M:%S", &timeinfo);
+            #endif
+            DEBUG_PRINTF("Last lightning event @%s: %d events, %d km", tbuf, lightn_events, lightn_distance);
+      } else {
+        DEBUG_PRINTF("-- No Lightning Event Data Available");
+      }
+    #endif
+    
     #ifdef ONEWIRE_EN
         // Debug output for auxiliary sensors/voltages
         if (water_temp_c != DEVICE_DISCONNECTED_C) {
@@ -1424,19 +1622,32 @@ cSensor::doUplink(void) {
             water_temp_c = -30.0;
         }
     #endif
+    #ifdef DISTANCESENSOR_EN
+        if (distance_mm > 0) {
+            DEBUG_PRINTF("Distance:          %4d mm", distance_mm);
+        } else {
+            DEBUG_PRINTF("Distance:         ---- mm");
+        }
+    #endif
     #ifdef ADC_EN
         DEBUG_PRINTF("Supply  Voltage:   %4d   mV",       supply_voltage);
     #endif
     #if defined(ADC_EN) && defined(PIN_ADC3_IN)
         DEBUG_PRINTF("Battery Voltage:   %4d   mV",       battery_voltage);
     #endif
-    #ifdef MITHERMOMETER_EN
-        if (miThermometer.data[0].valid) {
+    
+    #if defined(MITHERMOMETER_EN)
+        float div = 100.0;
+    #elif defined(THEENGSDECODER_EN)
+        float div = 1.0;
+    #endif
+    #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
+        if (bleSensors.data[0].valid) {
             mithermometer_valid = true;
-            indoor_temp_c   = miThermometer.data[0].temperature/100.0;
-            indoor_humidity = miThermometer.data[0].humidity/100.0;
-            DEBUG_PRINTF("Indoor Air Temp.:   % 3.1f °C", miThermometer.data[0].temperature/100.0);
-            DEBUG_PRINTF("Indoor Humidity:     %3.1f %%", miThermometer.data[0].humidity/100.0);
+            indoor_temp_c   = bleSensors.data[0].temperature/div;
+            indoor_humidity = bleSensors.data[0].humidity/div;
+            DEBUG_PRINTF("Indoor Air Temp.:   % 3.1f °C", bleSensors.data[0].temperature/div);
+            DEBUG_PRINTF("Indoor Humidity:     %3.1f %%", bleSensors.data[0].humidity/div);
         } else {
             DEBUG_PRINTF("Indoor Air Temp.:    --.- °C");
             DEBUG_PRINTF("Indoor Humidity:     --   %%");
@@ -1458,11 +1669,21 @@ cSensor::doUplink(void) {
         }
     #endif
 
-    // Status flags
-    encoder.writeBitmap(longSleep,
+    // TTN node status flags
+    encoder.writeBitmap(0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        longSleep,
                         rtcSyncReq, 
-                        runtimeExpired,
+                        runtimeExpired);
+
+    // Sensor status flags
+    encoder.writeBitmap(0,
                         mithermometer_valid,
+                        (ls > -1) ? weatherSensor.sensor[ls].valid : false,
+                        (ls > -1) ? weatherSensor.sensor[ls].battery_ok : false,
                         (s1 > -1) ? weatherSensor.sensor[s1].valid : false,
                         (s1 > -1) ? weatherSensor.sensor[s1].battery_ok : false,
                         (ws > -1) ? weatherSensor.sensor[ws].valid : false,
@@ -1509,12 +1730,12 @@ cSensor::doUplink(void) {
     #ifdef ONEWIRE_EN
         encoder.writeTemperature(water_temp_c);
     #endif
-    #ifdef MITHERMOMETER_EN
+    #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
         encoder.writeTemperature(indoor_temp_c);
         encoder.writeUint8((uint8_t)(indoor_humidity+0.5));
 
         // BLE Tempoerature/Humidity Sensor: delete results fromBLEScan buffer to release memory
-        miThermometer.clearScanResults();
+        bleSensors.clearScanResults();
     #endif    
 
     // Soil sensor data
@@ -1526,7 +1747,7 @@ cSensor::doUplink(void) {
         } else {
             // fill with suspicious dummy values
             encoder.writeTemperature(-30);
-            encoder.writeUint8(0);      
+            encoder.writeUint8(0);
         }
     #endif
 
@@ -1550,6 +1771,25 @@ cSensor::doUplink(void) {
         }
     #endif
 
+    // Distance sensor data
+    #ifdef DISTANCESENSOR_EN
+        encoder.writeUint16(distance_mm);
+    #endif
+
+    // Lightning sensor data
+    #ifdef LIGHTNINGSENSOR_EN
+        if (ls > -1) {
+            // Lightning sensor data available
+            encoder.writeUnixtime(lightn_ts);
+            encoder.writeUint16(lightn_events);
+            encoder.writeUint8(lightn_distance);
+        } else {
+            // Fill with suspicious dummy values
+            encoder.writeUnixtime(0);
+            encoder.writeUint16(0);
+            encoder.writeUint8(0);
+        }
+    #endif
     //encoder.writeRawFloat(radio.getRSSI()); // NOTE: int8_t would be more efficient
 
     this->m_fBusy = true;

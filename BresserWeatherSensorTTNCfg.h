@@ -45,6 +45,19 @@
 // 20221228 Modified DEBUG_PRINTF/DEBUG_PRINTF_TS macros to use
 //          Arduino logging functions
 // 20221230 Added WEATHERSENSOR_DATA_REQUIRED
+// 20220112 Removed LMIC_ENABLE_DeviceTimeReq; must be defined in 
+//          ~/Arduino/libraries/MCCI_LoRaWAN_LMIC_library/project_config/
+//          lmic_project_config.h
+//          in order to be recognized!!!
+// 20230121 Added configuration for TTGO LoRa32 V1
+// 20230209 Added configurations for TTGO LoRa32 V2/V21new,
+//          Adafruit Feather ESP32-S2 and Adafruit Feather ESP32
+// 20230211 Added integration of Theengs Decoder (https://github.com/theengs/decoder)
+//          for support of additional BLE sensors
+// 20230217 Added integration of A02YYUW (DFRobot SEN0311) 
+//          ultrasonic distance sensor 
+//          (https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311)
+// 20230714 Added LIGHTNINGSENSOR_EN
 //
 // ToDo:
 // - 
@@ -59,6 +72,14 @@
 //#define CORE_DEBUG_LEVEL ARDUHAL_LOG_LEVEL_DEBUG
 //#define CORE_DEBUG_LEVEL ARDUHAL_LOG_LEVEL_VERBOSE
 
+//--- Select Board ---
+#if !defined(ARDUINO_TTGO_LoRa32_V1)     && !defined(ARDUINO_TTGO_LoRa32_V2) && \
+    !defined(ARDUINO_TTGO_LoRa32_v21new) && !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) && \
+    !defined(ARDUINO_FEATHER_ESP32)
+    // Use pinning for LoRaWAN Node 
+    #define LORAWAN_NODE
+#endif
+
 //--- Select LoRaWAN Network ---
 // The Things Network
 #define ARDUINO_LMIC_CFG_NETWORK_TTN 1
@@ -67,9 +88,6 @@
 // see mcci-cathena/arduino-lorawan issue #185 "Add Helium EU868 support"
 // (https://github.com/mcci-catena/arduino-lorawan/issues/185)
 #define ARDUINO_LMIC_CFG_NETWORK_GENERIC 0
-
-// Enable Device_Time_Req MAC command
-#define LMIC_ENABLE_DeviceTimeReq 1
 
 // Enable LORAWAN debug mode - this generates dummy weather data and skips weather sensor reception 
 //#define LORAWAN_DEBUG
@@ -128,24 +146,50 @@
 #define ONEWIRE_EN
 
 // Enable BLE temperature/humidity measurement
-// Note: BLE requires a lot of program memory!
-#define MITHERMOMETER_EN
+// Notes: 
+// * BLE requires a lot of program memory!
+// * ESP32-S2 does not provide BLE!
+#ifndef ARDUINO_ADAFRUIT_FEATHER_ESP32S2
+    //#define MITHERMOMETER_EN
+    #define THEENGSDECODER_EN
+#endif
 
 // Enable Bresser Soil Temperature/Moisture Sensor
 #define SOILSENSOR_EN
 
+// Enable Bresser Lightning Sensor
+#define LIGHTNINGSENSOR_EN
+
+// Enable Ultrasonic Distance Sensor
+#if defined(LORAWAN_NODE)
+    //#define DISTANCESENSOR_EN
+#endif
+
 // ADC for supply/battery voltage measurement
 // default: on-board connection to VB on FireBeetle ESP32 (with R10+R11 assembled)
+//          on-board connection to VBAT on TTGO LoRa32
+//          on-board connection to VBAT on Adafruit Feather ESP32
+//          no VBAT input circuit on Adafruit Feather ESP32-S2
 #ifdef ADC_EN
-    #define PIN_ADC_IN        A0
-    //#define PIN_ADC_IN        34
+    #if defined(ARDUINO_TTGO_LoRa32_V1) || defined(ARDUINO_TTGO_LoRa32_V2) || defined(ARDUINO_TTGO_LoRa32_v21new)
+        #define PIN_ADC_IN        35
+    #elif defined(ARDUINO_FEATHER_ESP32)
+        #define PIN_ADC_IN        A13
+    #elif defined(LORAWAN_NODE)
+        #define PIN_ADC_IN        A0
+    #else
+        #define PIN_ADC_IN        34
+    #endif
 #endif
+
 
 // Additional ADC pins (default: FireBeetle ESP32) 
 //#define PIN_ADC0_IN         A0
 //#define PIN_ADC1_IN         A1
 //#define PIN_ADC2_IN         A2
-#define PIN_ADC3_IN         A3
+#ifdef LORAWAN_NODE
+  #define PIN_ADC3_IN         A3
+#endif
 
 #ifdef PIN_ADC0_IN
     // Voltage divider R1 / (R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)
@@ -172,7 +216,24 @@
 #endif
 
 #ifdef ONEWIRE_EN
-    #define PIN_ONEWIRE_BUS   5
+    #if defined(ARDUINO_TTGO_LoRa32_V1)
+        #define PIN_ONEWIRE_BUS   21
+    #elif defined(ARDUINO_FEATHER_ESP32) || defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
+        #define PIN_ONEWIRE_BUS   15
+    #elif defined(LORAWAN_NODE)
+        #define PIN_ONEWIRE_BUS   5
+    #else
+        #define PIN_ONEWIRE_BUS   0
+    #endif
+#endif
+
+#ifdef DISTANCESENSOR_EN
+    #if defined(LORAWAN_NODE)
+        #define DISTANCESENSOR_TX       0  // pull-up/open: processed value / low: real-time value
+        #define DISTANCESENSOR_RX       26
+        #define DISTANCESENSOR_PWR      25
+        #define DISTANCESENSOR_RETRIES  5
+    #endif
 #endif
 
 #ifdef ADC_EN
@@ -181,12 +242,12 @@
     const uint8_t UBATT_SAMPLES   = 10;
 #endif
 
-#ifdef MITHERMOMETER_EN
+#if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
     // BLE scan time in seconds
-    const int bleScanTime = 10;
+    #define BLE_SCAN_TIME 31
 
     // List of known sensors' BLE addresses
-    std::vector<std::string> knownBLEAddresses = {"a4:c1:38:b8:1f:7f"};
+    #define KNOWN_BLE_ADDRESSES {"a4:c1:38:b8:1f:7f"}
 #endif
 
 // Enter your time zone (https://remotemonitoringsystems.ca/time-zone-abbreviations.php)
