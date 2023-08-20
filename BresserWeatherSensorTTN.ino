@@ -319,6 +319,7 @@ const uint8_t PAYLOAD_SIZE = 51;
 #define CMD_SET_SLEEP_INTERVAL          0xA8
 #define CMD_SET_SLEEP_INTERVAL_LONG     0xA9
 #define CMD_RESET_RAINGAUGE             0xB0
+#define CMD_GET_CONFIG                  0xB1
 #define CMD_GET_DATETIME                0x86
 #define CMD_SET_DATETIME                0x88
 
@@ -787,6 +788,10 @@ void ReceiveCb(
             log_d("Get date/time");
             uplinkReq = CMD_GET_DATETIME;
         }
+        if ((pBuffer[0] == CMD_GET_CONFIG) && (nBuffer == 1)) {
+            log_d("Get config");
+            uplinkReq = CMD_GET_CONFIG; 
+        }
         if ((pBuffer[0] == CMD_SET_DATETIME) && (nBuffer == 5)) {
             
             time_t set_time = pBuffer[4] | (pBuffer[3] << 8) | (pBuffer[2] << 16) | (pBuffer[1] << 24);
@@ -822,11 +827,20 @@ void ReceiveCb(
             preferences.end();            
         }
         #ifdef RAINDATA_EN
-            if ((pBuffer[0] == CMD_RESET_RAINGAUGE) && (nBuffer == 1)) {
-                log_d("Reset raingauge");
-                rainGauge.reset();
+            if (pBuffer[0] == CMD_RESET_RAINGAUGE) {
+                if (nBuffer == 1) {
+                    log_d("Reset raingauge");
+                    rainGauge.reset();
+                }
+                else if (nBuffer == 2) {
+                    log_d("Reset raingauge - flags: 0x%F", pBuffer[1]);
+                    rainGauge.reset(pBuffer[1] & 0xF);
+                }
             }
         #endif
+    }
+    if (uplinkReq == 0) {
+        sleepReq = true;
     }
 }
 
@@ -922,9 +936,6 @@ cMyLoRaWAN::NetJoin(
 void
 cMyLoRaWAN::NetTxComplete(void) {
     DEBUG_PRINTF_TS("");
-    if (uplinkReq == 0) {
-        sleepReq = true;
-    }
 }
 
 // Print session info for debugging
@@ -1197,13 +1208,10 @@ cMyLoRaWAN::doCfgUplink(void) {
     //
     LoraEncoder encoder(uplink_payload);
 
-    //switch (uplinkReq) {
-    //  case CMD_GET_DATETIME:
     if (uplinkReq == CMD_GET_DATETIME) {
         log_d("Date/Time");
         port = 2;
         time_t t_now = rtc.getLocalEpoch();
-        //encoder.writeUnixtime(rtc.getLocalEpoch());
         encoder.writeUint8((t_now >> 24) & 0xff);
         encoder.writeUint8((t_now >> 16) & 0xff);
         encoder.writeUint8((t_now >>  8) & 0xff);
@@ -1221,8 +1229,14 @@ cMyLoRaWAN::doCfgUplink(void) {
         // bits 4..7 esp32 sntp time status (not used)
         // TODO add flags for succesful LORA time sync/manual sync
         encoder.writeUint8((rtcSyncReq) ? 0x03 : 0x02);
-        //break;
-        log_v("Size: %d", encoder.getLength());
+    } else if (uplinkReq) {
+        log_d("Config");
+        port = 3;
+        encoder.writeUint8(prefs.ws_timeout);
+        encoder.writeUint8(prefs.sleep_interval >> 8);
+        encoder.writeUint8(prefs.sleep_interval & 0xFF);
+        encoder.writeUint8(prefs.sleep_interval_long >> 8);
+        encoder.writeUint8(prefs.sleep_interval_long & 0xFF);
     } else {
       log_v("");
         return;
@@ -1238,13 +1252,13 @@ cMyLoRaWAN::doCfgUplink(void) {
     this->m_fBusy = true;
     log_v("Trying SendBuffer: port=%d, size=%d", port, encoder.getLength());
 
-    for (int i=0; i<5; i++) {
+    for (int i=0; i<encoder.getLength(); i++) {
       Serial.printf("%02X ", uplink_payload[i]);
     }
     Serial.println();
     
     // Schedule transmission
-    if (! myLoRaWAN.SendBuffer(
+    if (! this->SendBuffer(
         uplink_payload,
         encoder.getLength(),
         // this is the completion function:
