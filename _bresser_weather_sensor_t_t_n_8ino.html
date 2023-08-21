@@ -162,6 +162,12 @@ Macros</h2></td></tr>
 <tr class="memitem:abce73b9789a966192b66c344fa7ff860"><td class="memItemLeft" align="right" valign="top"><a id="abce73b9789a966192b66c344fa7ff860"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CMD_RESET_RAINGAUGE</b>&#160;&#160;&#160;0xB0</td></tr>
 <tr class="separator:abce73b9789a966192b66c344fa7ff860"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97e4eb0431d8a08039684a7de1522273"><td class="memItemLeft" align="right" valign="top"><a id="a97e4eb0431d8a08039684a7de1522273"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CMD_GET_CONFIG</b>&#160;&#160;&#160;0xB1</td></tr>
+<tr class="separator:a97e4eb0431d8a08039684a7de1522273"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56403a0b320b486365bcec61e5ac27f9"><td class="memItemLeft" align="right" valign="top"><a id="a56403a0b320b486365bcec61e5ac27f9"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CMD_GET_DATETIME</b>&#160;&#160;&#160;0x86</td></tr>
+<tr class="separator:a56403a0b320b486365bcec61e5ac27f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16d6490da3f14953d4fc8abc6353d026"><td class="memItemLeft" align="right" valign="top"><a id="a16d6490da3f14953d4fc8abc6353d026"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>CMD_SET_DATETIME</b>&#160;&#160;&#160;0x88</td></tr>
 <tr class="separator:a16d6490da3f14953d4fc8abc6353d026"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,6 +300,10 @@ std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bott
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#af6a553cefc7cf2dddb686b3bd2631bc5">sleepReq</a> = false</td></tr>
 <tr class="memdesc:af6a553cefc7cf2dddb686b3bd2631bc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sleep request (set in NetTxComplete();. <br /></td></tr>
 <tr class="separator:af6a553cefc7cf2dddb686b3bd2631bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4664d9149e1913eb419b81d0701b6b22"><td class="memItemLeft" align="right" valign="top"><a id="a4664d9149e1913eb419b81d0701b6b22"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a4664d9149e1913eb419b81d0701b6b22">uplinkReq</a> = 0</td></tr>
+<tr class="memdesc:a4664d9149e1913eb419b81d0701b6b22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uplink request - command received via downlink. <br /></td></tr>
+<tr class="separator:a4664d9149e1913eb419b81d0701b6b22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac96bf5854bc0dc7bf2a09e651cd5bfa"><td class="memItemLeft" align="right" valign="top"><a id="aac96bf5854bc0dc7bf2a09e651cd5bfa"></a>
 ostime_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#aac96bf5854bc0dc7bf2a09e651cd5bfa">sleepTimeout</a></td></tr>
 <tr class="memdesc:aac96bf5854bc0dc7bf2a09e651cd5bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force sleep mode after <code>sleepTimeout</code> has been reached (if FORCE_SLEEP is defined) <br /></td></tr>

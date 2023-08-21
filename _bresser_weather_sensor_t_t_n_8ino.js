@@ -3,6 +3,8 @@ var _bresser_weather_sensor_t_t_n_8ino =
     [ "cMyLoRaWAN", "classc_my_lo_ra_w_a_n.html", "classc_my_lo_ra_w_a_n" ],
     [ "cSensor", "classc_sensor.html", "classc_sensor" ],
     [ "sPrefs", "structs_prefs.html", "structs_prefs" ],
+    [ "CMD_GET_CONFIG", "_bresser_weather_sensor_t_t_n_8ino.html#a97e4eb0431d8a08039684a7de1522273", null ],
+    [ "CMD_GET_DATETIME", "_bresser_weather_sensor_t_t_n_8ino.html#a56403a0b320b486365bcec61e5ac27f9", null ],
     [ "CMD_RESET_RAINGAUGE", "_bresser_weather_sensor_t_t_n_8ino.html#abce73b9789a966192b66c344fa7ff860", null ],
     [ "CMD_SET_DATETIME", "_bresser_weather_sensor_t_t_n_8ino.html#a16d6490da3f14953d4fc8abc6353d026", null ],
     [ "CMD_SET_SLEEP_INTERVAL", "_bresser_weather_sensor_t_t_n_8ino.html#ac6d513741eec130023ce1a14bbc78396", null ],
@@ -54,6 +56,7 @@ var _bresser_weather_sensor_t_t_n_8ino =
     [ "runtimeExpired", "_bresser_weather_sensor_t_t_n_8ino.html#a1ac3506d3d8af7ec9d55da6acfa1aad4", null ],
     [ "sleepReq", "_bresser_weather_sensor_t_t_n_8ino.html#af6a553cefc7cf2dddb686b3bd2631bc5", null ],
     [ "sleepTimeout", "_bresser_weather_sensor_t_t_n_8ino.html#aac96bf5854bc0dc7bf2a09e651cd5bfa", null ],
+    [ "uplinkReq", "_bresser_weather_sensor_t_t_n_8ino.html#a4664d9149e1913eb419b81d0701b6b22", null ],
     [ "userUTCTime", "_bresser_weather_sensor_t_t_n_8ino.html#af54b986e7fb69847e038a07179fb74cc", null ],
     [ "weatherSensor", "_bresser_weather_sensor_t_t_n_8ino.html#a4f79b4f602e5910ea50712638c86b19c", null ]
 ];

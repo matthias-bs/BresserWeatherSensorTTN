@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['begin_64',['begin',['../class_ble_sensors.html#af496499868213e31c9757b0158e869a0',1,'BleSensors']]],
-  ['blesensors_65',['BleSensors',['../class_ble_sensors.html#a0f691fc054f2f3ea6fea9c2c403fd1f5',1,'BleSensors']]]
+  ['begin_66',['begin',['../class_ble_sensors.html#af496499868213e31c9757b0158e869a0',1,'BleSensors']]],
+  ['blesensors_67',['BleSensors',['../class_ble_sensors.html#a0f691fc054f2f3ea6fea9c2c403fd1f5',1,'BleSensors']]]
 ];
