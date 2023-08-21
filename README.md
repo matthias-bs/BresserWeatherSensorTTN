@@ -71,7 +71,7 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
     
     (Otherwise requesting the time from the LoRaWAN network will not work, even if supported by the network.)
 * Apply fixes if using ESP32 board package >= v2.0.5  
-   * https://github.com/mcci-catena/arduino-lorawan/pull/204
+   * https://github.com/mcci-catena/arduino-lorawan/pull/204 (fixed in mcci-catena/arduino-lorawan v0.10.0)
    * https://github.com/mcci-catena/arduino-lmic/issues/714#issuecomment-822051171
 * Download and unpack the desired BresserWeatherSensorTTN release ([Releases](https://github.com/matthias-bs/BresserWeatherSensorTTN/releases))
 * Load the sketch `BresserWeatherSensorTTN.ino` from the unpacked BresserWeatherSensorTTN archive directory
