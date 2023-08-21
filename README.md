@@ -21,6 +21,7 @@ Auxiliary sensor data can be integrated via Bluetooth Low Energy (BLE), OneWire,
 * OneWire Temperature Sensor Integration (optional)
 * ESP32 Analog Digital Converter Integration (optional)
 * [A02YYUW / DFRobot SEN0311 Ultrasonic Distance Sensor](https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311) (30...4500mm) (optional)
+* [Remote Configuration via LoRaWAN Downlink](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/README.md#remote-configuration-via-lorawan-downlink)
 
 ## Hardware
 * Please see my [LoRaWAN_Node](https://github.com/matthias-bs/LoRaWAN_Node) project.
