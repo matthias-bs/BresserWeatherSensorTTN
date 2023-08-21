@@ -106,6 +106,8 @@
 // 20230705 Updated library versions
 // 20230714 Added integration of Bresser Lightning Sensor
 // 20230717 Added sensor startup to rain gauge
+// 20230821 Implemented downlink commands CMD_GET_DATETIME & CMD_GET_CONFIG, 
+//          added CMD_RESET_RAINGAUGE <flags>
 //
 // ToDo:
 // -  
@@ -133,6 +135,7 @@
 // - Apply fixes if using Arduino ESP32 board package v2.0.x
 //     - mcci-catena/arduino-lorawan#204
 //       (https://github.com/mcci-catena/arduino-lorawan/pull/204)
+//       --> fixed in mcci-catena/arduino-lorawan v0.10.0
 //     - mcci-catena/arduino-lmic#714 
 //       (https://github.com/mcci-catena/arduino-lmic/issues/714#issuecomment-822051171)
 //
@@ -284,11 +287,12 @@ const uint8_t PAYLOAD_SIZE = 51;
 #define DEBUG_PRINTF_TS(...) { log_d(__VA_ARGS__); }
 
 // Downlink messages
+// ------------------
 //
 // CMD_SET_WEATHERSENSOR_TIMEOUT
 // (seconds)
 // byte0: 0xA0
-// byte1: <timeout_in_secs>
+// byte1: ws_timeout[ 7: 0]
 //
 // CMD_SET_SLEEP_INTERVAL
 // (seconds)
@@ -304,6 +308,10 @@ const uint8_t PAYLOAD_SIZE = 51;
 //
 // CMD_RESET_RAINGAUGE
 // byte0: 0xB0
+// byte1: flags[7:0] (optional)
+//
+// CMD_GET_CONFIG
+// byte0: 0xB1
 //
 // CMD_GET_DATETIME
 // byte0: 0x86
@@ -314,6 +322,23 @@ const uint8_t PAYLOAD_SIZE = 51;
 // byte2: unixtime[23:16]
 // byte3: unixtime[15: 8]
 // byte4: unixtime[ 7: 0]
+//
+// Response uplink messages
+// -------------------------
+//
+// CMD_GET_DATETIME -> FPort=2
+// byte0: unixtime[31:24]
+// byte1: unixtime[23:16]
+// byte2: unixtime[15: 8]
+// byte3: unixtime[ 7: 0]
+// byte4: rtc_source[ 7: 0]
+//
+// CMD_GET_CONFIG -> FPort=3
+// byte0: ws_timeout[ 7: 0]
+// byte1: sleep_interval[15: 8]
+// byte2: sleep_interval[ 7:0]
+// byte3: sleep_interval_long[15:8]
+// byte4: sleep_interval_long[ 7:0]
 
 #define CMD_SET_WEATHERSENSOR_TIMEOUT   0xA0
 #define CMD_SET_SLEEP_INTERVAL          0xA8
@@ -774,6 +799,7 @@ void ReceiveCb(
     const uint8_t *pBuffer,
     size_t nBuffer) {
             
+    uplinkReq = 0;
     log_v("Port: %d", uPort);
     char buf[255];
     *buf = '\0';
