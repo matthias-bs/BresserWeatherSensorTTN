@@ -96,7 +96,7 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 | NimBle-Arduino + Theengs Decoder   | o                            |
 | DistanceSensor_A02YYUW             | o                            |
 
-See [dependencies](https://github.com/matthias-bs/BresserWeatherSensorTTN/network/dependencies) for required/tested versions.
+See [package.json](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/package.json) for required/tested versions.
 
 ## Software Customization
 
