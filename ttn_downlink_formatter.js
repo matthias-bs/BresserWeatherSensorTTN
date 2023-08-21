@@ -132,8 +132,6 @@ function uint32BE(bytes) {
 
 // Encode Downlink from JSON to bytes
 function encodeDownlink(input) {
-    var encoding;
-
     if ((input.data.cmd === "CMD_SET_SLEEP_INTERVAL") ||
         (input.data.cmd === "CMD_SET_SLEEP_INTERVAL_LONG")) {
 
