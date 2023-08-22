@@ -361,21 +361,21 @@ A to DI01&lt;br&gt;<br  />
 <h2>The Things Network MQTT Integration and Payload Formatters</h2>
 <h3>Uplink Formatter</h3>
 <p>Decode uplink payload (a sequence of bytes) into data structures which are readable/suitable for further processing.</p>
-<p>In The Things Network Console:</p><ul>
+<p>In The Things Network Console:</p><ol type="1">
 <li>Go to "Payload formatters" -&gt; "Uplink"</li>
 <li>Select "Formatter type": "Custom Javascript formatter"</li>
 <li>"Formatter code": Paste <a href="ttn_uplink_formatter.js">ttn_uplink_formatter.js</a></li>
 <li>Apply "Save changes"</li>
-</ul>
+</ol>
 <p><img src="https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/38b66478-688a-4028-974a-c517cddae662" alt="TTN Uplink Formatter" class="inline"/></p>
 <h3>Downlink Formatter</h3>
 <p>Encode downlink payload from JSON to a sequence of bytes.</p>
-<p>In The Things Network Console:</p><ul>
+<p>In The Things Network Console:</p><ol type="1">
 <li>Go to "Payload formatters" -&gt; "Downlink"</li>
 <li>Select "Formatter type": "Custom Javascript formatter"</li>
 <li>"Formatter code": Paste <a href="ttn_downlink_formatter.js">ttn_downlink_formatter.js</a></li>
 <li>Apply "Save changes"</li>
-</ul>
+</ol>
 <p><b>Note:</b> The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210">ttn_decoder_fp.js line 176ff</a>). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py">generate_decoder.py</a>.</p>
 <h3>MQTT Integration</h3>
 <p>TTN provides an MQTT broker. How to receive and decode the payload with an MQTT client - see <a href="https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2">https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2</a></p>
