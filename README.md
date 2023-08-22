@@ -233,15 +233,24 @@ See [Debug Output Configuration in Arduino IDE](DEBUG_OUTPUT.md)
 
 ### Remote Configuration with The Things Network Console
 #### With Payload Formatter
+##### Example 1: Set SLEEP_INTERVAL to 360 seconds
+1. Build command sequence as JSON string: `{"cmd": "CMD_SET_SLEEP_INTERVAL", "interval": 360}`
+2. Send command sequence via The Things Network Console
+![TTN Downlink as JSON](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/e61ca412-713b-4972-8c4f-f0068068c323)
+
+##### Example 2: Set Date/Time
+1. Get epoch (e.g. from https://www.epochconverter.com) (Example: 1692729833); add an offset (estimated) for time until received (Example: + 64 seconds => 16927298**97**) 
+2. Build command sequence as JSON string: {"cmd": "CMD_SET_DATETIME", "epoch": 1692729897} 
+3. Send command sequence via The Things Network Console
 
 #### Without Payload Formatter
 ##### Example 1: Set SLEEP_INTERVAL to 360 seconds
 1. Convert interval to hex: 360 = 0x0168
 2. Build command sequence: "CMD_SET_SLEEP_INTERVAL 360 secs" -> 0xA8 0x01 0x68
 3. Send command sequence via The Things Network Console
-![TTN Downlink](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/67544195-c2cd-4118-8de5-1f1c0facacdb)
+![TTN Downlink as Hex](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/67544195-c2cd-4118-8de5-1f1c0facacdb)
 
-
+##### Example 2: Set Date/Time
 1. Get epoch (e.g. from https://www.epochconverter.com/hex) (Example: 0x63B2BC32); add an offset (estimated) for time until received (Example: + 64 / 0x40 seconds => 0x63B2BC**7**2) 
 2. Build command sequence: "CMD_SET_DATETIME 0x63B2BC72" -> 0x88 0x63 0xB2 0xBC 0x72
 3. Send command sequence via The Things Network Console
