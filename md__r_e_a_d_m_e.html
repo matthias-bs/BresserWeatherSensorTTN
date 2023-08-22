@@ -356,8 +356,14 @@ A to DI01&lt;br&gt;<br  />
 </ol>
 <h1>MQTT Integration</h1>
 <h2>The Things Network MQTT Integration and Payload Formatters</h2>
-<p>Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing: paste <a href="ttn_decoder_fp.js">ttn_decoder_fp.js</a> as "Custom Javascript formatter" to "Payload Formatters" -&gt; "Uplink" on The Things Network Console.</p>
+<h3>Uplink Formatter</h3>
+<p>Decode uplink payload (a sequence of bytes) into data structures which are readable/suitable for further processing.</p>
+<p>Paste <a href="ttn_uplink_formatter.js">ttn_uplink_formatter.js</a> as "Custom Javascript formatter" to "Payload Formatters" -&gt; "Uplink" and apply "Save changes" on The Things Network Console.</p>
+<h3>Downlink Formatter</h3>
+<p>Encode downlink payload from JSON to a sequence of bytes.</p>
+<p>Paste <a href="ttn_downlink_formatter.js">ttn_downlink_formatter.js</a> as "Custom Javascript formatter" to "Payload Formatters" -&gt; "Downlink" and apply "Save changes" on The Things Network Console.</p>
 <p><b>Note:</b> The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210">ttn_decoder_fp.js line 176ff</a>). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py">generate_decoder.py</a>.</p>
+<h3>MQTT Integration</h3>
 <p>TTN provides an MQTT broker. How to receive and decode the payload with an MQTT client - see <a href="https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2">https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2</a></p>
 <p>V3 topic:</p>
 <p><code>v3/&lt;ttn app id&gt;&lt;at symbol&gt;ttn/devices/&lt;ttn device id&gt;/up</code></p>
