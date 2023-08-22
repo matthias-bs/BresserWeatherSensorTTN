@@ -281,11 +281,21 @@ _To be done_
 
 ### The Things Network MQTT Integration and Payload Formatters
 
-Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing:
-paste [ttn_decoder_fp.js](ttn_decoder_fp.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Uplink" on The Things Network Console.
+#### Uplink Formatter
+
+Decode uplink payload (a sequence of bytes) into data structures which are readable/suitable for further processing.
+
+Paste [ttn_uplink_formatter.js](ttn_uplink_formatter.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Uplink" and apply "Save changes" on The Things Network Console.
+
+#### Downlink Formatter
+
+Encode downlink payload from JSON to a sequence of bytes.
+
+Paste [ttn_downlink_formatter.js](ttn_downlink_formatter.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Downlink" and apply "Save changes" on The Things Network Console.
 
 **Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [ttn_decoder_fp.js line 176ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210)). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script [generate_decoder.py](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py).
 
+#### MQTT Integration
 TTN provides an MQTT broker.
 How to receive and decode the payload with an MQTT client -
 see https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2
