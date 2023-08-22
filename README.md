@@ -234,9 +234,8 @@ See [Debug Output Configuration in Arduino IDE](DEBUG_OUTPUT.md)
 ### Remote Configuration with The Things Network Console
 #### With Payload Formatter
 
-see [ttn_downlink_formatter.js](ttn_downlink_formatter.js) for syntax of commands and responses
-
-see [The Things Network MQTT Integration and Payload Formatters](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/README.md#the-things-network-mqtt-integration-payload-formatters)
+* see [ttn_downlink_formatter.js](ttn_downlink_formatter.js) for syntax of commands and responses
+* see [The Things Network MQTT Integration and Payload Formatters](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/README.md#the-things-network-mqtt-integration-payload-formatters)
 
 ##### Example 1: Set SLEEP_INTERVAL to 360 seconds
 1. Build command sequence as JSON string: `{"cmd": "CMD_SET_SLEEP_INTERVAL", "interval": 360}`
@@ -288,13 +287,23 @@ _To be done_
 
 Decode uplink payload (a sequence of bytes) into data structures which are readable/suitable for further processing.
 
-Paste [ttn_uplink_formatter.js](ttn_uplink_formatter.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Uplink" and apply "Save changes" on The Things Network Console.
+In The Things Network Console:
+* Go to "Payload Formatters" -> "Uplink"
+* Select "Formatter type": "Custom Javascript formatter"
+* "Formatter code": Paste [ttn_uplink_formatter.js](ttn_uplink_formatter.js)
+* Apply "Save changes"
+
+![TTN Uplink Formatter](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/38b66478-688a-4028-974a-c517cddae662)
 
 #### Downlink Formatter
 
 Encode downlink payload from JSON to a sequence of bytes.
 
-Paste [ttn_downlink_formatter.js](ttn_downlink_formatter.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Downlink" and apply "Save changes" on The Things Network Console.
+In The Things Network Console:
+* Go to "Payload Formatters" -> "Downlink"
+* Select "Formatter type": "Custom Javascript formatter"
+* "Formatter code": Paste [ttn_downlink_formatter.js](ttn_downlink_formatter.js)
+* Apply "Save changes"
 
 **Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [ttn_decoder_fp.js line 176ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210)). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script [generate_decoder.py](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py).
 
