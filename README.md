@@ -233,6 +233,9 @@ See [Debug Output Configuration in Arduino IDE](DEBUG_OUTPUT.md)
 
 ### Remote Configuration with The Things Network Console
 #### With Payload Formatter
+
+see [ttn_downlink_formatter.js](ttn_downlink_formatter.js) for syntax of commands and responses
+
 see [The Things Network MQTT Integration and Payload Formatters](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/README.md#the-things-network-mqtt-integration-payload-formatters)
 
 ##### Example 1: Set SLEEP_INTERVAL to 360 seconds
