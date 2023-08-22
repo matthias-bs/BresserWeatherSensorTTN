@@ -231,14 +231,34 @@ See [Debug Output Configuration in Arduino IDE](DEBUG_OUTPUT.md)
 
 :warning: Confirmed downlinks should not be used! (see [here](https://www.thethingsnetwork.org/forum/t/how-to-purge-a-scheduled-confirmed-downlink/56849/7) for an explanation.)
 
-### Example 1: Set SLEEP_INTERVAL to 360 seconds
+### Remote Configuration with The Things Network Console
+#### With Payload Formatter
+
+#### Without Payload Formatter
+##### Example 1: Set SLEEP_INTERVAL to 360 seconds
+1. Convert interval to hex: 360 = 0x0168
+2. Build command sequence: "CMD_SET_SLEEP_INTERVAL 360 secs" -> 0xA8 0x01 0x68
+3. Send command sequence via The Things Network Console
+![TTN Downlink](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/67544195-c2cd-4118-8de5-1f1c0facacdb)
+
+
+1. Get epoch (e.g. from https://www.epochconverter.com/hex) (Example: 0x63B2BC32); add an offset (estimated) for time until received (Example: + 64 / 0x40 seconds => 0x63B2BC**7**2) 
+2. Build command sequence: "CMD_SET_DATETIME 0x63B2BC72" -> 0x88 0x63 0xB2 0xBC 0x72
+3. Send command sequence via The Things Network Console
+
+### Remote Configuration with Helium Console
+#### With Payload Formatter
+_To be done_
+
+#### Without Payload Formatter 
+##### Example 1: Set SLEEP_INTERVAL to 360 seconds
 1. Convert interval to hex: 360 = 0x0168
 2. Build command sequence: "CMD_SET_SLEEP_INTERVAL 360 secs" -> 0xA8 0x01 0x68
 3. Convert command sequence to Base64 encoding: 0xA8 0x01 0x68 -> "qAFo" ([Base64 Guru](https://base64.guru/converter/encode/hex))
-4. Send command sequence e.g. via Helium Console
+4. Send command sequence via Helium Console
     ![Helium_Add_Downlink_Payload](https://user-images.githubusercontent.com/83612361/210183244-a2d109bc-6782-4f83-b406-7f6e0b17eda1.png)
 
-### Example 2: Set Date/Time
+##### Example 2: Set Date/Time
 
 1. Get epoch (e.g. from https://www.epochconverter.com/hex) (Example: 0x63B2BC32); add an offset (estimated) for time until received (Example: + 64 / 0x40 seconds => 0x63B2BC**7**2) 
 2. Build command sequence: "CMD_SET_DATETIME 0x63B2BC72" -> 0x88 0x63 0xB2 0xBC 0x72
