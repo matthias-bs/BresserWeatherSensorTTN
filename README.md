@@ -288,10 +288,10 @@ _To be done_
 Decode uplink payload (a sequence of bytes) into data structures which are readable/suitable for further processing.
 
 In The Things Network Console:
-* Go to "Payload formatters" -> "Uplink"
-* Select "Formatter type": "Custom Javascript formatter"
-* "Formatter code": Paste [ttn_uplink_formatter.js](ttn_uplink_formatter.js)
-* Apply "Save changes"
+1. Go to "Payload formatters" -> "Uplink"
+2. Select "Formatter type": "Custom Javascript formatter"
+3. "Formatter code": Paste [ttn_uplink_formatter.js](ttn_uplink_formatter.js)
+4. Apply "Save changes"
 
 ![TTN Uplink Formatter](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/38b66478-688a-4028-974a-c517cddae662)
 
@@ -300,10 +300,10 @@ In The Things Network Console:
 Encode downlink payload from JSON to a sequence of bytes.
 
 In The Things Network Console:
-* Go to "Payload formatters" -> "Downlink"
-* Select "Formatter type": "Custom Javascript formatter"
-* "Formatter code": Paste [ttn_downlink_formatter.js](ttn_downlink_formatter.js)
-* Apply "Save changes"
+1. Go to "Payload formatters" -> "Downlink"
+2. Select "Formatter type": "Custom Javascript formatter"
+3. "Formatter code": Paste [ttn_downlink_formatter.js](ttn_downlink_formatter.js)
+4. Apply "Save changes"
 
 **Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [ttn_decoder_fp.js line 176ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210)). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script [generate_decoder.py](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py).
 
