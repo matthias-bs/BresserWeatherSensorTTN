@@ -233,6 +233,8 @@ See [Debug Output Configuration in Arduino IDE](DEBUG_OUTPUT.md)
 
 ### Remote Configuration with The Things Network Console
 #### With Payload Formatter
+see [The Things Network MQTT Integration and Payload Formatters](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/README.md#the-things-network-mqtt-integration-payload-formatters)
+
 ##### Example 1: Set SLEEP_INTERVAL to 360 seconds
 1. Build command sequence as JSON string: `{"cmd": "CMD_SET_SLEEP_INTERVAL", "interval": 360}`
 2. Send command sequence via The Things Network Console
@@ -277,12 +279,12 @@ _To be done_
 
 ## MQTT Integration
 
-### The Things Network MQTT Integration and Message Decoder
+### The Things Network MQTT Integration and Payload Formatters
 
 Decode payload (a sequence of bytes) into data structures which are readable/suitable for further processing:
 paste [ttn_decoder_fp.js](ttn_decoder_fp.js) as "Custom Javascript formatter" to "Payload Formatters" -> "Uplink" on The Things Network Console.
 
-**Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [ttn_decoder_fp.js line 176ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210)).
+**Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [ttn_decoder_fp.js line 176ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210)). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script [generate_decoder.py](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py).
 
 TTN provides an MQTT broker.
 How to receive and decode the payload with an MQTT client -
