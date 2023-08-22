@@ -288,7 +288,7 @@ _To be done_
 Decode uplink payload (a sequence of bytes) into data structures which are readable/suitable for further processing.
 
 In The Things Network Console:
-* Go to "Payload Formatters" -> "Uplink"
+* Go to "Payload formatters" -> "Uplink"
 * Select "Formatter type": "Custom Javascript formatter"
 * "Formatter code": Paste [ttn_uplink_formatter.js](ttn_uplink_formatter.js)
 * Apply "Save changes"
@@ -300,7 +300,7 @@ In The Things Network Console:
 Encode downlink payload from JSON to a sequence of bytes.
 
 In The Things Network Console:
-* Go to "Payload Formatters" -> "Downlink"
+* Go to "Payload formatters" -> "Downlink"
 * Select "Formatter type": "Custom Javascript formatter"
 * "Formatter code": Paste [ttn_downlink_formatter.js](ttn_downlink_formatter.js)
 * Apply "Save changes"
