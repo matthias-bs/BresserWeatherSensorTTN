@@ -352,20 +352,50 @@ rx = {[...],"decoded":{"payload":{"air_temp_c":"13.5","battery_v":4197,"humidity
 "supply_v":4210,"water_temp_c":"-30.0","wind_avg_meter_sec":"1.9","wind_direction_deg":"282.0","wind_gust_meter_sec":"2.0"},
 "status":"success"}, [...]
 ```
-## Datacake Integration
+### Datacake Integration
 
-### Desktop Dashboard
+#### Desktop Dashboard
 
 ![Datacake_Dashboard_Desktop](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/2a876ba1-06b9-4ea3-876c-2fad3d559b01)
 
-### Mobile Dashboard
+#### Mobile Dashboard
 ![Datacake_Dashboard_Mobile](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/fbc0948c-bfd8-4d7d-9780-c113d576d3cf)
 
-### Datacake/TTN Setup
+#### Datacake/TTN Setup
 
 YouTube Video: [Get started for free with LoRaWaN on The Things Network and Datacake IoT Platform](https://youtu.be/WGVFgYp3k3s)
 
 [Datacake Payload Decoder](scripts/datacake_decoder.js)
+
+### Decoder Scripts Summary
+
+#### [decoder_basic.js](scripts/decoder_basic.js)
+    
+Basic example for a single Weather Sensor uplink to [The Things Network](https://www.thethingsnetwork.org/).
+
+#### [ttn_uplink_formatter.js](scripts/ttn_uplink_formatter.js)
+    
+[The Things Network](https://www.thethingsnetwork.org/) uplink formatter for the full set of features provided by the default SW configuration. Includes decoding of response messages triggered by uplink command messages.
+
+#### [ttn_downlink_formatter.js](scripts/ttn_downlink_formatter.js)
+
+[The Things Network](https://www.thethingsnetwork.org/) downlink formatter for sending commands as JSON strings to the device.
+
+#### [ttn_decoder_distance.js](scripts/ttn_decoder_distance.js)
+
+Variant of [ttn_uplink_formatter.js](scripts/ttn_uplink_formatter.js) which supports the ultrasonic distance sensor, but neither the lightning sensor nor response messages.
+
+#### [ttn_decoder_fp.js](scripts/ttn_decoder_fp.js)
+    
+Predecessor of [ttn_uplink_formatter.js](scripts/ttn_uplink_formatter.js) without support of response messages. *deprecated, will eventually be deleted*
+
+#### [helium_decoder.js](scripts/helium_decoder.js)
+    
+Variant of [ttn_uplink_formatter.js](scripts/ttn_uplink_formatter.js) for [Helium Network](https://www.helium.com/), currently without support of response messages.
+
+#### [datacake_decoder.js](scripts/datacake_decoder.js)
+    
+Equivalent of [ttn_uplink_formatter.js](scripts/ttn_uplink_formatter.js) for [Datacake](https://datacake.co/), currently without support of response messages.
 
 ## Doxygen Generated Source Code Documentation
 
