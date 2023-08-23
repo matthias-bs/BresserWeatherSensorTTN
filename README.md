@@ -12,7 +12,7 @@ Auxiliary sensor data can be integrated via Bluetooth Low Energy (BLE), OneWire,
 
 ## Features
 * Single 868 MHz Radio Transceiver for both Sensor Data Reception and LoRaWAN Connection
-* Tested with The Things Network and Helium Network (EU868)
+* Tested with [The Things Network](https://www.thethingsnetwork.org/) and [Helium Network](https://www.helium.com/) (EU868)
 * Supports multiple 868 MHz Sensors (e.g. Weather Sensor and Soil Moisture Sensor or Indoor Thermometer/Hygrometer)
 * Low Power Design (using ESP32 Deep Sleep Mode)
 * Fast LoRaWAN Joining after Deep Sleep (using ESP32 RTC RAM)
@@ -24,7 +24,7 @@ Auxiliary sensor data can be integrated via Bluetooth Low Energy (BLE), OneWire,
 * [Remote Configuration via LoRaWAN Downlink](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/README.md#remote-configuration-via-lorawan-downlink)
 
 ## Hardware
-* Please see my [LoRaWAN_Node](https://github.com/matthias-bs/LoRaWAN_Node) project.
+* [LoRaWAN_Node](https://github.com/matthias-bs/LoRaWAN_Node)
 * [LILYGO® TTGO LORA32](http://www.lilygo.cn/prod_view.aspx?TypeId=50060&Id=1326&FId=t3:50060:3)
     
     [TTGO LoRa32 V2.1.6 Pinout](https://github.com/lnlp/pinout-diagrams/blob/main/LoRa%20development%20boards/TTGO%20LoRa32%20V2.1.6%20Pinout%20(LLP).pdf) 
