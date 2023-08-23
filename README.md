@@ -305,7 +305,7 @@ In The Things Network Console:
 3. "Formatter code": Paste [scripts/ttn_downlink_formatter.js](scripts/ttn_downlink_formatter.js)
 4. Apply "Save changes"
 
-**Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [scripts/ttn_decoder_fp.js line 176ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/scripts/ttn_decoder_fp.js#L210)). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script [generate_decoder.py](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py).
+**Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [scripts/ttn_uplink_formatter.js line 316ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/c64593e113f11b120eea79c6558f4f0822c4af91/scripts/ttn_uplink_formatter.js#L316)). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script [generate_decoder.py](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py).
 
 #### MQTT Integration
 TTN provides an MQTT broker.
