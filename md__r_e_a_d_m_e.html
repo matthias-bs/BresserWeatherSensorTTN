@@ -312,7 +312,7 @@ A to DI01&lt;br&gt;<br  />
 <h2>Remote Configuration with The Things Network Console</h2>
 <h3>With Payload Formatter</h3>
 <ul>
-<li>see <a href="ttn_downlink_formatter.js">ttn_downlink_formatter.js</a> for syntax of commands and responses</li>
+<li>see <a href="scripts/ttn_downlink_formatter.js">scripts/ttn_downlink_formatter.js</a> for syntax of commands and responses</li>
 <li>see <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/README.md#the-things-network-mqtt-integration-payload-formatters">The Things Network MQTT Integration and Payload Formatters</a></li>
 </ul>
 <h4>Example 1: Set SLEEP_INTERVAL to 360 seconds</h4>
@@ -364,7 +364,7 @@ A to DI01&lt;br&gt;<br  />
 <p>In The Things Network Console:</p><ol type="1">
 <li>Go to "Payload formatters" -&gt; "Uplink"</li>
 <li>Select "Formatter type": "Custom Javascript formatter"</li>
-<li>"Formatter code": Paste <a href="ttn_uplink_formatter.js">ttn_uplink_formatter.js</a></li>
+<li>"Formatter code": Paste <a href="scripts/ttn_uplink_formatter.js">scripts/ttn_uplink_formatter.js</a></li>
 <li>Apply "Save changes"</li>
 </ol>
 <p><img src="https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/38b66478-688a-4028-974a-c517cddae662" alt="TTN Uplink Formatter" class="inline"/></p>
@@ -373,10 +373,10 @@ A to DI01&lt;br&gt;<br  />
 <p>In The Things Network Console:</p><ol type="1">
 <li>Go to "Payload formatters" -&gt; "Downlink"</li>
 <li>Select "Formatter type": "Custom Javascript formatter"</li>
-<li>"Formatter code": Paste <a href="ttn_downlink_formatter.js">ttn_downlink_formatter.js</a></li>
+<li>"Formatter code": Paste <a href="scripts/ttn_downlink_formatter.js">scripts/ttn_downlink_formatter.js</a></li>
 <li>Apply "Save changes"</li>
 </ol>
-<p><b>Note:</b> The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210">ttn_decoder_fp.js line 176ff</a>). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py">generate_decoder.py</a>.</p>
+<p><b>Note:</b> The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/scripts/ttn_decoder_fp.js#L210">scripts/ttn_decoder_fp.js line 176ff</a>). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py">generate_decoder.py</a>.</p>
 <h3>MQTT Integration</h3>
 <p>TTN provides an MQTT broker. How to receive and decode the payload with an MQTT client - see <a href="https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2">https://www.thethingsnetwork.org/forum/t/some-clarity-on-mqtt-topics/44226/2</a></p>
 <p>V3 topic:</p>
@@ -385,12 +385,12 @@ A to DI01&lt;br&gt;<br  />
 <div class="fragment"><div class="line">&lt;ttn device id&gt; = .end_device_ids.device_id</div>
 <div class="line">&lt;ttn app id&gt; = .end_device_ids.application_ids.application_id  // (not including the &lt;at symbol&gt;ttn in the topic)</div>
 <div class="line">&lt;payload&gt; = .uplink_message.frm_payload</div>
-</div><!-- fragment --><p>JSON-Path with Uplink-Decoder (see <a href="ttn_uplink_formatter.js">ttn_uplink_formatter.js</a>)</p>
+</div><!-- fragment --><p>JSON-Path with Uplink-Decoder (see <a href="scripts/ttn_uplink_formatter.js">scripts/ttn_uplink_formatter.js</a>)</p>
 <p><code>.uplink_message.decoded_payload.bytes.&lt;variable&gt;</code></p>
 <h2>Helium Network MQTT Integration and Message Decoder</h2>
 <p>Please refer to <a href="https://docs.helium.com/use-the-network/console/integrations/mqtt/">https://docs.helium.com/use-the-network/console/integrations/mqtt/</a>.</p>
 <p>Add an MQTT integration in the Helium console - the "Endpoint" is in fact an MQTT broker you have to provide: <img src="https://user-images.githubusercontent.com/83612361/195050719-8562ad0e-5523-436f-8b61-e4b15b08d6de.png" alt="Helium_MQTT_Integration" class="inline"/></p>
-<p>Add <a href="helium_decoder.js">helium_decoder.js</a> in the Helium console as custom function: <img src="https://user-images.githubusercontent.com/83612361/195045593-d6c76e0c-1d87-410a-b941-8636b35d601a.png" alt="Helium_Decoder_Function" class="inline"/></p>
+<p>Add <a href="scripts/helium_decoder.js">scripts/helium_decoder.js</a> in the Helium console as custom function: <img src="https://user-images.githubusercontent.com/83612361/195045593-d6c76e0c-1d87-410a-b941-8636b35d601a.png" alt="Helium_Decoder_Function" class="inline"/></p>
 <p><b>Note:</b> The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers).</p>
 <p>Add your function to the flow: <img src="https://user-images.githubusercontent.com/83612361/195047042-6a8d9dfe-61f6-43e3-ac51-b917d01ff237.png" alt="Helium_Decoder_Flow" class="inline"/></p>
 <p>Example decoder output (JSON): </p><div class="fragment"><div class="line">rx = {[...],&quot;decoded&quot;:{&quot;payload&quot;:{&quot;air_temp_c&quot;:&quot;13.5&quot;,&quot;battery_v&quot;:4197,&quot;humidity&quot;:72,&quot;indoor_humidity&quot;:53,&quot;indoor_temp_c&quot;:&quot;21.7&quot;,&quot;rain_day&quot;:&quot;0.0&quot;,&quot;rain_hr&quot;:&quot;0.0&quot;,&quot;rain_mm&quot;:&quot;480.8&quot;,&quot;rain_mon&quot;:&quot;0.0&quot;,&quot;rain_week&quot;:&quot;0.0&quot;,&quot;soil_moisture&quot;:0,&quot;soil_temp_c&quot;:&quot;-30.0&quot;,</div>
@@ -404,7 +404,7 @@ A to DI01&lt;br&gt;<br  />
 <p><img src="https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/fbc0948c-bfd8-4d7d-9780-c113d576d3cf" alt="Datacake_Dashboard_Mobile" class="inline"/></p>
 <h2>Datacake/TTN Setup</h2>
 <p>YouTube Video: <a href="https://youtu.be/WGVFgYp3k3s">Get started for free with LoRaWaN on The Things Network and Datacake IoT Platform</a></p>
-<p><a href="datacake_decoder.js">Datacake Payload Decoder</a></p>
+<p><a href="scripts/datacake_decoder.js">Datacake Payload Decoder</a></p>
 <h1>Doxygen Generated Source Code Documentation</h1>
 <p><a href="https://matthias-bs.github.io/BresserWeatherSensorTTN/index.html">https://matthias-bs.github.io/BresserWeatherSensorTTN/index.html</a></p>
 <h1>References</h1>
