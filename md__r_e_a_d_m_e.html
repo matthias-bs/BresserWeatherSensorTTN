@@ -397,14 +397,29 @@ A to DI01&lt;br&gt;<br  />
 <div class="line">&quot;status&quot;:{&quot;ble_ok&quot;:true,&quot;res&quot;:false,&quot;rtc_sync_req&quot;:true,&quot;runtime_expired&quot;:true,&quot;s1_batt_ok&quot;:false,&quot;s1_dec_ok&quot;:false,&quot;ws_batt_ok&quot;:true,&quot;ws_dec_ok&quot;:true},</div>
 <div class="line">&quot;supply_v&quot;:4210,&quot;water_temp_c&quot;:&quot;-30.0&quot;,&quot;wind_avg_meter_sec&quot;:&quot;1.9&quot;,&quot;wind_direction_deg&quot;:&quot;282.0&quot;,&quot;wind_gust_meter_sec&quot;:&quot;2.0&quot;},</div>
 <div class="line">&quot;status&quot;:&quot;success&quot;}, [...]</div>
-</div><!-- fragment --> <h1>Datacake Integration</h1>
-<h2>Desktop Dashboard</h2>
+</div><!-- fragment --> <h2>Datacake Integration</h2>
+<h3>Desktop Dashboard</h3>
 <p><img src="https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/2a876ba1-06b9-4ea3-876c-2fad3d559b01" alt="Datacake_Dashboard_Desktop" class="inline"/></p>
-<h2>Mobile Dashboard</h2>
+<h3>Mobile Dashboard</h3>
 <p><img src="https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/fbc0948c-bfd8-4d7d-9780-c113d576d3cf" alt="Datacake_Dashboard_Mobile" class="inline"/></p>
-<h2>Datacake/TTN Setup</h2>
+<h3>Datacake/TTN Setup</h3>
 <p>YouTube Video: <a href="https://youtu.be/WGVFgYp3k3s">Get started for free with LoRaWaN on The Things Network and Datacake IoT Platform</a></p>
 <p><a href="scripts/datacake_decoder.js">Datacake Payload Decoder</a></p>
+<h2>Decoder Scripts Summary</h2>
+<h3><a href="scripts/decoder_basic.js">decoder_basic.js</a></h3>
+<p>Basic example for a single Weather Sensor uplink to <a href="https://www.thethingsnetwork.org/">The Things Network</a>.</p>
+<h3><a href="scripts/ttn_uplink_formatter.js">ttn_uplink_formatter.js</a></h3>
+<p><a href="https://www.thethingsnetwork.org/">The Things Network</a> uplink formatter for the full set of features provided by the default SW configuration. Includes decoding of response messages triggered by uplink command messages.</p>
+<h3><a href="scripts/ttn_downlink_formatter.js">ttn_downlink_formatter.js</a></h3>
+<p><a href="https://www.thethingsnetwork.org/">The Things Network</a> downlink formatter for sending commands as JSON strings to the device.</p>
+<h3><a href="scripts/ttn_decoder_distance.js">ttn_decoder_distance.js</a></h3>
+<p>Variant of <a href="scripts/ttn_uplink_formatter.js">ttn_uplink_formatter.js</a> which supports the ultrasonic distance sensor, but neither the lightning sensor nor response messages.</p>
+<h3><a href="scripts/ttn_decoder_fp.js">ttn_decoder_fp.js</a></h3>
+<p>Predecessor of <a href="scripts/ttn_uplink_formatter.js">ttn_uplink_formatter.js</a> without support of response messages. <em>deprecated, will eventually be deleted</em></p>
+<h3><a href="scripts/helium_decoder.js">helium_decoder.js</a></h3>
+<p>Variant of <a href="scripts/ttn_uplink_formatter.js">ttn_uplink_formatter.js</a> for <a href="https://www.helium.com/">Helium Network</a>, currently without support of response messages.</p>
+<h3><a href="scripts/datacake_decoder.js">datacake_decoder.js</a></h3>
+<p>Equivalent of <a href="scripts/ttn_uplink_formatter.js">ttn_uplink_formatter.js</a> for <a href="https://datacake.co/">Datacake</a>, currently without support of response messages.</p>
 <h1>Doxygen Generated Source Code Documentation</h1>
 <p><a href="https://matthias-bs.github.io/BresserWeatherSensorTTN/index.html">https://matthias-bs.github.io/BresserWeatherSensorTTN/index.html</a></p>
 <h1>References</h1>
