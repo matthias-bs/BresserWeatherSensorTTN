@@ -234,7 +234,7 @@ See [Debug Output Configuration in Arduino IDE](DEBUG_OUTPUT.md)
 ### Remote Configuration with The Things Network Console
 #### With Payload Formatter
 
-* see [ttn_downlink_formatter.js](ttn_downlink_formatter.js) for syntax of commands and responses
+* see [scripts/ttn_downlink_formatter.js](scripts/ttn_downlink_formatter.js) for syntax of commands and responses
 * see [The Things Network MQTT Integration and Payload Formatters](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/README.md#the-things-network-mqtt-integration-payload-formatters)
 
 ##### Example 1: Set SLEEP_INTERVAL to 360 seconds
@@ -290,7 +290,7 @@ Decode uplink payload (a sequence of bytes) into data structures which are reada
 In The Things Network Console:
 1. Go to "Payload formatters" -> "Uplink"
 2. Select "Formatter type": "Custom Javascript formatter"
-3. "Formatter code": Paste [ttn_uplink_formatter.js](ttn_uplink_formatter.js)
+3. "Formatter code": Paste [scripts/ttn_uplink_formatter.js](scripts/ttn_uplink_formatter.js)
 4. Apply "Save changes"
 
 ![TTN Uplink Formatter](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/38b66478-688a-4028-974a-c517cddae662)
@@ -302,10 +302,10 @@ Encode downlink payload from JSON to a sequence of bytes.
 In The Things Network Console:
 1. Go to "Payload formatters" -> "Downlink"
 2. Select "Formatter type": "Custom Javascript formatter"
-3. "Formatter code": Paste [ttn_downlink_formatter.js](ttn_downlink_formatter.js)
+3. "Formatter code": Paste [scripts/ttn_downlink_formatter.js](scripts/ttn_downlink_formatter.js)
 4. Apply "Save changes"
 
-**Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [ttn_decoder_fp.js line 176ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/ttn_decoder_fp.js#L210)). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script [generate_decoder.py](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py).
+**Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers - see [scripts/ttn_decoder_fp.js line 176ff](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/f4de8c490c6f6ef72890b3b807953450cb171b35/scripts/ttn_decoder_fp.js#L210)). The configuration dependent part of the decoder can be created with a C++ preprocessor and the Python script [generate_decoder.py](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/scripts/generate_decoder.py).
 
 #### MQTT Integration
 TTN provides an MQTT broker.
@@ -326,7 +326,7 @@ v3 message key field jsonpaths:
 ```  
 
 
-JSON-Path with Uplink-Decoder (see [ttn_uplink_formatter.js](ttn_uplink_formatter.js))
+JSON-Path with Uplink-Decoder (see [scripts/ttn_uplink_formatter.js](scripts/ttn_uplink_formatter.js))
 
 `.uplink_message.decoded_payload.bytes.<variable>`
 
@@ -337,7 +337,7 @@ Please refer to https://docs.helium.com/use-the-network/console/integrations/mqt
 Add an MQTT integration in the Helium console - the "Endpoint" is in fact an MQTT broker you have to provide:
 ![Helium_MQTT_Integration](https://user-images.githubusercontent.com/83612361/195050719-8562ad0e-5523-436f-8b61-e4b15b08d6de.png)
 
-Add [helium_decoder.js](helium_decoder.js) in the Helium console as custom function:
+Add [scripts/helium_decoder.js](scripts/helium_decoder.js) in the Helium console as custom function:
 ![Helium_Decoder_Function](https://user-images.githubusercontent.com/83612361/195045593-d6c76e0c-1d87-410a-b941-8636b35d601a.png)
 
 **Note:** The actual payload depends on the options selected in the Arduino software - the decoder must be edited accordingly (add or remove data types and JSON identifiers).
@@ -365,7 +365,7 @@ rx = {[...],"decoded":{"payload":{"air_temp_c":"13.5","battery_v":4197,"humidity
 
 YouTube Video: [Get started for free with LoRaWaN on The Things Network and Datacake IoT Platform](https://youtu.be/WGVFgYp3k3s)
 
-[Datacake Payload Decoder](datacake_decoder.js)
+[Datacake Payload Decoder](scripts/datacake_decoder.js)
 
 ## Doxygen Generated Source Code Documentation
 
