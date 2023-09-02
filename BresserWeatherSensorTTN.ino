@@ -279,6 +279,7 @@ const uint8_t PAYLOAD_SIZE = 51;
 #define MAGIC2 (('m' << 24) | ('g' < 16) | ('c' << 8) | '2')
 #define EXTRA_INFO_MEM_SIZE 64
 
+// Debug printing
 // To enable debug mode (debug messages via serial port):
 // Arduino IDE: Tools->Core Debug Level: "Debug|Verbose"
 // or
@@ -374,12 +375,15 @@ public:
     void setup();
     
     
-    /*!
-     * \fn requestNetworkTime
-     * 
-     * \brief Wrapper function for LMIC_requestNetworkTime()
-     */
-    void requestNetworkTime(void);
+    #if defined(GET_NETWORKTIME)
+        /*!
+        * \fn requestNetworkTime
+        * 
+        * \brief Wrapper function for LMIC_requestNetworkTime()
+        */
+        void requestNetworkTime(void);
+    #endif
+
     
     
     /*!
@@ -402,7 +406,9 @@ public:
     void printSessionState(const SessionState &State);
 
     /*!
-     * TODO
+     * \fn doCfgUplink
+     *
+     * \brief Uplink configuration/status
      */
     void doCfgUplink(void);
 
@@ -516,10 +522,10 @@ public:
 private:
     void doUplink();
 
-    bool m_fUplinkRequest;              // set true when uplink is requested
-    bool m_fBusy;                       // set true while sending an uplink
-    std::uint32_t m_uplinkPeriodMs;     // uplink period in milliseconds
-    std::uint32_t m_tReference;         // time of last uplink
+    bool m_fUplinkRequest;              //!< set true when uplink is requested
+    bool m_fBusy;                       //!< set true while sending an uplink
+    std::uint32_t m_uplinkPeriodMs;     //!< uplink period in milliseconds
+    std::uint32_t m_tReference;         //!< time of last uplink
 };
 
 /****************************************************************************\
@@ -634,7 +640,7 @@ uint16_t  sleep_interval_long;  //!< preferences: sleep interval long
 /// LoRaWAN uplink payload buffer
 static uint8_t loraData[PAYLOAD_SIZE]; //!< LoRaWAN uplink payload buffer
 
-/// Sleep request (set in NetTxComplete();
+/// Sleep request
 bool sleepReq = false;
 
 /// Uplink request - command received via downlink
@@ -993,7 +999,7 @@ cMyLoRaWAN::printSessionInfo(const SessionInfo &Info)
 }
 
 // Print session state for debugging
-void 
+void
 cMyLoRaWAN::printSessionState(const SessionState &State)
 {
     log_v("Tag:\t\t%d", State.V1.Tag);
