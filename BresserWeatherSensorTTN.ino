@@ -375,14 +375,14 @@ public:
     void setup();
     
     
-    #if defined(GET_NETWORKTIME)
-        /*!
-        * \fn requestNetworkTime
-        * 
-        * \brief Wrapper function for LMIC_requestNetworkTime()
-        */
-        void requestNetworkTime(void);
-    #endif
+    
+    /*!
+    * \fn requestNetworkTime
+    * 
+    * \brief Wrapper function for LMIC_requestNetworkTime()
+    */
+    void requestNetworkTime(void);
+    
 
     
     
