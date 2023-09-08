@@ -8,10 +8,10 @@
 
 **or**
 
-    ![Arduino_IDE-Select_Other_Board_and_Port](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/875ca5c9-cb66-4055-8dbc-231bafa4566b)
+   ![Arduino_IDE-Select_Other_Board_and_Port](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/ac847f23-4fe6-4111-929f-ac6d36cb8a53)
   
 2. Select desired debug level
-   
+
     ![Arduino_IDE-Tools_CoreDebugLevel](https://github.com/matthias-bs/BresserWeatherSensorTTN/assets/83612361/72a8b1d9-8d39-41fc-9658-78b432b73d56)
 
   This passes the define `CORE_DEBUG_LEVEL`to the compiler accordingly.
