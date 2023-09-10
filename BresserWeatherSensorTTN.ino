@@ -28,10 +28,10 @@
 // (install via normal Arduino Library installer:) 
 // MCCI Arduino Development Kit ADK     0.2.2
 // MCCI LoRaWAN LMIC library            4.1.1
-// MCCI Arduino LoRaWAN Library         0.9.2
+// MCCI Arduino LoRaWAN Library         0.10.0
 // RadioLib                             6.1.0
 // LoRa_Serialization                   3.2.1
-// ESP32Time                            2.0.3
+// ESP32Time                            2.0.4
 // BresserWeatherSensorReceiver         0.12.1
 // ESP32AnalogRead                      0.2.1 (optional)
 // OneWireNg                            0.13.1 (optional)
@@ -108,6 +108,8 @@
 // 20230717 Added sensor startup to rain gauge
 // 20230821 Implemented downlink commands CMD_GET_DATETIME & CMD_GET_CONFIG, 
 //          added CMD_RESET_RAINGAUGE <flags>
+// 20230910 Added configuration for Firebeetle ESP32 with Firebeetle Cover LoRa 
+//          (FIREBEETLE_COVER_LORA)
 //
 // ToDo:
 // -  
@@ -258,6 +260,17 @@
     #pragma message("ARDUINO_ADAFRUIT_FEATHER_ESP32 defined; assuming RFM95W FeatherWing will be used")
     #pragma message("Required wiring: A to RST, B to DIO1, D to DIO0, E to CS")
 
+#elif defined(FIREBEETLE_COVER_LORA)
+    // https://wiki.dfrobot.com/FireBeetle_ESP32_IOT_Microcontroller(V3.0)__Supports_Wi-Fi_&_Bluetooth__SKU__DFR0478
+    // https://wiki.dfrobot.com/FireBeetle_Covers_LoRa_Radio_868MHz_SKU_TEL0125
+    #define PIN_LMIC_NSS      27 // D4
+    #define PIN_LMIC_RST      25 // D2
+    #define PIN_LMIC_DIO0     26 // D3
+    #define PIN_LMIC_DIO1      9 // D5
+    #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+    #pragma message("FIREBEETLE_COVER_LORA defined; assuming FireBeetle ESP32 with FireBeetle Cover LoRa will be used")
+    #pragma message("Required wiring: D2 to RESET, D3 to DIO0, D4 to CS, D5 to DIO1")
+
 #else
     // LoRaWAN_Node board
     // https://github.com/matthias-bs/LoRaWAN_Node
@@ -375,7 +388,6 @@ public:
     void setup();
     
     
-    
     /*!
     * \fn requestNetworkTime
     * 
@@ -383,7 +395,6 @@ public:
     */
     void requestNetworkTime(void);
     
-
     
     
     /*!
@@ -964,7 +975,6 @@ cMyLoRaWAN::NetJoin(
 }
 
 // This method is called after transmission has been completed.
-// If enabled, the controller goes into deep sleep mode now.
 void
 cMyLoRaWAN::NetTxComplete(void) {
     DEBUG_PRINTF_TS("");
@@ -1273,13 +1283,6 @@ cMyLoRaWAN::doCfgUplink(void) {
       log_v("");
         return;
     }
-
-    //encoder.writeBitmap(longSleep,
-    //                    rtcSyncReq, 
-    //                   runtimeExpired);
-    //encoder.writeUint32(0);
-    //encoder.writeUint16(0);
-    //encoder.writeUint8(0);
 
     this->m_fBusy = true;
     log_v("Trying SendBuffer: port=%d, size=%d", port, encoder.getLength());
