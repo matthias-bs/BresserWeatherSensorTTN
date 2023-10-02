@@ -919,7 +919,7 @@ void ReceiveCb(
                     rainGauge.reset();
                 }
                 else if (nBuffer == 2) {
-                    log_d("Reset raingauge - flags: 0x%F", pBuffer[1]);
+                    log_d("Reset raingauge - flags: 0x%X", pBuffer[1]);
                     rainGauge.reset(pBuffer[1] & 0xF);
                 }
             }
