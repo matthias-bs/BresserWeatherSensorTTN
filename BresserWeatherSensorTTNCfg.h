@@ -58,6 +58,7 @@
 //          ultrasonic distance sensor 
 //          (https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311)
 // 20230714 Added LIGHTNINGSENSOR_EN
+// 20230927 Added configuration for Adafruit Feather RP2040
 //
 // ToDo:
 // - 
@@ -75,7 +76,7 @@
 //--- Select Board ---
 #if !defined(ARDUINO_TTGO_LoRa32_V1)     && !defined(ARDUINO_TTGO_LoRa32_V2) && \
     !defined(ARDUINO_TTGO_LoRa32_v21new) && !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) && \
-    !defined(ARDUINO_FEATHER_ESP32)
+    !defined(ARDUINO_FEATHER_ESP32)      && !defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
     // Use pinning for LoRaWAN Node 
     #define LORAWAN_NODE
 #endif
@@ -95,10 +96,21 @@
 // Battery voltage thresholds for energy saving
 
 // If SLEEP_EN is defined and battery voltage is below BATTERY_WEAK [mV], MCU will sleep for SLEEP_INTERVAL_LONG
-#define BATTERY_WEAK 3500
+#if defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+    // External voltage divider required
+    #define BATTERY_WEAK 0
+#else
+    #define BATTERY_WEAK 3500
+#endif
+
 
 // Go to sleep mode immediately after start if battery voltage is below BATTERY_LOW [mV]
-#define BATTERY_LOW 3200
+#if defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+    // External voltage divider required
+    #define BATTERY_LOW 0
+#else
+    #define BATTERY_LOW 3200
+#endif
 
 // Enable sleep mode - sleep after successful transmission to TTN (recommended!)
 #define SLEEP_EN
@@ -149,7 +161,7 @@
 // Notes: 
 // * BLE requires a lot of program memory!
 // * ESP32-S2 does not provide BLE!
-#ifndef ARDUINO_ADAFRUIT_FEATHER_ESP32S2
+#if !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) && !defined(ARDUINO_ARCH_RP2040)
     //#define MITHERMOMETER_EN
     #define THEENGSDECODER_EN
 #endif
@@ -166,16 +178,21 @@
 #endif
 
 // ADC for supply/battery voltage measurement
-// default: on-board connection to VB on FireBeetle ESP32 (with R10+R11 assembled)
-//          on-board connection to VBAT on TTGO LoRa32
-//          on-board connection to VBAT on Adafruit Feather ESP32
-//          no VBAT input circuit on Adafruit Feather ESP32-S2
+// Defaults:
+// ---------
+// FireBeetle ESP32:            on-board connection to VB (with R10+R11 assembled)
+// TTGO LoRa32:                 on-board connection to VBAT
+// Adafruit Feather ESP32:      on-board connection to VBAT
+// Adafruit Feather ESP32-S2:   no VBAT input circuit
+// Adafruit Feather RP2040:     no VBAT input circuit (connect external divider to A0)
 #ifdef ADC_EN
     #if defined(ARDUINO_TTGO_LoRa32_V1) || defined(ARDUINO_TTGO_LoRa32_V2) || defined(ARDUINO_TTGO_LoRa32_v21new)
         #define PIN_ADC_IN        35
     #elif defined(ARDUINO_FEATHER_ESP32)
         #define PIN_ADC_IN        A13
     #elif defined(LORAWAN_NODE)
+        #define PIN_ADC_IN        A0
+    #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
         #define PIN_ADC_IN        A0
     #else
         #define PIN_ADC_IN        34
@@ -222,6 +239,8 @@
         #define PIN_ONEWIRE_BUS   15
     #elif defined(LORAWAN_NODE)
         #define PIN_ONEWIRE_BUS   5
+    #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+        #define PIN_ONEWIRE_BUS   6
     #else
         #define PIN_ONEWIRE_BUS   0
     #endif

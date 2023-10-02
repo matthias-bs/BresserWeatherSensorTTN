@@ -110,9 +110,13 @@
 //          added CMD_RESET_RAINGAUGE <flags>
 // 20230910 Added configuration for Firebeetle ESP32 with Firebeetle Cover LoRa 
 //          (FIREBEETLE_COVER_LORA)
+// 20230927 Added configuration for Adafruit Feather RP2040 with RFM95W FeatherWing
+//          (INCOMPLETE & NOT FULLY TESTED!)
 //
 // ToDo:
-// -  
+// - Implement sleep mode for RP2040
+// - Change storing of LoRaWAN connection information from RTC RAM to Preferences
+//   (Flash FS)
 //
 // Notes:
 // - Pin mapping of radio transceiver module is done in two places:
@@ -142,7 +146,7 @@
 //       (https://github.com/mcci-catena/arduino-lmic/issues/714#issuecomment-822051171)
 //
 ///////////////////////////////////////////////////////////////////////////////
-/*! \file */ 
+/*! \file BresserWeatherSensorTTN.ino */ 
 
 #include "BresserWeatherSensorTTNCfg.h"
 #include <Arduino_LoRaWAN_network.h>
@@ -150,7 +154,15 @@
 #include <arduino_lmic.h>
 #include <Preferences.h>
 #include <ESP32Time.h>
+#include "logging.h"
 
+#ifdef ARDUINO_ARCH_RP2040
+    //#include "pico.h"
+    //#include "pico/sleep.h"
+    //  #include "hardware/clocks.h"
+    #include "hardware/rtc.h"
+    //#include "src/rtc/rtc_utils.h"
+#endif
 
 #ifdef RAINDATA_EN
     #include "RainGauge.h"
@@ -181,8 +193,10 @@
 #endif
 
 #ifdef ADC_EN
-    // ESP32 calibrated Analog Input Reading
-    #include <ESP32AnalogRead.h>
+    #ifdef ESP32
+        // ESP32 calibrated Analog Input Reading
+        #include <ESP32AnalogRead.h>
+    #endif
 #endif
 
 // BresserWeatherSensorReceiver
@@ -260,6 +274,18 @@
     #pragma message("ARDUINO_ADAFRUIT_FEATHER_ESP32 defined; assuming RFM95W FeatherWing will be used")
     #pragma message("Required wiring: A to RST, B to DIO1, D to DIO0, E to CS")
 
+#elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+    // Use pinning for Adafruit Feather RP2040 with RFM95W "FeatherWing" ADA3232
+    // https://github.com/earlephilhower/arduino-pico/blob/master/variants/adafruit_feather/pins_arduino.h
+    #define PIN_LMIC_NSS       7
+    #define PIN_LMIC_RST      11
+    #define PIN_LMIC_DIO0      8
+    #define PIN_LMIC_DIO1     10
+    #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+    #pragma message("NOT TESTED!!!")
+    #pragma message("ARDUINO_ADAFRUIT_FEATHER_RP2040 defined; assuming RFM95W FeatherWing will be used")
+    #pragma message("Required wiring: A to RST, B to DIO1, D to DIO0, E to CS")
+    
 #elif defined(FIREBEETLE_COVER_LORA)
     // https://wiki.dfrobot.com/FireBeetle_ESP32_IOT_Microcontroller(V3.0)__Supports_Wi-Fi_&_Bluetooth__SKU__DFR0478
     // https://wiki.dfrobot.com/FireBeetle_Covers_LoRa_Radio_868MHz_SKU_TEL0125
@@ -484,20 +510,24 @@ public:
          */
         uint16_t getVoltage(void);
         
-        /*
-         * \fn getVoltage
-         * 
-         * \brief Get ADC voltage from specified port with averaging and application of divider
-         * 
-         * \param adc ADC port
-         * 
-         * \param samples No. of samples used in averaging
-         * 
-         * \param divider Voltage divider
-         * 
-         * \returns Voltage [mV]
-         */
-        uint16_t getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider);
+        #if defined(ESP32)
+          /*
+          * \fn getVoltage
+          * 
+          * \brief Get ADC voltage from specified port with averaging and application of divider
+          * 
+          * \param adc ADC port
+          * 
+          * \param samples No. of samples used in averaging
+          * 
+          * \param divider Voltage divider
+          * 
+          * \returns Voltage [mV]
+          */
+          uint16_t getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider);
+        #else
+          uint16_t getVoltage(pin_size_t pin, uint8_t samples, float divider);
+        #endif
     #endif
         
     /*!
@@ -570,6 +600,12 @@ const cMyLoRaWAN::lmic_pinmap myPinMap = {
      .pConfig = NULL
 };
 
+// TODO
+// This will be replaced by using the Preferences library later
+#if defined(ARDUINO_ARCH_RP2040)
+#define RTC_DATA_ATTR static
+#endif
+
 // The following variables are stored in the ESP32's RTC RAM -
 // their value is retained after a Sleep Reset.
 RTC_DATA_ATTR uint32_t                        magicFlag1;               //!< flag for validating Session State in RTC RAM 
@@ -582,24 +618,25 @@ RTC_DATA_ATTR bool                            runtimeExpired = false;   //!< fla
 RTC_DATA_ATTR bool                            longSleep;                //!< last sleep interval; 0 - normal / 1 - long
 RTC_DATA_ATTR time_t                          rtcLastClockSync = 0;     //!< timestamp of last RTC synchonization to network time
 
+#ifdef ESP32
+    #ifdef ADC_EN
+        // ESP32 ADC with calibration
+        ESP32AnalogRead adc; //!< ADC object for supply voltage measurement
+    #endif
 
-#ifdef ADC_EN
     // ESP32 ADC with calibration
-    ESP32AnalogRead adc; //!< ADC object for supply voltage measurement
-#endif
-
-// ESP32 ADC with calibration
-#if defined(ADC_EN) && defined(PIN_ADC0_IN)
-    ESP32AnalogRead adc0; //!< ADC object
-#endif
-#if defined(ADC_EN) && defined(PIN_ADC1_IN)
-    ESP32AnalogRead adc1; //!< ADC object
-#endif
-#if defined(ADC_EN) && defined(PIN_ADC2_IN)
-    ESP32AnalogRead adc2; //!< ADC object
-#endif
-#if defined(ADC_EN) && defined(PIN_ADC3_IN)
-    ESP32AnalogRead adc3; //!< ADC object
+    #if defined(ADC_EN) && defined(PIN_ADC0_IN)
+        ESP32AnalogRead adc0; //!< ADC object
+    #endif
+    #if defined(ADC_EN) && defined(PIN_ADC1_IN)
+        ESP32AnalogRead adc1; //!< ADC object
+    #endif
+    #if defined(ADC_EN) && defined(PIN_ADC2_IN)
+        ESP32AnalogRead adc2; //!< ADC object
+    #endif
+    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
+        ESP32AnalogRead adc3; //!< ADC object
+    #endif
 #endif
 
 /// Bresser Weather Sensor Receiver
@@ -720,8 +757,14 @@ ESP32Time rtc;
 
 /// Arduino setup
 void setup() {
+    #if defined(ARDUINO_ARCH_RP2040)
+      // see pico-sdk/src/rp2_common/hardware_rtc/rtc.c
+      rtc_init();
+    #endif
+
     // set baud rate
     Serial.begin(115200);
+    delay(3000);
     Serial.setDebugOutput(true);
 
     // wait for serial to be ready - or timeout if USB is not connected
@@ -1149,15 +1192,31 @@ void prepareSleep(void) {
     // to next non-fractional multiple of sleep_interval past the hour
     if (rtcLastClockSync) {
         struct tm timeinfo;
-        time_t t_now = rtc.getLocalEpoch();
-        localtime_r(&t_now, &timeinfo);
+        //#ifdef ESP32
+          time_t t_now = rtc.getLocalEpoch();
+          localtime_r(&t_now, &timeinfo);
+        //#else
+          // FIXME Is this needed?
+        //  datetime_t t_now;
+        //  rtc_get_datetime(&t_now);
+        //  datetime_to_tm(t_now, timeinfo);
+        //#endif
+        
 
         sleep_interval = sleep_interval - ((timeinfo.tm_min * 60) % sleep_interval + timeinfo.tm_sec);
         sleep_interval += 20; // Added extra 20-secs of sleep to allow for slow ESP32 RTC timers
     }
     
     DEBUG_PRINTF_TS("Shutdown() - sleeping for %d s", sleep_interval);
-    ESP.deepSleep(sleep_interval * 1000000LL);
+    #if defined(ESP32)
+        ESP.deepSleep(sleep_interval * 1000000LL);
+    #else
+        //set_sys_clock_khz(18 * 1000, false);
+        clock_stop(clk_adc);
+        sleep_ms(sleep_interval * 1000);
+        //rp2040.reboot();
+        watchdog_reboot(0,0,0);
+    #endif
 }
 
 /**
@@ -1335,8 +1394,13 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
     #endif
 
     #ifdef ADC_EN
-        // Use ADC with PIN_ADC_IN
-        adc.attach(PIN_ADC_IN);
+        #ifdef ESP32
+            // Use ADC with PIN_ADC_IN
+            adc.attach(PIN_ADC_IN);
+        #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+            // Set resolution to 12 bits
+            analogReadResolution(12);
+        #endif
         
         if (getVoltage() < BATTERY_LOW) {
           DEBUG_PRINTF("Battery low!");
@@ -1445,11 +1509,15 @@ cSensor::getVoltage(void)
 {
     float voltage_raw = 0;
     for (uint8_t i=0; i < UBATT_SAMPLES; i++) {
-        voltage_raw += float(adc.readMiliVolts());
+        #ifdef ESP32
+            voltage_raw += float(adc.readMiliVolts());
+        #else
+            voltage_raw += float(analogRead(PIN_ADC_IN)) / 4095.0 * 3.3;
+        #endif
     }
     uint16_t voltage = int(voltage_raw / UBATT_SAMPLES / UBATT_DIV);
      
-    DEBUG_PRINTF("Voltage = %dmV", voltage);
+    log_d("Voltage = %dmV", voltage);
 
     return voltage;
 }
@@ -1457,19 +1525,35 @@ cSensor::getVoltage(void)
 //
 // Get supply / battery voltage
 //
-uint16_t
-cSensor::getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider)
-{
-    float voltage_raw = 0;
-    for (uint8_t i=0; i < samples; i++) {
-        voltage_raw += float(adc.readMiliVolts());
-    }
-    uint16_t voltage = int(voltage_raw / samples / divider);
-     
-    DEBUG_PRINTF("Voltage = %dmV", voltage);
+  #if defined(ESP32)
+    uint16_t
+    cSensor::getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider)
+    {
+        float voltage_raw = 0;
+        for (uint8_t i=0; i < samples; i++) {
+            voltage_raw += float(adc.readMiliVolts());
+        }
+        uint16_t voltage = int(voltage_raw / samples / divider);
+        
+        log_d("Voltage = %dmV", voltage);
 
-    return voltage;
-}
+        return voltage;
+    }
+  #else
+    uint16_t
+    cSensor::getVoltage(pin_size_t pin, uint8_t samples, float divider)
+    {
+        float voltage_raw = 0;
+        for (uint8_t i=0; i < samples; i++) {
+            voltage_raw += float(analogRead(pin)) / 4095.0 * 3.3;
+        }
+        uint16_t voltage = int(voltage_raw / samples / divider);
+        
+        log_d("Voltage = %dmV", voltage);
+
+        return voltage;
+    }
+  #endif
 #endif
 
 #ifdef ONEWIRE_EN
