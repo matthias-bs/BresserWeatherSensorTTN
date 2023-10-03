@@ -1514,7 +1514,7 @@ cSensor::getVoltage(void)
         #ifdef ESP32
             voltage_raw += float(adc.readMiliVolts());
         #else
-            voltage_raw += float(analogRead(PIN_ADC_IN)) / 4095.0 * 3.3;
+            voltage_raw += float(analogRead(PIN_ADC_IN)) / 4095.0 * 3300;
         #endif
     }
     uint16_t voltage = int(voltage_raw / UBATT_SAMPLES / UBATT_DIV);
