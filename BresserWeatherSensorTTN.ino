@@ -282,7 +282,6 @@
     #define PIN_LMIC_DIO0      8
     #define PIN_LMIC_DIO1     10
     #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
-    #pragma message("NOT TESTED!!!")
     #pragma message("ARDUINO_ADAFRUIT_FEATHER_RP2040 defined; assuming RFM95W FeatherWing will be used")
     #pragma message("Required wiring: A to RST, B to DIO1, D to DIO0, E to CS")
     
