@@ -781,7 +781,7 @@ void setup() {
     
     sleepTimeout = sec2osticks(SLEEP_TIMEOUT_INITIAL);
 
-    DEBUG_PRINTF_TS("");
+    DEBUG_PRINTF_TS("-");
     
     // Set time zone
     setenv("TZ", TZ_INFO, 1);
@@ -858,14 +858,15 @@ void ReceiveCb(
     uint8_t uPort,
     const uint8_t *pBuffer,
     size_t nBuffer) {
-            
+
+    (void)pCtx;        
     uplinkReq = 0;
     log_v("Port: %d", uPort);
     char buf[255];
     *buf = '\0';
 
     if (uPort > 0) {
-        for (int i = 0; i < nBuffer; i++) {
+        for (size_t i = 0; i < nBuffer; i++) {
               sprintf(&buf[strlen(buf)], "%02X ", pBuffer[i]);
         }
         log_v("Data: %s", buf);
@@ -966,7 +967,7 @@ cMyLoRaWAN::setup() {
                             uint32_t tstamp = osticks2ms(pEvent->getTime());
                         #endif
                         // see MCCI_Arduino_LoRaWAN_Library/src/lib/arduino_lorawan_cEventLog.cpp
-                        log_i("TX @%u ms: ch=%d rps=0x%02x (%s %s %s %s IH=%d)", 
+                        log_i("TX @%lu ms: ch=%d rps=0x%02x (%s %s %s %s IH=%d)", 
                             tstamp,
                             std::uint8_t(pEvent->getData(0)),
                             rps,
@@ -1009,7 +1010,7 @@ cMyLoRaWAN::GetOtaaProvisioningInfo(
 void
 cMyLoRaWAN::NetJoin(
     void) {
-    DEBUG_PRINTF_TS("");
+    DEBUG_PRINTF_TS("-");
     sleepTimeout = os_getTime() + sec2osticks(SLEEP_TIMEOUT_JOINED);
     if (rtcSyncReq) {
         // Allow additional time for completing Network Time Request
@@ -1020,7 +1021,7 @@ cMyLoRaWAN::NetJoin(
 // This method is called after transmission has been completed.
 void
 cMyLoRaWAN::NetTxComplete(void) {
-    DEBUG_PRINTF_TS("");
+    DEBUG_PRINTF_TS("-");
 }
 
 // Print session info for debugging
@@ -1086,7 +1087,7 @@ cMyLoRaWAN::NetSaveSessionInfo(
     rtcSavedNExtraInfo = nExtraInfo;
     memcpy(rtcSavedExtraInfo, pExtraInfo, nExtraInfo);
     magicFlag2 = MAGIC2;
-    DEBUG_PRINTF_TS("");
+    DEBUG_PRINTF_TS("-");
     printSessionInfo(Info);
 }
 
@@ -1099,7 +1100,7 @@ void
 cMyLoRaWAN::NetSaveSessionState(const SessionState &State) {
     rtcSavedSessionState = State;
     magicFlag1 = MAGIC1;
-    DEBUG_PRINTF_TS("");
+    DEBUG_PRINTF_TS("-");
     printSessionState(State);
 }
 
@@ -1136,7 +1137,7 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
     if ((magicFlag1 != MAGIC1) || (magicFlag2 != MAGIC2)) {
          return false;
     }
-    DEBUG_PRINTF_TS("");
+    DEBUG_PRINTF_TS("-");
 
     pAbpInfo->DevAddr = rtcSavedSessionInfo.V2.DevAddr;
     pAbpInfo->NetID   = rtcSavedSessionInfo.V2.NetID;
@@ -1207,7 +1208,7 @@ void prepareSleep(void) {
         sleep_interval += 20; // Added extra 20-secs of sleep to allow for slow ESP32 RTC timers
     }
     
-    DEBUG_PRINTF_TS("Shutdown() - sleeping for %d s", sleep_interval);
+    DEBUG_PRINTF_TS("Shutdown() - sleeping for %lu s", sleep_interval);
     #if defined(ESP32)
         ESP.deepSleep(sleep_interval * 1000000LL);
     #else
@@ -1356,7 +1357,8 @@ cMyLoRaWAN::doCfgUplink(void) {
         uplink_payload,
         encoder.getLength(),
         // this is the completion function:
-        [](void *pClientData, bool fSucccess) -> void {
+        [](void *pClientData, bool fSuccess) -> void {
+            (void)fSuccess;
             auto const pThis = (cMyLoRaWAN *)pClientData;
             pThis->m_fBusy = false;
             uplinkReq = 0;
@@ -1788,7 +1790,7 @@ cSensor::doUplink(void) {
             indoor_humidity = 0;
         }
     #endif
-    DEBUG_PRINTF("");
+    DEBUG_PRINTF("-");
 
     //
     // Encode sensor data as byte array for LoRaWAN transmission
@@ -1931,7 +1933,8 @@ cSensor::doUplink(void) {
     if (! myLoRaWAN.SendBuffer(
         loraData, encoder.getLength(),
         // this is the completion function:
-        [](void *pClientData, bool fSucccess) -> void {
+        [](void *pClientData, bool fSuccess) -> void {
+            (void)fSuccess;
             auto const pThis = (cSensor *)pClientData;
             pThis->m_fBusy = false;
         },
