@@ -10,8 +10,6 @@ var _bresser_weather_sensor_t_t_n_8ino =
     [ "CMD_SET_SLEEP_INTERVAL", "_bresser_weather_sensor_t_t_n_8ino.html#ac6d513741eec130023ce1a14bbc78396", null ],
     [ "CMD_SET_SLEEP_INTERVAL_LONG", "_bresser_weather_sensor_t_t_n_8ino.html#ab78a9949f3763b4a013c001e2da6f1c5", null ],
     [ "CMD_SET_WEATHERSENSOR_TIMEOUT", "_bresser_weather_sensor_t_t_n_8ino.html#a3ef23004659d442e110d84d95c173b0a", null ],
-    [ "DEBUG_PRINTF", "_bresser_weather_sensor_t_t_n_8ino.html#a5c8ef3c24dad2c469a42784a9a39403b", null ],
-    [ "DEBUG_PRINTF_TS", "_bresser_weather_sensor_t_t_n_8ino.html#a5d85581d74bae8579b031113e1ea23f3", null ],
     [ "EXTRA_INFO_MEM_SIZE", "_bresser_weather_sensor_t_t_n_8ino.html#ad1e00d731010e88d6355395309d99064", null ],
     [ "FILLMEIN_16", "_bresser_weather_sensor_t_t_n_8ino.html#a7d69176f59155cf538f4d3494efba023", null ],
     [ "FILLMEIN_8", "_bresser_weather_sensor_t_t_n_8ino.html#af0c1bf4ee189c125eed41b77e7ce50a1", null ],
