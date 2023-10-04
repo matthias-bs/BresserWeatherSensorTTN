@@ -206,7 +206,7 @@ o: optional    </th></tr>
 </ul>
 </li>
 </ul>
-<h2>Configure the ESP32 / RF Transceiver GPIO Wiring</h2>
+<h2>Configure the Microcontroller / RF Transceiver GPIO Wiring</h2>
 <h3>Pinout Configuration by selecting a supported Board in the Arduino IDE</h3>
 <p>By selecting a Board and a Board Revision (if available) in the Arduino IDE, a define is passed to the preprocessor/compiler. For the boards in the table below, the default configuration is assumed based in this define.</p>
 <p>If you are not using the Arduino IDE, you can use the defines in the table below with your specific tool chain to get the same result.</p>
@@ -244,7 +244,14 @@ E to IRQ<br  />
 D to CS<br  />
 C to RST<br  />
 A to DI01&lt;br&gt;<br  />
-<b>see</b> <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/issues/55">**#55**</a>   </td></tr>
+<b>see</b> <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/issues/55">**#55**</a>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a href="https://www.adafruit.com/product/4884">Adafruit Feather RP2040</a> with <a href="https://www.adafruit.com/product/3231">Adafruit LoRa Radio FeatherWing</a>   </td><td class="markdownTableBodyNone">"Adafruit FeatherRP2040"   </td><td class="markdownTableBodyNone">n.a.   </td><td class="markdownTableBodyNone">ARDUINO_ADAFRUIT_FEATHER_RP2040   </td><td class="markdownTableBodyNone">SX1276 (RFM95W)   </td><td class="markdownTableBodyNone">Wiring on the Featherwing:<br  />
+E to IRQ<br  />
+D to CS<br  />
+C to RST<br  />
+A to DI01&lt;br&gt;<br  />
+<b>see</b> <a href="https://github.com/matthias-bs/BresserWeatherSensorTTN/issues/72">**#72**</a>   </td></tr>
 </table>
 <p>If enabled in the Arduino IDE Preferences ("Verbose Output"), the preprosessor will provide some output regarding the selected configuration, e.g.</p>
 <div class="fragment"><div class="line">ARDUINO_ADAFRUIT_FEATHER_ESP32S2 defined; assuming RFM95W FeatherWing will be used</div>
