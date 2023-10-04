@@ -38,6 +38,7 @@
 // History:
 //
 // 20230927 Created from BresserWeatherSensorReceiver
+// 20231004 Added function names and line numbers to ESP8266/RP2040 debug logging
 //
 // ToDo:
 // - 
@@ -61,30 +62,30 @@
     #define ARDUHAL_LOG_LEVEL_VERBOSE   5
 
     // Set desired level here!
-    #define CORE_DEBUG_LEVEL ARDUHAL_LOG_LEVEL_VERBOSE
+    #define CORE_DEBUG_LEVEL ARDUHAL_LOG_LEVEL_INFO
 
     #if defined(DEBUG_PORT) && CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_NONE
-        #define log_e(...) { DEBUG_PORT.printf(__VA_ARGS__); DEBUG_PORT.println(); }
+        #define log_e(...) { DEBUG_PORT.printf("%s(), l.%d: ", __func__, __LINE__); DEBUG_PORT.println(); }
      #else
         #define log_e(...) {}
      #endif
     #if defined(DEBUG_PORT) && CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_ERROR
-        #define log_w(...) { DEBUG_PORT.printf(__VA_ARGS__); DEBUG_PORT.println(); }
+        #define log_w(...) { DEBUG_PORT.printf("%s(), l.%d: ", __func__, __LINE__); DEBUG_PORT.printf(__VA_ARGS__); DEBUG_PORT.println(); }
      #else
         #define log_w(...) {}
      #endif
     #if defined(DEBUG_PORT) && CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_WARN
-        #define log_i(...) { DEBUG_PORT.printf(__VA_ARGS__); DEBUG_PORT.println(); }
+        #define log_i(...) { DEBUG_PORT.printf("%s(), l.%d: ", __func__, __LINE__); DEBUG_PORT.printf(__VA_ARGS__); DEBUG_PORT.println(); }
      #else
         #define log_i(...) {}
      #endif
     #if defined(DEBUG_PORT) && CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_INFO
-        #define log_d(...) { DEBUG_PORT.printf(__VA_ARGS__); DEBUG_PORT.println(); }
+        #define log_d(...) { DEBUG_PORT.printf("%s(), l.%d: ", __func__, __LINE__); DEBUG_PORT.printf(__VA_ARGS__); DEBUG_PORT.println(); }
      #else
         #define log_d(...) {}
      #endif
     #if defined(DEBUG_PORT) && CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_DEBUG
-        #define log_v(...) { DEBUG_PORT.printf(__VA_ARGS__); DEBUG_PORT.println(); }
+        #define log_v(...) { DEBUG_PORT.printf("%s(), l.%d: ", __func__, __LINE__); DEBUG_PORT.printf(__VA_ARGS__); DEBUG_PORT.println(); }
      #else
         #define log_v(...) {}
      #endif

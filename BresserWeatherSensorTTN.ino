@@ -112,6 +112,7 @@
 //          (FIREBEETLE_COVER_LORA)
 // 20230927 Added configuration for Adafruit Feather RP2040 with RFM95W FeatherWing
 //          (INCOMPLETE & NOT FULLY TESTED!)
+// 20231004 Replaced DEBUG_PRINTF/DEBUG_PRINTF_TS by macros log_i/../log_d/log_v
 //
 // ToDo:
 // - Implement sleep mode for RP2040
@@ -318,12 +319,11 @@ const uint8_t PAYLOAD_SIZE = 51;
 #define EXTRA_INFO_MEM_SIZE 64
 
 // Debug printing
+// ---------------
 // To enable debug mode (debug messages via serial port):
 // Arduino IDE: Tools->Core Debug Level: "Debug|Verbose"
 // or
 // set CORE_DEBUG_LEVEL in BresserWeatherSensorTTNCfg.h
-#define DEBUG_PRINTF(...) { log_d(__VA_ARGS__); }
-#define DEBUG_PRINTF_TS(...) { log_d(__VA_ARGS__); }
 
 // Downlink messages
 // ------------------
@@ -780,7 +780,7 @@ void setup() {
     
     sleepTimeout = sec2osticks(SLEEP_TIMEOUT_INITIAL);
 
-    DEBUG_PRINTF_TS("-");
+    log_v("-");
     
     // Set time zone
     setenv("TZ", TZ_INFO, 1);
@@ -788,21 +788,21 @@ void setup() {
     
     // Check if clock was never synchronized or sync interval has expired 
     if ((rtcLastClockSync == 0) || ((rtc.getLocalEpoch() - rtcLastClockSync) > (CLOCK_SYNC_INTERVAL * 60))) {
-        DEBUG_PRINTF("RTC sync required");
+        log_i("RTC sync required");
         rtcSyncReq = true;
     }
 
     // set up the log; do this first.
     myEventLog.setup();
-    DEBUG_PRINTF("myEventlog.setup() - done");
+    log_v("myEventlog.setup() - done");
 
     // set up the sensors.
     mySensor.setup();
-    DEBUG_PRINTF("mySensor.setup() - done");
+    log_v("mySensor.setup() - done");
 
     // set up lorawan.
     myLoRaWAN.setup();
-    DEBUG_PRINTF("myLoRaWAN.setup() - done");
+    log_v("myLoRaWAN.setup() - done");
     
     mySensor.uplinkRequest();
 }
@@ -839,7 +839,7 @@ void loop() {
                 magicFlag1 = 0;
                 magicFlag2 = 0;
             #endif
-            DEBUG_PRINTF_TS("Sleep timer expired!");
+            log_i("Sleep timer expired!");
             prepareSleep();
         }
     #endif
@@ -1009,7 +1009,7 @@ cMyLoRaWAN::GetOtaaProvisioningInfo(
 void
 cMyLoRaWAN::NetJoin(
     void) {
-    DEBUG_PRINTF_TS("-");
+    log_v("-");
     sleepTimeout = os_getTime() + sec2osticks(SLEEP_TIMEOUT_JOINED);
     if (rtcSyncReq) {
         // Allow additional time for completing Network Time Request
@@ -1020,7 +1020,7 @@ cMyLoRaWAN::NetJoin(
 // This method is called after transmission has been completed.
 void
 cMyLoRaWAN::NetTxComplete(void) {
-    DEBUG_PRINTF_TS("-");
+    log_v("-");
 }
 
 // Print session info for debugging
@@ -1086,7 +1086,7 @@ cMyLoRaWAN::NetSaveSessionInfo(
     rtcSavedNExtraInfo = nExtraInfo;
     memcpy(rtcSavedExtraInfo, pExtraInfo, nExtraInfo);
     magicFlag2 = MAGIC2;
-    DEBUG_PRINTF_TS("-");
+    log_v("-");
     printSessionInfo(Info);
 }
 
@@ -1099,7 +1099,7 @@ void
 cMyLoRaWAN::NetSaveSessionState(const SessionState &State) {
     rtcSavedSessionState = State;
     magicFlag1 = MAGIC1;
-    DEBUG_PRINTF_TS("-");
+    log_v("-");
     printSessionState(State);
 }
 
@@ -1109,11 +1109,11 @@ bool
 cMyLoRaWAN::NetGetSessionState(SessionState &State) {
     if (magicFlag1 == MAGIC1) {
         State = rtcSavedSessionState;
-        DEBUG_PRINTF_TS("o.k.");
+        log_d("o.k.");
         printSessionState(State);
         return true;
     } else {
-        DEBUG_PRINTF_TS("failed");
+        log_d("failed");
         return false;
     }
 }
@@ -1136,7 +1136,7 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
     if ((magicFlag1 != MAGIC1) || (magicFlag2 != MAGIC2)) {
          return false;
     }
-    DEBUG_PRINTF_TS("-");
+    log_v("-");
 
     pAbpInfo->DevAddr = rtcSavedSessionInfo.V2.DevAddr;
     pAbpInfo->NetID   = rtcSavedSessionInfo.V2.NetID;
@@ -1173,7 +1173,7 @@ void printDateTime(void) {
         time_t tnow = rtc.getLocalEpoch();
         localtime_r(&tnow, &timeinfo);
         strftime(tbuf, 25, "%Y-%m-%d %H:%M:%S", &timeinfo);
-        DEBUG_PRINTF("%s", tbuf);
+        log_i("%s", tbuf);
 }
 
 /// Determine sleep duration and enter Deep Sleep Mode
@@ -1207,7 +1207,7 @@ void prepareSleep(void) {
         sleep_interval += 20; // Added extra 20-secs of sleep to allow for slow ESP32 RTC timers
     }
     
-    DEBUG_PRINTF_TS("Shutdown() - sleeping for %lu s", sleep_interval);
+    log_i("Shutdown() - sleeping for %lu s", sleep_interval);
     #if defined(ESP32)
         ESP.deepSleep(sleep_interval * 1000000LL);
     #else
@@ -1242,7 +1242,7 @@ void UserRequestNetworkTimeCb(void *pVoidUserUTCTime, int flagSuccess) {
 
     if (flagSuccess != 1) {
         // Most likely the service is not provided by the gateway. No sense in trying again...
-        DEBUG_PRINTF_TS("didn't succeed");
+        log_i("Request network time didn't succeed");
         rtcSyncReq = false;
         return;
     }
@@ -1250,7 +1250,7 @@ void UserRequestNetworkTimeCb(void *pVoidUserUTCTime, int flagSuccess) {
     // Populate "lmic_time_reference"
     flagSuccess = LMIC_getNetworkTimeReference(&lmicTimeReference);
     if (flagSuccess != 1) {
-        DEBUG_PRINTF_TS("LMIC_getNetworkTimeReference didn't succeed");
+        log_i("LMIC_getNetworkTimeReference didn't succeed");
         return;
     }
 
@@ -1274,7 +1274,7 @@ void UserRequestNetworkTimeCb(void *pVoidUserUTCTime, int flagSuccess) {
     // Save clock sync timestamp and clear flag 
     rtcLastClockSync = rtc.getLocalEpoch();
     rtcSyncReq = false;
-    DEBUG_PRINTF_TS("RTC sync completed");
+    log_d("RTC sync completed");
     printDateTime();
 }
 
@@ -1404,7 +1404,7 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
         #endif
         
         if (getVoltage() < BATTERY_LOW) {
-          DEBUG_PRINTF("Battery low!");
+          log_i("Battery low!");
           prepareSleep();
         }
     #endif
@@ -1426,9 +1426,9 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
         bool decode_ok = weatherSensor.genMessage(0 /* slot */, 0x01234567 /* ID */, 1 /* type */, 0 /* channel */);
     #endif
     if (decode_ok) {
-        DEBUG_PRINTF("Receiving Weather Sensor Data o.k.");
+        log_i("Receiving Weather Sensor Data o.k.");
     } else {
-        DEBUG_PRINTF("Receiving Weather Sensor Data failed.");
+        log_i("Receiving Weather Sensor Data failed.");
         #ifdef WEATHERSENSOR_DATA_REQUIRED
             prepareSleep();
         #endif
@@ -1572,14 +1572,14 @@ cSensor::getTemperature(void)
     // We use the function ByIndex, and as an example get the temperature from the first sensor only.
     float tempC = temp_sensors.getTempCByIndex(0);
 
-    #ifdef _DEBUG_MODE_
-        // Check if reading was successful
-        if (tempC != DEVICE_DISCONNECTED_C) {
-            DEBUG_PRINTF("Temperature = %.2f°C", tempC);
-        } else {
-            DEBUG_PRINTF("Error: Could not read temperature data");
-        }
-    #endif
+    
+    // Check if reading was successful
+    if (tempC != DEVICE_DISCONNECTED_C) {
+        log_d("Temperature = %.2f°C", tempC);
+    } else {
+        log_d("Error: Could not read temperature data");
+    }
+    
     return tempC;
 }
 #endif
@@ -1606,12 +1606,12 @@ void
 cSensor::doUplink(void) {
     // if busy uplinking, just skip
     if (this->m_fBusy || myLoRaWAN.isBusy()) {
-        DEBUG_PRINTF_TS("busy");
+        log_d("busy");
         return;
     }
     // if LMIC is busy, just skip
     if (LMIC.opmode & (OP_POLL | OP_TXDATA | OP_TXRXPEND)) {
-        DEBUG_PRINTF_TS("other operation in progress");    
+        log_d("other operation in progress");    
         return;
     }
 
@@ -1638,7 +1638,7 @@ cSensor::doUplink(void) {
             dstStatus = distanceSensor.meassure();
 
             if (dstStatus != DistanceSensor_A02YYUW_MEASSUREMENT_STATUS_OK) {
-                DEBUG_PRINTF("Distance Sensor Error: %d", dstStatus);
+                log_e("Distance Sensor Error: %d", dstStatus);
             }
         } while (
             (dstStatus != DistanceSensor_A02YYUW_MEASSUREMENT_STATUS_OK) &&
@@ -1701,73 +1701,73 @@ cSensor::doUplink(void) {
       ls = weatherSensor.findType(SENSOR_TYPE_LIGHTNING);
     #endif
     
-    DEBUG_PRINTF("--- Uplink Data ---");
+    log_i("--- Uplink Data ---");
     
     // Debug output for weather sensor data
     if (ws > -1) {
-      DEBUG_PRINTF("Air Temperature:    % 3.1f °C",   weatherSensor.sensor[ws].temp_c);
-      DEBUG_PRINTF("Humidity:            %2d   %%",   weatherSensor.sensor[ws].humidity);
-      DEBUG_PRINTF("Rain Gauge:       %7.1f mm",      weatherSensor.sensor[ws].rain_mm);
-      DEBUG_PRINTF("Wind Speed (avg.):    %3.1f m/s", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1/10.0);
-      DEBUG_PRINTF("Wind Speed (max.):    %3.1f m/s", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1/10.0);
-      DEBUG_PRINTF("Wind Direction:     %4.1f °",     weatherSensor.sensor[ws].wind_direction_deg_fp1/10.0);
+      log_i("Air Temperature:    % 3.1f °C",   weatherSensor.sensor[ws].temp_c);
+      log_i("Humidity:            %2d   %%",   weatherSensor.sensor[ws].humidity);
+      log_i("Rain Gauge:       %7.1f mm",      weatherSensor.sensor[ws].rain_mm);
+      log_i("Wind Speed (avg.):    %3.1f m/s", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1/10.0);
+      log_i("Wind Speed (max.):    %3.1f m/s", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1/10.0);
+      log_i("Wind Direction:     %4.1f °",     weatherSensor.sensor[ws].wind_direction_deg_fp1/10.0);
     } else {
-      DEBUG_PRINTF("-- Weather Sensor Failure");
+      log_i("-- Weather Sensor Failure");
     }
 
     // Debug output for soil sensor data
     #ifdef SOILSENSOR_EN
       if (s1 > -1) {
-        DEBUG_PRINTF("Soil Temperature 1: %3.1f °C",  weatherSensor.sensor[s1].temp_c);
-        DEBUG_PRINTF("Soil Moisture 1:     %2d   %%",  weatherSensor.sensor[s1].moisture);      
+        log_i("Soil Temperature 1: %3.1f °C",  weatherSensor.sensor[s1].temp_c);
+        log_i("Soil Moisture 1:     %2d   %%",  weatherSensor.sensor[s1].moisture);      
       } else {
-        DEBUG_PRINTF("-- Soil Sensor 1 Failure");
+        log_i("-- Soil Sensor 1 Failure");
       }
     #endif
 
     // Debug output for lightning sensor data
     #ifdef LIGHTNINGSENSOR_EN
       if (ls > -1) {
-        DEBUG_PRINTF("Lightning counter:  %3d",  weatherSensor.sensor[ls].lightning_count);
-        DEBUG_PRINTF("Lightning distance:  %2d   km",  weatherSensor.sensor[ls].lightning_distance_km);    
+        log_i("Lightning counter:  %3d",  weatherSensor.sensor[ls].lightning_count);
+        log_i("Lightning distance:  %2d   km",  weatherSensor.sensor[ls].lightning_distance_km);    
       } else {
-        DEBUG_PRINTF("-- Lightning Sensor Failure");
+        log_i("-- Lightning Sensor Failure");
       }
       if (lightningProc.lastEvent(lightn_ts, lightn_events, lightn_distance)) {
-            #if CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG
+            #if CORE_DEBUG_LEVEL >= ARDUHAL_LOG_LEVEL_INFO
                 struct tm timeinfo;
                 char tbuf[25];
 
                 localtime_r(&lightn_ts, &timeinfo);
                 strftime(tbuf, 25, "%Y-%m-%d %H:%M:%S", &timeinfo);
             #endif
-            DEBUG_PRINTF("Last lightning event @%s: %d events, %d km", tbuf, lightn_events, lightn_distance);
+            log_i("Last lightning event @%s: %d events, %d km", tbuf, lightn_events, lightn_distance);
       } else {
-        DEBUG_PRINTF("-- No Lightning Event Data Available");
+        log_i("-- No Lightning Event Data Available");
       }
     #endif
     
     #ifdef ONEWIRE_EN
         // Debug output for auxiliary sensors/voltages
         if (water_temp_c != DEVICE_DISCONNECTED_C) {
-            DEBUG_PRINTF("Water Temperature:  % 2.1f °C",  water_temp_c);
+            log_i("Water Temperature:  % 2.1f °C",  water_temp_c);
         } else {
-            DEBUG_PRINTF("Water Temperature:   --.- °C");
+            log_i("Water Temperature:   --.- °C");
             water_temp_c = -30.0;
         }
     #endif
     #ifdef DISTANCESENSOR_EN
         if (distance_mm > 0) {
-            DEBUG_PRINTF("Distance:          %4d mm", distance_mm);
+            log_i("Distance:          %4d mm", distance_mm);
         } else {
-            DEBUG_PRINTF("Distance:         ---- mm");
+            log_i("Distance:         ---- mm");
         }
     #endif
     #ifdef ADC_EN
-        DEBUG_PRINTF("Supply  Voltage:   %4d   mV",       supply_voltage);
+        log_i("Supply  Voltage:   %4d   mV",       supply_voltage);
     #endif
     #if defined(ADC_EN) && defined(PIN_ADC3_IN)
-        DEBUG_PRINTF("Battery Voltage:   %4d   mV",       battery_voltage);
+        log_i("Battery Voltage:   %4d   mV",       battery_voltage);
     #endif
     
     #if defined(MITHERMOMETER_EN)
@@ -1780,16 +1780,16 @@ cSensor::doUplink(void) {
             mithermometer_valid = true;
             indoor_temp_c   = bleSensors.data[0].temperature/div;
             indoor_humidity = bleSensors.data[0].humidity/div;
-            DEBUG_PRINTF("Indoor Air Temp.:   % 3.1f °C", bleSensors.data[0].temperature/div);
-            DEBUG_PRINTF("Indoor Humidity:     %3.1f %%", bleSensors.data[0].humidity/div);
+            log_i("Indoor Air Temp.:   % 3.1f °C", bleSensors.data[0].temperature/div);
+            log_i("Indoor Humidity:     %3.1f %%", bleSensors.data[0].humidity/div);
         } else {
-            DEBUG_PRINTF("Indoor Air Temp.:    --.- °C");
-            DEBUG_PRINTF("Indoor Humidity:     --   %%");
+            log_i("Indoor Air Temp.:    --.- °C");
+            log_i("Indoor Humidity:     --   %%");
             indoor_temp_c   = -30;
             indoor_humidity = 0;
         }
     #endif
-    DEBUG_PRINTF("-");
+    log_v("-");
 
     //
     // Encode sensor data as byte array for LoRaWAN transmission
@@ -1888,16 +1888,16 @@ cSensor::doUplink(void) {
     // Rain data statistics
     #ifdef RAINDATA_EN
         if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].rain_ok) {
-            DEBUG_PRINTF("Rain past 60min:  %7.1f mm", rainGauge.pastHour());
-            DEBUG_PRINTF("Rain curr. day:   %7.1f mm", rainGauge.currentDay());
-            DEBUG_PRINTF("Rain curr. week:  %7.1f mm", rainGauge.currentWeek());
-            DEBUG_PRINTF("Rain curr. month: %7.1f mm", rainGauge.currentMonth());
+            log_i("Rain past 60min:  %7.1f mm", rainGauge.pastHour());
+            log_i("Rain curr. day:   %7.1f mm", rainGauge.currentDay());
+            log_i("Rain curr. week:  %7.1f mm", rainGauge.currentWeek());
+            log_i("Rain curr. month: %7.1f mm", rainGauge.currentMonth());
             encoder.writeRawFloat(rainGauge.pastHour());
             encoder.writeRawFloat(rainGauge.currentDay());
             encoder.writeRawFloat(rainGauge.currentWeek());
             encoder.writeRawFloat(rainGauge.currentMonth());
         } else {
-            DEBUG_PRINTF("Current rain gauge statistics not valid.");
+            log_i("Current rain gauge statistics not valid.");
             encoder.writeRawFloat(-1);
             encoder.writeRawFloat(-1);
             encoder.writeRawFloat(-1);
