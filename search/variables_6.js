@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['onewire_93',['oneWire',['../_bresser_weather_sensor_t_t_n_8ino.html#a988a13c4fd0ed4eba1d6dff73d064914',1,'BresserWeatherSensorTTN.ino']]]
+  ['preferences_90',['preferences',['../_bresser_weather_sensor_t_t_n_8ino.html#a6ea06cf7b8092a0adaf07614d7ece59d',1,'BresserWeatherSensorTTN.ino']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['adc_84',['adc',['../_bresser_weather_sensor_t_t_n_8ino.html#a50355c8e58a465c9cf8a0a8e763c4b78',1,'BresserWeatherSensorTTN.ino']]],
-  ['adc3_85',['adc3',['../_bresser_weather_sensor_t_t_n_8ino.html#aaa6a722d1257901d23e1110ca77f2abb',1,'BresserWeatherSensorTTN.ino']]]
+  ['batt_5flevel_82',['batt_level',['../struct_ble_data_s.html#a625a619a3a728bfde61a48a14b0bbcff',1,'BleDataS']]]
 ];

@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['temperature_51',['temperature',['../struct_ble_data_s.html#a271d5aafcdb97ea91e9183a1262911c1',1,'BleDataS']]]
+  ['uplinkreq_50',['uplinkReq',['../_bresser_weather_sensor_t_t_n_8ino.html#a4664d9149e1913eb419b81d0701b6b22',1,'BresserWeatherSensorTTN.ino']]],
+  ['uplinkrequest_51',['uplinkRequest',['../classc_sensor.html#a3338de574b62fe75e146587cbaf67f2f',1,'cSensor']]],
+  ['userutctime_52',['userUTCTime',['../_bresser_weather_sensor_t_t_n_8ino.html#af54b986e7fb69847e038a07179fb74cc',1,'BresserWeatherSensorTTN.ino']]]
 ];

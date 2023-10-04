@@ -29,8 +29,6 @@ var _bresser_weather_sensor_t_t_n_8ino =
     [ "ReceiveCb", "_bresser_weather_sensor_t_t_n_8ino.html#adcc0a832999dcb153e3abf33a8639501", null ],
     [ "setup", "_bresser_weather_sensor_t_t_n_8ino.html#a4fc01d736fe50cf5b977f755b675f11d", null ],
     [ "UserRequestNetworkTimeCb", "_bresser_weather_sensor_t_t_n_8ino.html#aebdd1bf31facb0c79ca2b987763b1050", null ],
-    [ "adc", "_bresser_weather_sensor_t_t_n_8ino.html#a50355c8e58a465c9cf8a0a8e763c4b78", null ],
-    [ "adc3", "_bresser_weather_sensor_t_t_n_8ino.html#aaa6a722d1257901d23e1110ca77f2abb", null ],
     [ "bleSensors", "_bresser_weather_sensor_t_t_n_8ino.html#a568aac4540a80387844b398aa821ceb2", null ],
     [ "knownBLEAddresses", "_bresser_weather_sensor_t_t_n_8ino.html#a134e5b815ce8cf8454c451c1f5bfb81d", null ],
     [ "lightningProc", "_bresser_weather_sensor_t_t_n_8ino.html#a2829a7a314e4e8bb9e316ecdd47dd547", null ],
