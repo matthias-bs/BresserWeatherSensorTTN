@@ -41,7 +41,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#if !defined(BLE_SENSORS) && !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
+#if !defined(BLE_SENSORS) && !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) \
+                          && !defined(ARDUINO_ARCH_RP2040)
 #define BLE_SENSORS
 
 #include <Arduino.h>

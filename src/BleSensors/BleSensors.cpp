@@ -41,7 +41,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#if !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
+#if !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) && !defined(ARDUINO_ARCH_RP2040)
 
 #include "BleSensors.h"
 
