@@ -131,9 +131,9 @@
 //   reconfiguration of the RFM95W module and its SW drivers - 
 //   i.e. to work as a weather data relay to TTN, enabling sleep mode 
 //   is basically the only useful option
-// - The ESP32's RTC RAM is used to store information about the LoRaWAN 
-//   network session; this speeds up the connection after a restart
-//   significantly
+// - The ESP32's RTC RAM/the RP2040's Flash (via Preferences library) is used
+//   to store information about the LoRaWAN network session;
+//   this speeds up the connection after a restart significantly
 // - The ESP32's Bluetooth LE interface is used to access sensor data (option)
 // - To enable Network Time Requests:
 //   #define LMIC_ENABLE_DeviceTimeReq 1
@@ -1141,11 +1141,6 @@ cMyLoRaWAN::printSessionState(const SessionState &State)
 #else
     void
     cMyLoRaWAN::NetSaveSessionState(const SessionState &State) {
-        // if (!preferences.begin("BWS-TTN-S")) {
-        //     log_d("failed");
-        //     return;
-        // }
-        
         preferences.begin("BWS-TTN-S");
         // All members are saved separately, because most of them will not change frequently
         // and we want to avoid unnecessary wearing of the flash!
@@ -1199,11 +1194,9 @@ cMyLoRaWAN::printSessionState(const SessionState &State)
     cMyLoRaWAN::NetGetSessionState(SessionState &State) {
         
         if (false == preferences.begin("BWS-TTN-S")) {
-            log_i("failed");
+            log_d("failed");
             return false;
         }
-        //bool res = preferences.begin("BWS-TTN-S");
-        //log_d("preferences.begin(\"BWS-TTN-S\"): %d", res ? 1 : 0);
         // All members are saved separately, because most of them will not change frequently
         // and we want to avoid unnecessary wearing of the flash!
         State.V1.Tag = (SessionStateTag)preferences.getUChar("Tag");
@@ -1264,14 +1257,10 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
         memcpy(pAbpInfo->NwkSKey, rtcSavedSessionInfo.V2.NwkSKey, 16);
         memcpy(pAbpInfo->AppSKey, rtcSavedSessionInfo.V2.AppSKey, 16);
     #else
-        
         if (false == preferences.begin("BWS-TTN-S")) {
-            log_i("failed");
+            log_d("failed");
             return false;
         }
-    
-        // bool res = preferences.begin("BWS-TTN-S");
-        // log_d("preferences.begin(\"BWS-TTN-S\"): %d", res ? 1 : 0);
         #if defined(ARDUINO_ARCH_RP2040)
             if (vreg_and_chip_reset_hw->chip_reset & 
                 (VREG_AND_CHIP_RESET_CHIP_RESET_HAD_RUN_BITS | 
