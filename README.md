@@ -92,6 +92,7 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 | LoRa_Serialization                 | r                            |
 | ESP32Time                          | r                            |
 | BresserWeatherSensorReceiver       | r                            |
+| Preferences                        | r (RP2040)                   |
 | ESP32AnalogRead                    | o                            |
 | OneWireNg                          | o                            |
 | DallasTemperature                  | o                            |
