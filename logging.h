@@ -39,6 +39,7 @@
 //
 // 20230927 Created from BresserWeatherSensorReceiver
 // 20231004 Added function names and line numbers to ESP8266/RP2040 debug logging
+// 20231005 Allowed re-definition of CORE_DEBUG_LEVEL and log_* macros
 //
 // ToDo:
 // - 
@@ -61,7 +62,15 @@
     #define ARDUHAL_LOG_LEVEL_DEBUG     4
     #define ARDUHAL_LOG_LEVEL_VERBOSE   5
 
+    // '#undef' allows to change a previous definition from WeatherSensor.h
+    #undef log_e
+    #undef log_w
+    #undef log_i
+    #undef log_d
+    #undef log_v
+
     // Set desired level here!
+    #undef CORE_DEBUG_LEVEL
     #define CORE_DEBUG_LEVEL ARDUHAL_LOG_LEVEL_INFO
 
     #if defined(DEBUG_PORT) && CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_NONE
