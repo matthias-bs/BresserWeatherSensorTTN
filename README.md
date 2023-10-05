@@ -421,7 +421,8 @@ Based on
 * [DallasTemperature / Arduino-Temperature-Control-Library](https://github.com/milesburton/Arduino-Temperature-Control-Library) by Miles Burton
 * [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) by h2zero
 * [Theengs Decoder](https://github.com/theengs/decoder) by [Theengs Project](https://github.com/theengs)
-* [DistanceSensor_A02YYUW](https://github.com/pportelaf/DistanceSensor_A02YYUW) by Pablo Portela 
+* [DistanceSensor_A02YYUW](https://github.com/pportelaf/DistanceSensor_A02YYUW) by Pablo Portela
+* [Preferences](https://github.com/vshymanskyy/Preferences) by Volodymyr Shymanskyy
 
 # Legal
 
