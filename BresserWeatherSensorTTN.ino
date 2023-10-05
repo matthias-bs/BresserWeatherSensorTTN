@@ -162,7 +162,7 @@
     //#include "pico.h"
     //#include "pico/sleep.h"
     //  #include "hardware/clocks.h"
-    //#include "hardware/rtc.h"
+    #include "hardware/rtc.h"
     //#include "src/rtc/rtc_utils.h"
     #include "hardware/structs/vreg_and_chip_reset.h"   // for reset reason detection
     #include "hardware/regs/vreg_and_chip_reset.h"      // for reset reason detection
@@ -1119,6 +1119,8 @@ cMyLoRaWAN::printSessionState(const SessionState &State)
         preferences.putUInt("NetID", Info.V2.NetID);
         preferences.putBytes("NwkSKey", Info.V2.NwkSKey, 16);
         preferences.putBytes("AppSKey", Info.V2.AppSKey, 16);
+        (void)pExtraInfo;
+        (void)nExtraInfo;
         // TODO: Save ExtraInfo?
         preferences.end();
         log_v("-");
@@ -1262,9 +1264,9 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
             return false;
         }
         #if defined(ARDUINO_ARCH_RP2040)
-            if (vreg_and_chip_reset_hw->chip_reset & 
-                (VREG_AND_CHIP_RESET_CHIP_RESET_HAD_RUN_BITS | 
-                 VREG_AND_CHIP_RESET_CHIP_RESET_HAD_POR_BITS) != 0) {
+            if ((vreg_and_chip_reset_hw->chip_reset & 
+                 (VREG_AND_CHIP_RESET_CHIP_RESET_HAD_RUN_BITS | 
+                  VREG_AND_CHIP_RESET_CHIP_RESET_HAD_POR_BITS)) != 0) {
                 // Last reset was power-on/brown-out detection or RUN pin reset;
                 // we assume that stored session info is no longer valid and clear it.
                 // A new join will be faster than trying with stale session info and
