@@ -20,7 +20,7 @@ Auxiliary sensor data can be integrated via Bluetooth Low Energy (BLE), OneWire,
 * [ATC MiThermometer](https://github.com/pvvx/ATC_MiThermometer) Bluetooth Low Energy Thermometer/Hygrometer Integration (optional)
 * [Theengs Decoder](https://github.com/theengs/decoder) Bluetooth Low Energy Sensors Integration (optional)
 * OneWire Temperature Sensor Integration (optional)
-* ESP32 Analog Digital Converter Integration (optional)
+* ESP32/RP2040 Analog Digital Converter Integration (optional)
 * [A02YYUW / DFRobot SEN0311 Ultrasonic Distance Sensor](https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311) (30...4500mm) (optional)
 * [Remote Configuration via LoRaWAN Downlink](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/README.md#remote-configuration-via-lorawan-downlink)
 
