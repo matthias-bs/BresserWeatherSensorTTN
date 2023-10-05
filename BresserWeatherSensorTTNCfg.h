@@ -59,6 +59,7 @@
 //          (https://wiki.dfrobot.com/_A02YYUW_Waterproof_Ultrasonic_Sensor_SKU_SEN0311)
 // 20230714 Added LIGHTNINGSENSOR_EN
 // 20230927 Added configuration for Adafruit Feather RP2040
+// 20231005 Added SESSION_IN_PREFERENCES and NVS_LOG
 //
 // ToDo:
 // - 
@@ -70,8 +71,10 @@
 
 // Enable debug mode (debug messages via serial port)
 // Arduino IDE: Tools->Core Debug Level: "Debug|Verbose"
-//#define CORE_DEBUG_LEVEL ARDUHAL_LOG_LEVEL_DEBUG
-//#define CORE_DEBUG_LEVEL ARDUHAL_LOG_LEVEL_VERBOSE
+// For other architectures than ESP32, see logging.h
+
+// Enable logging for https://github.com/vshymanskyy/Preferences (used for RP2040)
+#define NVS_LOG
 
 //--- Select Board ---
 #if !defined(ARDUINO_TTGO_LoRa32_V1)     && !defined(ARDUINO_TTGO_LoRa32_V2) && \
@@ -92,6 +95,11 @@
 
 // Enable LORAWAN debug mode - this generates dummy weather data and skips weather sensor reception 
 //#define LORAWAN_DEBUG
+
+// LoRaWAN session info is stored in RTC RAM on ESP32 and in Preferences (flash) on RP2040 
+#if defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+    #define SESSION_IN_PREFERENCES
+#endif
 
 // Battery voltage thresholds for energy saving
 
