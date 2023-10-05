@@ -113,11 +113,12 @@
 // 20230927 Added configuration for Adafruit Feather RP2040 with RFM95W FeatherWing
 //          (INCOMPLETE & NOT FULLY TESTED!)
 // 20231004 Replaced DEBUG_PRINTF/DEBUG_PRINTF_TS by macros log_i/../log_d/log_v
+// 20231005 Implemented storing of LoRaWAN session state using preferences
+//          for RP2040 (instead of ESP32's RTC RAM)
 //
 // ToDo:
 // - Implement sleep mode for RP2040
-// - Change storing of LoRaWAN connection information from RTC RAM to Preferences
-//   (Flash FS)
+// - Split this file
 //
 // Notes:
 // - Pin mapping of radio transceiver module is done in two places:
@@ -130,9 +131,9 @@
 //   reconfiguration of the RFM95W module and its SW drivers - 
 //   i.e. to work as a weather data relay to TTN, enabling sleep mode 
 //   is basically the only useful option
-// - The ESP32's RTC RAM is used to store information about the LoRaWAN 
-//   network session; this speeds up the connection after a restart
-//   significantly
+// - The ESP32's RTC RAM/the RP2040's Flash (via Preferences library) is used
+//   to store information about the LoRaWAN network session;
+//   this speeds up the connection after a restart significantly
 // - The ESP32's Bluetooth LE interface is used to access sensor data (option)
 // - To enable Network Time Requests:
 //   #define LMIC_ENABLE_DeviceTimeReq 1
@@ -163,6 +164,8 @@
     //  #include "hardware/clocks.h"
     #include "hardware/rtc.h"
     //#include "src/rtc/rtc_utils.h"
+    #include "hardware/structs/vreg_and_chip_reset.h"   // for reset reason detection
+    #include "hardware/regs/vreg_and_chip_reset.h"      // for reset reason detection
 #endif
 
 #ifdef RAINDATA_EN
@@ -605,14 +608,19 @@ const cMyLoRaWAN::lmic_pinmap myPinMap = {
 #define RTC_DATA_ATTR static
 #endif
 
-// The following variables are stored in the ESP32's RTC RAM -
-// their value is retained after a Sleep Reset.
-RTC_DATA_ATTR uint32_t                        magicFlag1;               //!< flag for validating Session State in RTC RAM 
-RTC_DATA_ATTR Arduino_LoRaWAN::SessionState   rtcSavedSessionState;     //!< Session State saved in RTC RAM
-RTC_DATA_ATTR uint32_t                        magicFlag2;               //!< flag for validating Session Info in RTC RAM 
-RTC_DATA_ATTR Arduino_LoRaWAN::SessionInfo    rtcSavedSessionInfo;      //!< Session Info saved in RTC RAM
-RTC_DATA_ATTR size_t                          rtcSavedNExtraInfo;       //!< size of extra Session Info data
-RTC_DATA_ATTR uint8_t                         rtcSavedExtraInfo[EXTRA_INFO_MEM_SIZE]; //!< extra Session Info data
+#if !defined(SESSION_IN_PREFERENCES)
+    // The following variables are stored in the ESP32's RTC RAM -
+    // their value is retained after a Sleep Reset.
+    RTC_DATA_ATTR uint32_t                        magicFlag1;               //!< flag for validating Session State in RTC RAM 
+    RTC_DATA_ATTR Arduino_LoRaWAN::SessionState   rtcSavedSessionState;     //!< Session State saved in RTC RAM
+    RTC_DATA_ATTR uint32_t                        magicFlag2;               //!< flag for validating Session Info in RTC RAM 
+    RTC_DATA_ATTR Arduino_LoRaWAN::SessionInfo    rtcSavedSessionInfo;      //!< Session Info saved in RTC RAM
+    RTC_DATA_ATTR size_t                          rtcSavedNExtraInfo;       //!< size of extra Session Info data
+    RTC_DATA_ATTR uint8_t                         rtcSavedExtraInfo[EXTRA_INFO_MEM_SIZE]; //!< extra Session Info data
+#endif
+
+// TODO: 
+// RP2040: move to Preferences
 RTC_DATA_ATTR bool                            runtimeExpired = false;   //!< flag indicating if runtime has expired at least once
 RTC_DATA_ATTR bool                            longSleep;                //!< last sleep interval; 0 - normal / 1 - long
 RTC_DATA_ATTR time_t                          rtcLastClockSync = 0;     //!< timestamp of last RTC synchonization to network time
@@ -772,9 +780,9 @@ void setup() {
     preferences.begin("BWS-TTN", false);
     prefs.ws_timeout = preferences.getUChar("ws_timeout", WEATHERSENSOR_TIMEOUT);
     log_d("Preferences: weathersensor_timeout: %u s", prefs.ws_timeout);
-    prefs.sleep_interval      = preferences.getUShort("sleep_interval", SLEEP_INTERVAL);
+    prefs.sleep_interval      = preferences.getUShort("sleep_int", SLEEP_INTERVAL);
     log_d("Preferences: sleep_interval:        %u s", prefs.sleep_interval);
-    prefs.sleep_interval_long = preferences.getUShort("sleep_interval_long", SLEEP_INTERVAL_LONG);
+    prefs.sleep_interval_long = preferences.getUShort("sleep_int_long", SLEEP_INTERVAL_LONG);
     log_d("Preferences: sleep_interval_long:   %u s", prefs.sleep_interval_long);
     preferences.end();
     
@@ -836,8 +844,14 @@ void loop() {
             myLoRaWAN.Shutdown();
             #ifdef FORCE_JOIN_AFTER_SLEEP_TIMEOUT
                 // Force join (instead of re-join)
-                magicFlag1 = 0;
-                magicFlag2 = 0;
+                #if !defined(SESSION_IN_PREFERENCES)
+                    magicFlag1 = 0;
+                    magicFlag2 = 0;
+                #else
+                    preferences.begin("BWS-TTN-S");
+                    preferences.clear();
+                    preferences.end();
+                #endif
             #endif
             log_i("Sleep timer expired!");
             prepareSleep();
@@ -902,14 +916,14 @@ void ReceiveCb(
             prefs.sleep_interval = pBuffer[2] | (pBuffer[1] << 8);
             log_d("Set sleep_interval: %u s", prefs.sleep_interval);
             preferences.begin("BWS-TTN", false);
-            preferences.putUShort("sleep_interval", prefs.sleep_interval);
+            preferences.putUShort("sleep_int", prefs.sleep_interval);
             preferences.end();            
         }
         if ((pBuffer[0] == CMD_SET_SLEEP_INTERVAL_LONG) && (nBuffer == 3)){
             prefs.sleep_interval_long = pBuffer[2] | (pBuffer[1] << 8);
             log_d("Set sleep_interval_long: %u s", prefs.sleep_interval_long);
             preferences.begin("BWS-TTN", false);
-            preferences.putUShort("sleep_interval", prefs.sleep_interval_long);
+            preferences.putUShort("sleep_int_long", prefs.sleep_interval_long);
             preferences.end();            
         }
         #ifdef RAINDATA_EN
@@ -1074,49 +1088,150 @@ cMyLoRaWAN::printSessionState(const SessionState &State)
 // Save Info to ESP32's RTC RAM
 // if not possible, just do nothing and make sure you return false
 // from NetGetSessionState().
-void
-cMyLoRaWAN::NetSaveSessionInfo(
-    const SessionInfo &Info,
-    const uint8_t *pExtraInfo,
-    size_t nExtraInfo
+#if !defined(SESSION_IN_PREFERENCES)
+    void
+    cMyLoRaWAN::NetSaveSessionInfo(
+        const SessionInfo &Info,
+        const uint8_t *pExtraInfo,
+        size_t nExtraInfo
+        ) {
+        if (nExtraInfo > EXTRA_INFO_MEM_SIZE)
+            return;
+        rtcSavedSessionInfo = Info;
+        rtcSavedNExtraInfo = nExtraInfo;
+        memcpy(rtcSavedExtraInfo, pExtraInfo, nExtraInfo);
+        magicFlag2 = MAGIC2;
+        log_v("-");
+        printSessionInfo(Info);
+    }
+#else
+    void
+    cMyLoRaWAN::NetSaveSessionInfo(
+        const SessionInfo &Info,
+        const uint8_t *pExtraInfo,
+        size_t nExtraInfo
     ) {
-    if (nExtraInfo > EXTRA_INFO_MEM_SIZE)
-        return;
-    rtcSavedSessionInfo = Info;
-    rtcSavedNExtraInfo = nExtraInfo;
-    memcpy(rtcSavedExtraInfo, pExtraInfo, nExtraInfo);
-    magicFlag2 = MAGIC2;
-    log_v("-");
-    printSessionInfo(Info);
-}
-
+        preferences.begin("BWS-TTN-S");
+        // Not used (read)
+        //preferences.putUChar("ITag", Info.V2.Tag);
+        //preferences.putUChar("ISize", Info.V2.Size);
+        preferences.putUInt("DevAddr", Info.V2.DevAddr);
+        preferences.putUInt("NetID", Info.V2.NetID);
+        preferences.putBytes("NwkSKey", Info.V2.NwkSKey, 16);
+        preferences.putBytes("AppSKey", Info.V2.AppSKey, 16);
+        (void)pExtraInfo;
+        (void)nExtraInfo;
+        // TODO: Save ExtraInfo?
+        preferences.end();
+        log_v("-");
+        printSessionInfo(Info);
+    }
+#endif
 
 // Save State in RTC RAM. Note that it's often the same;
 // often only the frame counters change.
 // [If not possible, just do nothing and make sure you return false
 // from NetGetSessionState().]
-void
-cMyLoRaWAN::NetSaveSessionState(const SessionState &State) {
-    rtcSavedSessionState = State;
-    magicFlag1 = MAGIC1;
-    log_v("-");
-    printSessionState(State);
-}
+#if !defined(SESSION_IN_PREFERENCES)
+    void
+    cMyLoRaWAN::NetSaveSessionState(const SessionState &State) {
+        rtcSavedSessionState = State;
+        magicFlag1 = MAGIC1;
+        log_v("-");
+        printSessionState(State);
+    }
+#else
+    void
+    cMyLoRaWAN::NetSaveSessionState(const SessionState &State) {
+        preferences.begin("BWS-TTN-S");
+        // All members are saved separately, because most of them will not change frequently
+        // and we want to avoid unnecessary wearing of the flash!
+        preferences.putUChar("Tag", State.V1.Tag);
+        preferences.putUChar("Size", State.V1.Size);
+        preferences.putUChar("Region", State.V1.Region);
+        preferences.putUChar("LinkDR", State.V1.LinkDR);
+        preferences.putUInt("FCntUp", State.V1.FCntUp);
+        preferences.putUInt("FCntDown", State.V1.FCntDown);
+        preferences.putUInt("gpsTime", State.V1.gpsTime);
+        preferences.putUInt("globalAvail", State.V1.globalAvail);
+        preferences.putUInt("Rx2Frequency", State.V1.Rx2Frequency);
+        preferences.putUInt("PingFrequency", State.V1.PingFrequency);
+        preferences.putUShort("Country", State.V1.Country);
+        preferences.putShort("LinkIntegrity", State.V1.LinkIntegrity);
+        preferences.putUChar("TxPower", State.V1.TxPower);
+        preferences.putUChar("Redundancy", State.V1.Redundancy);
+        preferences.putUChar("DutyCycle", State.V1.DutyCycle);
+        preferences.putUChar("Rx1DRoffset", State.V1.Rx1DRoffset);
+        preferences.putUChar("Rx2DataRate", State.V1.Rx2DataRate);
+        preferences.putUChar("RxDelay", State.V1.RxDelay);
+        preferences.putUChar("TxParam", State.V1.TxParam);
+        preferences.putUChar("BeaconChannel", State.V1.BeaconChannel);
+        preferences.putUChar("PingDr", State.V1.PingDr);
+        preferences.putUChar("MacRxParamAns", State.V1.MacRxParamAns);
+        preferences.putUChar("MacDlChannelAns", State.V1.MacDlChannelAns);;
+        preferences.putUChar("MacRxTimSetAns", State.V1.MacRxTimingSetupAns);
+        preferences.putBytes("Channels", &State.V1.Channels, sizeof(SessionChannelMask));
+        preferences.end();
+    }
+#endif
 
 // Either fetch SessionState from somewhere and return true or...
 // return false, which forces a re-join.
-bool
-cMyLoRaWAN::NetGetSessionState(SessionState &State) {
-    if (magicFlag1 == MAGIC1) {
-        State = rtcSavedSessionState;
-        log_d("o.k.");
+#if !defined(SESSION_IN_PREFERENCES)
+
+    bool
+    cMyLoRaWAN::NetGetSessionState(SessionState &State) {
+        if (magicFlag1 == MAGIC1) {
+            State = rtcSavedSessionState;
+            log_d("o.k.");
+            printSessionState(State);
+            return true;
+        } else {
+            log_d("failed");
+            return false;
+        }
+    }
+#else
+    bool
+    cMyLoRaWAN::NetGetSessionState(SessionState &State) {
+        
+        if (false == preferences.begin("BWS-TTN-S")) {
+            log_d("failed");
+            return false;
+        }
+        // All members are saved separately, because most of them will not change frequently
+        // and we want to avoid unnecessary wearing of the flash!
+        State.V1.Tag = (SessionStateTag)preferences.getUChar("Tag");
+        State.V1.Size = preferences.getUChar("Size");
+        State.V1.Region = preferences.getUChar("Region");
+        State.V1.LinkDR = preferences.getUChar("LinkDR");
+        State.V1.FCntUp = preferences.getUInt("FCntUp");
+        State.V1.FCntDown = preferences.getUInt("FCntDown");
+        State.V1.gpsTime = preferences.getUInt("gpsTime");
+        State.V1.globalAvail = preferences.getUInt("globalAvail");
+        State.V1.Rx2Frequency = preferences.getUInt("Rx2Frequency");
+        State.V1.PingFrequency = preferences.getUInt("PingFrequency");
+        State.V1.Country = preferences.getUShort("Country");
+        State.V1.LinkIntegrity = preferences.getShort("LinkIntegrity");
+        State.V1.TxPower = preferences.getUChar("TxPower");
+        State.V1.Redundancy = preferences.getUChar("Redundancy");
+        State.V1.DutyCycle = preferences.getUChar("DutyCycle");
+        State.V1.Rx1DRoffset = preferences.getUChar("Rx1DRoffset");
+        State.V1.Rx2DataRate = preferences.getUChar("Rx2DataRate");
+        State.V1.RxDelay = preferences.getUChar("RxDelay");
+        State.V1.TxParam = preferences.getUChar("TxParam");
+        State.V1.BeaconChannel = preferences.getUChar("BeaconChannel");
+        State.V1.PingDr = preferences.getUChar("PingDr");
+        State.V1.MacRxParamAns = preferences.getUChar("MacRxParamAns");
+        State.V1.MacDlChannelAns = preferences.getUChar("MacDlChannelAns");;
+        State.V1.MacRxTimingSetupAns = preferences.getUChar("MacRxTimSetAns");
+        preferences.getBytes("Channels", &State.V1.Channels, sizeof(SessionChannelMask));
+        preferences.end();
+
         printSessionState(State);
         return true;
-    } else {
-        log_d("failed");
-        return false;
     }
-}
+#endif
 
 // Get APB provisioning info - this is also used in OTAA after a succesful join.
 // If it can be provided in OTAA mode after a restart, no re-join is needed.
@@ -1133,15 +1248,41 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
     // uint32_t        FCntUp;
     // uint32_t        FCntDown;
     
-    if ((magicFlag1 != MAGIC1) || (magicFlag2 != MAGIC2)) {
-         return false;
-    }
-    log_v("-");
+    #if !defined(SESSION_IN_PREFERENCES)
+        if ((magicFlag1 != MAGIC1) || (magicFlag2 != MAGIC2)) {
+            return false;
+        }
+        log_v("-");
 
-    pAbpInfo->DevAddr = rtcSavedSessionInfo.V2.DevAddr;
-    pAbpInfo->NetID   = rtcSavedSessionInfo.V2.NetID;
-    memcpy(pAbpInfo->NwkSKey, rtcSavedSessionInfo.V2.NwkSKey, 16);
-    memcpy(pAbpInfo->AppSKey, rtcSavedSessionInfo.V2.AppSKey, 16);
+        pAbpInfo->DevAddr = rtcSavedSessionInfo.V2.DevAddr;
+        pAbpInfo->NetID   = rtcSavedSessionInfo.V2.NetID;
+        memcpy(pAbpInfo->NwkSKey, rtcSavedSessionInfo.V2.NwkSKey, 16);
+        memcpy(pAbpInfo->AppSKey, rtcSavedSessionInfo.V2.AppSKey, 16);
+    #else
+        if (false == preferences.begin("BWS-TTN-S")) {
+            log_d("failed");
+            return false;
+        }
+        #if defined(ARDUINO_ARCH_RP2040)
+            if ((vreg_and_chip_reset_hw->chip_reset & 
+                 (VREG_AND_CHIP_RESET_CHIP_RESET_HAD_RUN_BITS | 
+                  VREG_AND_CHIP_RESET_CHIP_RESET_HAD_POR_BITS)) != 0) {
+                // Last reset was power-on/brown-out detection or RUN pin reset;
+                // we assume that stored session info is no longer valid and clear it.
+                // A new join will be faster than trying with stale session info and
+                // running into a timeout.
+                log_d("HW reset detected, deleting session info.");
+                preferences.clear();
+            }
+        #endif
+
+        log_v("-");
+        pAbpInfo->DevAddr = preferences.getUInt("DevAddr");
+        pAbpInfo->NetID   = preferences.getUInt("NetID");
+        preferences.getBytes("NwkSKey", pAbpInfo->NwkSKey, 16);
+        preferences.getBytes("AppSKey", pAbpInfo->AppSKey, 16);
+        preferences.end();
+    #endif
     NetGetSessionState(state);
     pAbpInfo->FCntUp   = state.V1.FCntUp;
     pAbpInfo->FCntDown = state.V1.FCntDown;
