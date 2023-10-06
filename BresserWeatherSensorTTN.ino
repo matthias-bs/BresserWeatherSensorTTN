@@ -115,9 +115,10 @@
 // 20231004 Replaced DEBUG_PRINTF/DEBUG_PRINTF_TS by macros log_i/../log_d/log_v
 // 20231005 Implemented storing of LoRaWAN session state using preferences
 //          for RP2040 (instead of ESP32's RTC RAM)
+// 20231006 Added sleep mode and wake-up by RTC
 //
 // ToDo:
-// - Implement sleep mode for RP2040
+// - Implement RTC setting/time-keeping after reset
 // - Split this file
 //
 // Notes:
@@ -160,10 +161,8 @@
 
 #ifdef ARDUINO_ARCH_RP2040
     //#include "pico.h"
-    //#include "pico/sleep.h"
-    //  #include "hardware/clocks.h"
+    #include "src/pico_rtc/pico_rtc_utils.h"
     #include "hardware/rtc.h"
-    //#include "src/rtc/rtc_utils.h"
     #include "hardware/structs/vreg_and_chip_reset.h"   // for reset reason detection
     #include "hardware/regs/vreg_and_chip_reset.h"      // for reset reason detection
 #endif
@@ -1344,19 +1343,28 @@ void prepareSleep(void) {
         //#endif
         
 
-        sleep_interval = sleep_interval - ((timeinfo.tm_min * 60) % sleep_interval + timeinfo.tm_sec);
-        sleep_interval += 20; // Added extra 20-secs of sleep to allow for slow ESP32 RTC timers
+        sleep_interval = sleep_interval - ((timeinfo.tm_min * 60) % sleep_interval + timeinfo.tm_sec);  
     }
     
     log_i("Shutdown() - sleeping for %lu s", sleep_interval);
     #if defined(ESP32)
+        sleep_interval += 20; // Added extra 20-secs of sleep to allow for slow ESP32 RTC timers
         ESP.deepSleep(sleep_interval * 1000000LL);
     #else
-        //set_sys_clock_khz(18 * 1000, false);
-        clock_stop(clk_adc);
-        sleep_ms(sleep_interval * 1000);
-        //rp2040.reboot();
-        watchdog_reboot(0,0,0);
+        // Set RTC to an arbitrary, but valid time
+        datetime_t dt = { 
+            .year  = 2023,
+            .month = 10,
+            .day   = 06,
+            .dotw  = 5, // 0 is Sunday, so 5 is Friday
+            .hour  = 17,
+            .min   = 15,
+            .sec   = 00
+        };
+        rtc_set_datetime(&dt);
+        sleep_us(64);
+        pico_sleep(sleep_interval);
+        rp2040.restart();
     #endif
 }
 
