@@ -67,7 +67,9 @@ You get a fully functional board (including antenna) which does not require any 
 
 * [FireBeetle Cover LoRa Radio 868MHz](https://www.dfrobot.com/product-1831.html)
 
-##### Antenna ([Delock 89769 - LoRa 868 MHz Antenna SMA plug 3 dBi omnidirectional](https://www.delock.de/produkt/89769/merkmale.html?setLanguage=en) has been used with good results)
+##### Antenna 
+
+* [Delock 89769 - LoRa 868 MHz Antenna SMA plug 3 dBi omnidirectional](https://www.delock.de/produkt/89769/merkmale.html?setLanguage=en) has been used with good results
 
 #### Power Supply
 Mains adapter or Li-Ion battery (with or without solar charger) - depending on desired operation time and duty cycle.
