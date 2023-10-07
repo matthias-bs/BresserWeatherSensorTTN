@@ -121,18 +121,26 @@ $(document).ready(function(){initNavTree('md__r_e_a_d_m_e.html',''); initResizab
 </ul>
 <p>See <a href="https://www.thethingsnetwork.org">The Things Network's</a> <a href="https://www.thethingsnetwork.org/forum/t/big-esp32-sx127x-topic-part-2/11973">Big ESP32 + SX127x topic part 2</a> for some hardware options.</p>
 <p>See <a href="https://github.com/lnlp">Leonel Lopes Parente's</a> collection of <a href="https://github.com/lnlp/pinout-diagrams/tree/main/LoRa%20development%20boards">LoRa development boards pinout-diagrams</a>.</p>
-<h2>ESP32 Module</h2>
-<p><a href="https://www.dfrobot.com/product-1590.html">DFRobot FireBeetle ESP32 IoT</a> (DFR0478) recomended due to its good low power design (but other boards will work, too)</p>
-<h2>RFM95W- or SX1276-based Radio Transceiver Module</h2>
+<h3>Recommended Hardware</h3>
+<h4>Beginners</h4>
+<p><a href="https://www.lilygo.cc/products/lora3?variant=42272562282677">LILYGO® TTGO LORA32</a></p>
+<p>You get a fully functional board (including antenna) which does not require any additional wiring for a reasonable price!</p>
+<h3>Advanced</h3>
+<h4>ESP32 Module</h4>
+<p><a href="https://www.dfrobot.com/product-1590.html">DFRobot FireBeetle ESP32 IoT</a> (DFR0478) recomended due to its good low power design.</p>
+<h4>RFM95W- or SX1276-based Radio Transceiver Module</h4>
 <ul>
-<li><a href="https://www.adafruit.com/product/3072">Adafruit RFM95W LoRa Radio Transceiver Breakout</a> (ADA3072) - 868/915 MHz version (868 MHz is used for both LoRaWAN and Bresser Weather Sensor in Europe)<ul>
+<li><a href="https://www.adafruit.com/product/3072">Adafruit RFM95W LoRa Radio Transceiver Breakout</a> (ADA3072) - 868/915 MHz version (868 MHz is used for both LoRaWAN and Bresser Weather Sensor in Europe) with RF connector (u.FL or SMA as desired)<ul>
 <li>See <a href="https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/pinouts">Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts</a>.</li>
 </ul>
 </li>
-<li>RF connector (u.FL or SMA as desired)</li>
-<li>Antenna (<a href="https://www.delock.de/produkt/89769/merkmale.html?setLanguage=en">Delock 89769 - LoRa 868 MHz Antenna SMA plug 3 dBi omnidirectional</a> has been used with good results)</li>
 </ul>
-<h2>Power Supply</h2>
+<p><b>or</b></p>
+<ul>
+<li><a href="https://www.dfrobot.com/product-1831.html">FireBeetle Cover LoRa Radio 868MHz</a></li>
+</ul>
+<h4>Antenna (<a href="https://www.delock.de/produkt/89769/merkmale.html?setLanguage=en">Delock 89769 - LoRa 868 MHz Antenna SMA plug 3 dBi omnidirectional</a> has been used with good results)</h4>
+<h3>Power Supply</h3>
 <p>Mains adapter or Li-Ion battery (with or without solar charger) - depending on desired operation time and duty cycle.</p>
 <h1>Software Build Setup</h1>
 <ul>
