@@ -1,3 +1,46 @@
+///////////////////////////////////////////////////////////////////////////////
+// pico_rtc_utils.cpp
+// 
+// RTC utility functions for RP2040
+//
+// Sleep/wakeup scheme based on
+// https://github.com/lyusupov/SoftRF/tree/master/software/firmware/source/libraries/RP2040_Sleep
+// by Linar Yusupov
+//
+// created: 10/2023
+//
+//
+// MIT License
+//
+// Copyright (c) 2023 Matthias Prinke
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+//
+// History:
+//
+// 20231006 Created
+//
+// ToDo:
+// - 
+//
+///////////////////////////////////////////////////////////////////////////////
 #if defined(ARDUINO_ARCH_RP2040)
 
 #include "pico_rtc_utils.h"
@@ -29,16 +72,19 @@ datetime_t *tm_to_datetime(struct tm *ti, datetime_t *dt)
 }
 
 void print_dt(datetime_t dt) {
-  printf("%4d-%02d-%02d %02d:%02d:%02d\n", dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec);
+    log_i("%4d-%02d-%02d %02d:%02d:%02d\n", dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec);
 }
 
 void print_tm(struct tm ti) {
-    printf("%4d-%02d-%02d %02d:%02d:%02d\n", ti.tm_year+1900, ti.tm_mon+1, ti.tm_mday, ti.tm_hour, ti.tm_min, ti.tm_sec);
+    log_i("%4d-%02d-%02d %02d:%02d:%02d\n", ti.tm_year+1900, ti.tm_mon+1, ti.tm_mday, ti.tm_hour, ti.tm_min, ti.tm_sec);
 }
 
 time_t datetime_to_epoch(datetime_t *dt, time_t *epoch) {
         struct tm ti;
         datetime_to_tm(dt, &ti);
+        
+        // Do not apply daylight saving time
+        ti.tm_isdst = 0;
 
         // Convert to epoch
         time_t _epoch = mktime(&ti);
@@ -62,31 +108,22 @@ datetime_t *epoch_to_datetime(time_t *epoch, datetime_t *dt) {
     return dt;
 }
 
+// Sleep for <duration> seconds
 void pico_sleep(unsigned duration) {
     datetime_t dt;
     rtc_get_datetime(&dt);
-    printf("RTC time:\n");
+    log_i("RTC time:\n");
     print_dt(dt);
 
     time_t now;
     datetime_to_epoch(&dt, &now);
-
-    // struct tm ti;
-    // datetime_to_tm(&dt, &ti);
-
-    // // Convert to epoch
-    // time_t now = mktime(&ti);
     
     // Add sleep_duration
     time_t wakeup = now + duration;
 
     epoch_to_datetime(&wakeup, &dt);
-    // // Convert epoch to struct tm
-    // localtime_r(&wakeup, &ti);
 
-    // // Convert struct tm to datetime_t
-    // tm_to_datetime(&ti, &dt);
-    printf("Wakeup time:\n");
+    log_i("Wakeup time:\n");
     print_dt(dt);
 
     Serial.flush();
