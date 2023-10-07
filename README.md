@@ -70,6 +70,7 @@ You get a fully functional board (including antenna) which does not require any 
 ##### Antenna 
 
 * [Delock 89769 - LoRa 868 MHz Antenna SMA plug 3 dBi omnidirectional](https://www.delock.de/produkt/89769/merkmale.html?setLanguage=en) has been used with good results
+* [EBYTE TX868-XP-100 868MHz SMA-J 3.5dBi High Gain Omnidirectional Antenna](https://www.amazon.de/gp/product/B07NWLWJH7) - larger, but better
 
 #### Power Supply
 Mains adapter or Li-Ion battery (with or without solar charger) - depending on desired operation time and duty cycle.
