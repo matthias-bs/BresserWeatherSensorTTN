@@ -7,6 +7,12 @@
 // https://github.com/lyusupov/SoftRF/tree/master/software/firmware/source/libraries/RP2040_Sleep
 // by Linar Yusupov
 //
+// Using code from pico-extras:
+// https://github.com/raspberrypi/pico-extras/blob/master/src/rp2_common/pico_sleep/include/pico/sleep.h
+// https://github.com/raspberrypi/pico-extras/blob/master/src/rp2_common/pico_sleep/sleep.c
+// https://github.com/raspberrypi/pico-extras/blob/master/src/rp2_common/hardware_rosc/include/hardware/rosc.h
+// https://github.com/raspberrypi/pico-extras/blob/master/src/rp2_common/hardware_rosc/rosc.c
+//
 // created: 10/2023
 //
 //
@@ -44,8 +50,11 @@
 #if defined(ARDUINO_ARCH_RP2040)
 #include <Arduino.h>
 #include <time.h>
+#include <pico/stdlib.h>
+#include <hardware/rtc.h>
 #include "pico_sleep.h"
 #include "pico_rosc.h"
+#include "../../logging.h"
 
 #ifndef PICO_RTC_UTILS_H
 #define PICO_RTC_UTILS_H

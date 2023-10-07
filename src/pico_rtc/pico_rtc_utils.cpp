@@ -7,6 +7,12 @@
 // https://github.com/lyusupov/SoftRF/tree/master/software/firmware/source/libraries/RP2040_Sleep
 // by Linar Yusupov
 //
+// Using code from pico-extras:
+// https://github.com/raspberrypi/pico-extras/blob/master/src/rp2_common/pico_sleep/include/pico/sleep.h
+// https://github.com/raspberrypi/pico-extras/blob/master/src/rp2_common/pico_sleep/sleep.c
+// https://github.com/raspberrypi/pico-extras/blob/master/src/rp2_common/hardware_rosc/include/hardware/rosc.h
+// https://github.com/raspberrypi/pico-extras/blob/master/src/rp2_common/hardware_rosc/rosc.c
+//
 // created: 10/2023
 //
 //
@@ -72,19 +78,19 @@ datetime_t *tm_to_datetime(struct tm *ti, datetime_t *dt)
 }
 
 void print_dt(datetime_t dt) {
-    log_i("%4d-%02d-%02d %02d:%02d:%02d\n", dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec);
+    log_i("%4d-%02d-%02d %02d:%02d:%02d", dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec);
 }
 
 void print_tm(struct tm ti) {
-    log_i("%4d-%02d-%02d %02d:%02d:%02d\n", ti.tm_year+1900, ti.tm_mon+1, ti.tm_mday, ti.tm_hour, ti.tm_min, ti.tm_sec);
+    log_i("%4d-%02d-%02d %02d:%02d:%02d", ti.tm_year+1900, ti.tm_mon+1, ti.tm_mday, ti.tm_hour, ti.tm_min, ti.tm_sec);
 }
 
 time_t datetime_to_epoch(datetime_t *dt, time_t *epoch) {
         struct tm ti;
         datetime_to_tm(dt, &ti);
         
-        // Do not apply daylight saving time
-        ti.tm_isdst = 0;
+        // Apply daylight saving time according to timezone and date
+        ti.tm_isdst = -1;
 
         // Convert to epoch
         time_t _epoch = mktime(&ti);
@@ -99,6 +105,9 @@ time_t datetime_to_epoch(datetime_t *dt, time_t *epoch) {
 datetime_t *epoch_to_datetime(time_t *epoch, datetime_t *dt) {
     struct tm ti;
 
+    // Apply daylight saving time according to timezone and date
+    ti.tm_isdst = -1;
+
     // Convert epoch to struct tm
     localtime_r(epoch, &ti);
 
@@ -112,7 +121,7 @@ datetime_t *epoch_to_datetime(time_t *epoch, datetime_t *dt) {
 void pico_sleep(unsigned duration) {
     datetime_t dt;
     rtc_get_datetime(&dt);
-    log_i("RTC time:\n");
+    log_i("RTC time:");
     print_dt(dt);
 
     time_t now;
@@ -123,7 +132,7 @@ void pico_sleep(unsigned duration) {
 
     epoch_to_datetime(&wakeup, &dt);
 
-    log_i("Wakeup time:\n");
+    log_i("Wakeup time:");
     print_dt(dt);
 
     Serial.flush();
