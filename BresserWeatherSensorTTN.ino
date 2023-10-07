@@ -160,11 +160,8 @@
 #include "logging.h"
 
 #ifdef ARDUINO_ARCH_RP2040
-    //#include "pico.h"
     #include "src/pico_rtc/pico_rtc_utils.h"
-    #include "hardware/rtc.h"
-    #include "hardware/structs/vreg_and_chip_reset.h"   // for reset reason detection
-    #include "hardware/regs/vreg_and_chip_reset.h"      // for reset reason detection
+    #include <hardware/rtc.h>
 #endif
 
 #ifdef RAINDATA_EN
