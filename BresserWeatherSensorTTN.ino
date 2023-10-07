@@ -618,11 +618,18 @@ const cMyLoRaWAN::lmic_pinmap myPinMap = {
     RTC_DATA_ATTR uint8_t                         rtcSavedExtraInfo[EXTRA_INFO_MEM_SIZE]; //!< extra Session Info data
 #endif
 
-// TODO: 
-// RP2040: move to Preferences
-RTC_DATA_ATTR bool                            runtimeExpired = false;   //!< flag indicating if runtime has expired at least once
-RTC_DATA_ATTR bool                            longSleep;                //!< last sleep interval; 0 - normal / 1 - long
-RTC_DATA_ATTR time_t                          rtcLastClockSync = 0;     //!< timestamp of last RTC synchonization to network time
+// Variables which must retain their values after deep sleep
+#if defined(ESP32)
+    // Stored in RTC RAM
+    RTC_DATA_ATTR bool      runtimeExpired = false;   //!< flag indicating if runtime has expired at least once 
+    RTC_DATA_ATTR bool      longSleep;                //!< last sleep interval; 0 - normal / 1 - long
+    RTC_DATA_ATTR time_t    rtcLastClockSync = 0;     //!< timestamp of last RTC synchonization to network time
+#else
+    // Save to/restored from Watchdog SCRATCH registers
+    bool                    runtimeExpired;           //!< flag indicating if runtime has expired at least once
+    bool                    longSleep;                //!< last sleep interval; 0 - normal / 1 - long
+    time_t                  rtcLastClockSync;         //!< timestamp of last RTC synchonization to network time
+#endif
 
 #ifdef ESP32
     #ifdef ADC_EN
@@ -764,10 +771,23 @@ ESP32Time rtc;
 /// Arduino setup
 void setup() {
     #if defined(ARDUINO_ARCH_RP2040)
-      // see pico-sdk/src/rp2_common/hardware_rtc/rtc.c
-      rtc_init();
+        // see pico-sdk/src/rp2_common/hardware_rtc/rtc.c
+        rtc_init();
 
-      uint32_t time_saved = watchdog_hw->scratch[0];
+        // Restore variables and RTC after reset 
+        time_t time_saved = watchdog_hw->scratch[0];
+        datetime_t dt;
+        epoch_to_datetime(&time_saved, &dt);
+        
+        // Set HW clock (only used in sleep mode)
+        rtc_set_datetime(&dt);
+        
+        // Set SW clock
+        rtc.setTime(time_saved);
+
+        runtimeExpired   = ((watchdog_hw->scratch[1] & 1) == 1);
+        longSleep        = ((watchdog_hw->scratch[1] & 2) == 2);
+        rtcLastClockSync = watchdog_hw->scratch[2];
     #endif
 
     // set baud rate
@@ -1333,16 +1353,8 @@ void prepareSleep(void) {
     // to next non-fractional multiple of sleep_interval past the hour
     if (rtcLastClockSync) {
         struct tm timeinfo;
-        //#ifdef ESP32
-          time_t t_now = rtc.getLocalEpoch();
-          localtime_r(&t_now, &timeinfo);
-        //#else
-          // FIXME Is this needed?
-        //  datetime_t t_now;
-        //  rtc_get_datetime(&t_now);
-        //  datetime_to_tm(t_now, timeinfo);
-        //#endif
-        
+        time_t t_now = rtc.getLocalEpoch();
+        localtime_r(&t_now, &timeinfo);        
 
         sleep_interval = sleep_interval - ((timeinfo.tm_min * 60) % sleep_interval + timeinfo.tm_sec);  
     }
@@ -1352,34 +1364,33 @@ void prepareSleep(void) {
         sleep_interval += 20; // Added extra 20-secs of sleep to allow for slow ESP32 RTC timers
         ESP.deepSleep(sleep_interval * 1000000LL);
     #else
-        // Set RTC to an arbitrary, but valid time
-        datetime_t dt = { 
-            .year  = 2023,
-            .month = 10,
-            .day   = 06,
-            .dotw  = 5, // 0 is Sunday, so 5 is Friday
-            .hour  = 17,
-            .min   = 15,
-            .sec   = 00
-        };
+        time_t t_now = rtc.getLocalEpoch();
+        datetime_t dt;
+        epoch_to_datetime(&t_now, &dt);
         rtc_set_datetime(&dt);
         sleep_us(64);
         pico_sleep(sleep_interval);
 
+        // Save variables to be retained after reset
+        watchdog_hw->scratch[2] = rtcLastClockSync;
+        
+        if (runtimeExpired) {
+            watchdog_hw->scratch[1] |= 1;
+        } else {
+            watchdog_hw->scratch[1] &= ~1;
+        }
+        if (longSleep) {
+            watchdog_hw->scratch[1] |= 2;
+        } else {
+            watchdog_hw->scratch[1] &= ~2;
+        }
+
+        // Save the current time, because RTC will be reset (SIC!)
         rtc_get_datetime(&dt);
-        //-- datetime_to_epoch()
-        // printf("RTC time:\n");
-        // print_dt(dt);
-
-        // struct tm ti;
-        // datetime_to_tm(&dt, &ti);
-
-        // // Convert to epoch
-        // time_t now = mktime(&ti);
-        //--
         time_t now = datetime_to_epoch(&dt, NULL);
         watchdog_hw->scratch[0] = now;
         log_i("Now: %lu", now);
+        
         rp2040.restart();
     #endif
 }
