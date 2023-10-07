@@ -766,6 +766,8 @@ void setup() {
     #if defined(ARDUINO_ARCH_RP2040)
       // see pico-sdk/src/rp2_common/hardware_rtc/rtc.c
       rtc_init();
+
+      uint32_t time_saved = watchdog_hw->scratch[0];
     #endif
 
     // set baud rate
@@ -775,7 +777,7 @@ void setup() {
 
     // wait for serial to be ready - or timeout if USB is not connected
     delay(500);
-
+    log_i("Time saved: %lu", time_saved);
     preferences.begin("BWS-TTN", false);
     prefs.ws_timeout = preferences.getUChar("ws_timeout", WEATHERSENSOR_TIMEOUT);
     log_d("Preferences: weathersensor_timeout: %u s", prefs.ws_timeout);
@@ -1263,11 +1265,10 @@ cMyLoRaWAN::GetAbpProvisioningInfo(AbpProvisioningInfo *pAbpInfo) {
             return false;
         }
         #if defined(ARDUINO_ARCH_RP2040)
-            if ((vreg_and_chip_reset_hw->chip_reset & 
-                 (VREG_AND_CHIP_RESET_CHIP_RESET_HAD_RUN_BITS | 
-                  VREG_AND_CHIP_RESET_CHIP_RESET_HAD_POR_BITS)) != 0) {
-                // Last reset was power-on/brown-out detection or RUN pin reset;
-                // we assume that stored session info is no longer valid and clear it.
+            if (!watchdog_caused_reboot()) {
+                // Last reset was not caused by the watchdog, i.e. SW reset via restart().
+                // Consequently, a power-on/brown-out detection or RUN pin reset occurred.
+                // We assume that stored session info is no longer valid and clear it.
                 // A new join will be faster than trying with stale session info and
                 // running into a timeout.
                 log_d("HW reset detected, deleting session info.");
@@ -1364,6 +1365,21 @@ void prepareSleep(void) {
         rtc_set_datetime(&dt);
         sleep_us(64);
         pico_sleep(sleep_interval);
+
+        rtc_get_datetime(&dt);
+        //-- datetime_to_epoch()
+        // printf("RTC time:\n");
+        // print_dt(dt);
+
+        // struct tm ti;
+        // datetime_to_tm(&dt, &ti);
+
+        // // Convert to epoch
+        // time_t now = mktime(&ti);
+        //--
+        time_t now = datetime_to_epoch(&dt, NULL);
+        watchdog_hw->scratch[0] = now;
+        log_i("Now: %lu", now);
         rp2040.restart();
     #endif
 }
