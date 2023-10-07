@@ -794,7 +794,10 @@ void setup() {
 
     // wait for serial to be ready - or timeout if USB is not connected
     delay(500);
-    log_i("Time saved: %lu", time_saved);
+
+    #if defined(ARDUINO_ARCH_RP2040)
+        log_i("Time saved: %lu", time_saved);
+    #endif
     preferences.begin("BWS-TTN", false);
     prefs.ws_timeout = preferences.getUChar("ws_timeout", WEATHERSENSOR_TIMEOUT);
     log_d("Preferences: weathersensor_timeout: %u s", prefs.ws_timeout);
