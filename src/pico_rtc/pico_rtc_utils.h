@@ -9,6 +9,8 @@
 
 struct tm *datetime_to_tm(datetime_t *dt, struct tm *ti);
 datetime_t *tm_to_datetime(struct tm *ti, datetime_t *dt);
+time_t datetime_to_epoch(datetime_t *dt, time_t *epoch);
+datetime_t *epoch_to_datetime(time_t *epoch, datetime_t *dt);
 
 void print_dt(datetime_t dt);
 void print_tm(struct tm ti);

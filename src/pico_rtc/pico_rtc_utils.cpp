@@ -36,26 +36,56 @@ void print_tm(struct tm ti) {
     printf("%4d-%02d-%02d %02d:%02d:%02d\n", ti.tm_year+1900, ti.tm_mon+1, ti.tm_mday, ti.tm_hour, ti.tm_min, ti.tm_sec);
 }
 
+time_t datetime_to_epoch(datetime_t *dt, time_t *epoch) {
+        struct tm ti;
+        datetime_to_tm(dt, &ti);
+
+        // Convert to epoch
+        time_t _epoch = mktime(&ti);
+
+        if (epoch) {
+          *epoch = _epoch;
+        }
+
+        return _epoch;
+}
+
+datetime_t *epoch_to_datetime(time_t *epoch, datetime_t *dt) {
+    struct tm ti;
+
+    // Convert epoch to struct tm
+    localtime_r(epoch, &ti);
+
+    // Convert struct tm to datetime_t
+    tm_to_datetime(&ti, dt);
+
+    return dt;
+}
+
 void pico_sleep(unsigned duration) {
     datetime_t dt;
     rtc_get_datetime(&dt);
     printf("RTC time:\n");
     print_dt(dt);
 
-    struct tm ti;
-    datetime_to_tm(&dt, &ti);
+    time_t now;
+    datetime_to_epoch(&dt, &now);
 
-    // Convert to epoch
-    time_t now = mktime(&ti);
+    // struct tm ti;
+    // datetime_to_tm(&dt, &ti);
+
+    // // Convert to epoch
+    // time_t now = mktime(&ti);
     
     // Add sleep_duration
     time_t wakeup = now + duration;
 
-    // Convert epoch to struct tm
-    localtime_r(&wakeup, &ti);
+    epoch_to_datetime(&wakeup, &dt);
+    // // Convert epoch to struct tm
+    // localtime_r(&wakeup, &ti);
 
-    // Convert struct tm to datetime_t
-    tm_to_datetime(&ti, &dt);
+    // // Convert struct tm to datetime_t
+    // tm_to_datetime(&ti, &dt);
     printf("Wakeup time:\n");
     print_dt(dt);
 
