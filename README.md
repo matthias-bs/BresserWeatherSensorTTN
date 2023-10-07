@@ -47,17 +47,29 @@ See [The Things Network's](https://www.thethingsnetwork.org) [Big ESP32 + SX127x
 
 See [Leonel Lopes Parente's](https://github.com/lnlp) collection of [LoRa development boards pinout-diagrams](https://github.com/lnlp/pinout-diagrams/tree/main/LoRa%20development%20boards).
 
-### ESP32 Module
-[DFRobot FireBeetle ESP32 IoT](https://www.dfrobot.com/product-1590.html) (DFR0478) recomended due to its good low power design (but other boards will work, too)
+#### Recommended Hardware
+##### Beginners
+ [LILYGO® TTGO LORA32](https://www.lilygo.cc/products/lora3?variant=42272562282677)
 
-### RFM95W- or SX1276-based Radio Transceiver Module
+You get a fully functional board (including antenna) which does not require any additional wiring for a reasonable price!
+
+#### Advanced
+##### ESP32 Module
+[DFRobot FireBeetle ESP32 IoT](https://www.dfrobot.com/product-1590.html) (DFR0478) recomended due to its good low power design.
+
+##### RFM95W- or SX1276-based Radio Transceiver Module
 
 * [Adafruit RFM95W LoRa Radio Transceiver Breakout](https://www.adafruit.com/product/3072) (ADA3072) - 868/915 MHz version (868 MHz is used for both LoRaWAN and Bresser Weather Sensor in Europe)
+  with RF connector (u.FL or SMA as desired)
     * See [Adafruit RFM69HCW and RFM9X LoRa Packet Radio Breakouts - Pinouts](https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/pinouts).
-* RF connector (u.FL or SMA as desired)
-* Antenna ([Delock 89769 - LoRa 868 MHz Antenna SMA plug 3 dBi omnidirectional](https://www.delock.de/produkt/89769/merkmale.html?setLanguage=en) has been used with good results)
 
-### Power Supply
+**or**
+
+* [FireBeetle Cover LoRa Radio 868MHz](https://www.dfrobot.com/product-1831.html)
+
+##### Antenna ([Delock 89769 - LoRa 868 MHz Antenna SMA plug 3 dBi omnidirectional](https://www.delock.de/produkt/89769/merkmale.html?setLanguage=en) has been used with good results)
+
+#### Power Supply
 Mains adapter or Li-Ion battery (with or without solar charger) - depending on desired operation time and duty cycle.
 
 ## Software Build Setup
