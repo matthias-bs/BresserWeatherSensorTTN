@@ -113,9 +113,10 @@
 // 20230927 Added configuration for Adafruit Feather RP2040 with RFM95W FeatherWing
 //          (INCOMPLETE & NOT FULLY TESTED!)
 // 20231004 Replaced DEBUG_PRINTF/DEBUG_PRINTF_TS by macros log_i/../log_d/log_v
-// 20231005 Implemented storing of LoRaWAN session state using preferences
-//          for RP2040 (instead of ESP32's RTC RAM)
-// 20231006 Added sleep mode and wake-up by RTC
+// 20231005 [RP2040] Implemented storing of LoRaWAN session state using preferences
+//          (instead of ESP32's RTC RAM)
+// 20231006 [RP2040] Added sleep mode and wake-up by RTC
+// 20231008 [RP2040] Added configuration for distance sensor
 //
 // ToDo:
 // - Implement RTC setting/time-keeping after reset
@@ -684,7 +685,11 @@ uint16_t  sleep_interval_long;  //!< preferences: sleep interval long
 #endif
 
 #ifdef DISTANCESENSOR_EN
-    DistanceSensor_A02YYUW distanceSensor(&Serial2);
+    #if defined(ESP32)
+        DistanceSensor_A02YYUW distanceSensor(&Serial2);
+    #else
+        DistanceSensor_A02YYUW distanceSensor(&Serial1);
+    #endif
 #endif
 
 #ifdef MITHERMOMETER_EN
@@ -1565,9 +1570,17 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
     this->m_tReference = millis();
 
     #ifdef DISTANCESENSOR_EN
-        Serial2.begin(9600, SERIAL_8N1, DISTANCESENSOR_RX, DISTANCESENSOR_TX);
-        pinMode(DISTANCESENSOR_PWR, OUTPUT);
-        digitalWrite(DISTANCESENSOR_PWR, LOW);
+        #if defined(ESP32)
+            Serial2.begin(9600, SERIAL_8N1, DISTANCESENSOR_RX, DISTANCESENSOR_TX);
+            pinMode(DISTANCESENSOR_PWR, OUTPUT);
+            digitalWrite(DISTANCESENSOR_PWR, LOW);
+        #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+            Serial1.setRX(DISTANCESENSOR_RX);
+            Serial1.setTX(DISTANCESENSOR_TX);
+            Serial1.begin(9600, SERIAL_8N1);
+            pinMode(DISTANCESENSOR_PWR, OUTPUT_12MA);
+            digitalWrite(DISTANCESENSOR_PWR, LOW);
+        #endif
     #endif
 
     #ifdef ADC_EN

@@ -60,6 +60,7 @@
 // 20230714 Added LIGHTNINGSENSOR_EN
 // 20230927 Added configuration for Adafruit Feather RP2040
 // 20231005 Added SESSION_IN_PREFERENCES and NVS_LOG
+// 20231008 [RP2040] Added configuration for distance sensor
 //
 // ToDo:
 // - 
@@ -181,7 +182,7 @@
 #define LIGHTNINGSENSOR_EN
 
 // Enable Ultrasonic Distance Sensor
-#if defined(LORAWAN_NODE)
+#if defined(LORAWAN_NODE) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
     //#define DISTANCESENSOR_EN
 #endif
 
@@ -260,6 +261,11 @@
         #define DISTANCESENSOR_RX       26
         #define DISTANCESENSOR_PWR      25
         #define DISTANCESENSOR_RETRIES  5
+    #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+        #define DISTANCESENSOR_TX       0  // pull-up/open: processed value / low: real-time value
+        #define DISTANCESENSOR_RX       1
+        #define DISTANCESENSOR_PWR      7
+        #define DISTANCESENSOR_RETRIES  8
     #endif
 #endif
 
