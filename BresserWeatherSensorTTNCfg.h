@@ -75,7 +75,7 @@
 // For other architectures than ESP32, see logging.h
 
 // Enable logging for https://github.com/vshymanskyy/Preferences (used for RP2040)
-#define NVS_LOG
+//#define NVS_LOG
 
 //--- Select Board ---
 #if !defined(ARDUINO_TTGO_LoRa32_V1)     && !defined(ARDUINO_TTGO_LoRa32_V2) && \
