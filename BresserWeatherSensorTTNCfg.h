@@ -181,6 +181,9 @@
 // Enable Bresser Lightning Sensor
 #define LIGHTNINGSENSOR_EN
 
+// Enter your time zone (https://remotemonitoringsystems.ca/time-zone-abbreviations.php)
+const char* TZ_INFO    = "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00";
+
 // Enable Ultrasonic Distance Sensor
 #if defined(LORAWAN_NODE) || defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
     //#define DISTANCESENSOR_EN
@@ -282,6 +285,3 @@
     // List of known sensors' BLE addresses
     #define KNOWN_BLE_ADDRESSES {"a4:c1:38:b8:1f:7f"}
 #endif
-
-// Enter your time zone (https://remotemonitoringsystems.ca/time-zone-abbreviations.php)
-const char* TZ_INFO    = "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00";  
