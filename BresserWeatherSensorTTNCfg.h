@@ -109,8 +109,14 @@
 // Battery voltage thresholds for energy saving
 
 // If SLEEP_EN is defined and battery voltage is below BATTERY_WEAK [mV], MCU will sleep for SLEEP_INTERVAL_LONG
-#if defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+#if defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
     // External voltage divider required
+    #pragma message("External voltage divider required for battery voltage measurement.")
+    #pragma message("Setting BATTERY_WEAK 0 (no power-saving).")
+    #define BATTERY_WEAK 0
+#elif defined(FIREBEETLE_COVER_LORA)
+    #pragma message("On-board voltage divider must be enabled for battery voltage measurement (see schematic).")
+    #pragma message("Setting BATTERY_WEAK 0 (no power-saving).")
     #define BATTERY_WEAK 0
 #else
     #define BATTERY_WEAK 3500
@@ -118,8 +124,12 @@
 
 
 // Go to sleep mode immediately after start if battery voltage is below BATTERY_LOW [mV]
-#if defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+#if defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
     // External voltage divider required
+    #pragma message("Setting BATTERY_LOW 0 (no deep-discharge prevention).")
+    #define BATTERY_LOW 0
+#elif defined(FIREBEETLE_COVER_LORA)
+    #pragma message("Setting BATTERY_LOW 0 (no deep-discharge prevention).")
     #define BATTERY_LOW 0
 #else
     #define BATTERY_LOW 3200
