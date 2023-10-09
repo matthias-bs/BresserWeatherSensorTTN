@@ -62,6 +62,8 @@
 // 20231005 Added SESSION_IN_PREFERENCES and NVS_LOG
 // 20231008 [RP2040] Added configuration for distance sensor
 // 20231009 Added configuration for FIREBEETLE_COVER_LORA
+//          Improved config for Firebeetle Cover LoRa and 
+//          Adafruit Feather ESP32-S2 (default battery voltage thresholds)
 //
 // ToDo:
 // - 
