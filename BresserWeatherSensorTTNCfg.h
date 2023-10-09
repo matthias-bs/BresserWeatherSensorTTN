@@ -61,6 +61,7 @@
 // 20230927 Added configuration for Adafruit Feather RP2040
 // 20231005 Added SESSION_IN_PREFERENCES and NVS_LOG
 // 20231008 [RP2040] Added configuration for distance sensor
+// 20231009 Added configuration for FIREBEETLE_COVER_LORA
 //
 // ToDo:
 // - 
@@ -82,7 +83,10 @@
     !defined(ARDUINO_TTGO_LoRa32_v21new) && !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) && \
     !defined(ARDUINO_FEATHER_ESP32)      && !defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
     // Use pinning for LoRaWAN Node 
-    #define LORAWAN_NODE
+    //#define LORAWAN_NODE
+
+    // Use pinning for Firebeetle Cover LoRa
+    #define FIREBEETLE_COVER_LORA
 #endif
 
 //--- Select LoRaWAN Network ---
@@ -202,7 +206,7 @@ const char* TZ_INFO    = "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00";
         #define PIN_ADC_IN        35
     #elif defined(ARDUINO_FEATHER_ESP32)
         #define PIN_ADC_IN        A13
-    #elif defined(LORAWAN_NODE)
+    #elif defined(LORAWAN_NODE) || defined(FIREBEETLE_COVER_LORA)
         #define PIN_ADC_IN        A0
     #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
         #define PIN_ADC_IN        A0
@@ -249,7 +253,7 @@ const char* TZ_INFO    = "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00";
         #define PIN_ONEWIRE_BUS   21
     #elif defined(ARDUINO_FEATHER_ESP32) || defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
         #define PIN_ONEWIRE_BUS   15
-    #elif defined(LORAWAN_NODE)
+    #elif defined(LORAWAN_NODE) || defined(FIREBEETLE_COVER_LORA)
         #define PIN_ONEWIRE_BUS   5
     #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
         #define PIN_ONEWIRE_BUS   6
