@@ -64,6 +64,7 @@
 // 20231009 Added configuration for FIREBEETLE_COVER_LORA
 //          Improved config for Firebeetle Cover LoRa and 
 //          Adafruit Feather ESP32-S2 (default battery voltage thresholds)
+//          Renamed FIREBEETLE_COVER_LORA in FIREBEETLE_ESP32_COVER_LORA
 //
 // ToDo:
 // - 
@@ -88,7 +89,7 @@
     //#define LORAWAN_NODE
 
     // Use pinning for Firebeetle Cover LoRa
-    #define FIREBEETLE_COVER_LORA
+    #define FIREBEETLE_ESP32_COVER_LORA
 #endif
 
 //--- Select LoRaWAN Network ---
@@ -116,7 +117,7 @@
     #pragma message("External voltage divider required for battery voltage measurement.")
     #pragma message("Setting BATTERY_WEAK 0 (no power-saving).")
     #define BATTERY_WEAK 0
-#elif defined(FIREBEETLE_COVER_LORA)
+#elif defined(FIREBEETLE_ESP32_COVER_LORA)
     #pragma message("On-board voltage divider must be enabled for battery voltage measurement (see schematic).")
     #pragma message("Setting BATTERY_WEAK 0 (no power-saving).")
     #define BATTERY_WEAK 0
@@ -130,7 +131,7 @@
     // External voltage divider required
     #pragma message("Setting BATTERY_LOW 0 (no deep-discharge prevention).")
     #define BATTERY_LOW 0
-#elif defined(FIREBEETLE_COVER_LORA)
+#elif defined(FIREBEETLE_ESP32_COVER_LORA)
     #pragma message("Setting BATTERY_LOW 0 (no deep-discharge prevention).")
     #define BATTERY_LOW 0
 #else
@@ -218,7 +219,7 @@ const char* TZ_INFO    = "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00";
         #define PIN_ADC_IN        35
     #elif defined(ARDUINO_FEATHER_ESP32)
         #define PIN_ADC_IN        A13
-    #elif defined(LORAWAN_NODE) || defined(FIREBEETLE_COVER_LORA)
+    #elif defined(LORAWAN_NODE) || defined(FIREBEETLE_ESP32_COVER_LORA)
         #define PIN_ADC_IN        A0
     #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
         #define PIN_ADC_IN        A0
@@ -265,7 +266,7 @@ const char* TZ_INFO    = "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00";
         #define PIN_ONEWIRE_BUS   21
     #elif defined(ARDUINO_FEATHER_ESP32) || defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
         #define PIN_ONEWIRE_BUS   15
-    #elif defined(LORAWAN_NODE) || defined(FIREBEETLE_COVER_LORA)
+    #elif defined(LORAWAN_NODE) || defined(FIREBEETLE_ESP32_COVER_LORA)
         #define PIN_ONEWIRE_BUS   5
     #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
         #define PIN_ONEWIRE_BUS   6

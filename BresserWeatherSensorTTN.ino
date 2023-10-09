@@ -117,6 +117,7 @@
 //          (instead of ESP32's RTC RAM)
 // 20231006 [RP2040] Added sleep mode and wake-up by RTC
 // 20231008 [RP2040] Added configuration for distance sensor
+// 20231009 Renamed FIREBEETLE_COVER_LORA in FIREBEETLE_ESP32_COVER_LORA
 //
 // ToDo:
 // - Implement RTC setting/time-keeping after reset
@@ -286,7 +287,7 @@
     #pragma message("ARDUINO_ADAFRUIT_FEATHER_RP2040 defined; assuming RFM95W FeatherWing will be used")
     #pragma message("Required wiring: A to RST, B to DIO1, D to DIO0, E to CS")
     
-#elif defined(FIREBEETLE_COVER_LORA)
+#elif defined(FIREBEETLE_ESP32_COVER_LORA)
     // https://wiki.dfrobot.com/FireBeetle_ESP32_IOT_Microcontroller(V3.0)__Supports_Wi-Fi_&_Bluetooth__SKU__DFR0478
     // https://wiki.dfrobot.com/FireBeetle_Covers_LoRa_Radio_868MHz_SKU_TEL0125
     #define PIN_LMIC_NSS      27 // D4
@@ -294,7 +295,7 @@
     #define PIN_LMIC_DIO0     26 // D3
     #define PIN_LMIC_DIO1      9 // D5
     #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
-    #pragma message("FIREBEETLE_COVER_LORA defined; assuming FireBeetle ESP32 with FireBeetle Cover LoRa will be used")
+    #pragma message("FIREBEETLE_ESP32_COVER_LORA defined; assuming FireBeetle ESP32 with FireBeetle Cover LoRa will be used")
     #pragma message("Required wiring: D2 to RESET, D3 to DIO0, D4 to CS, D5 to DIO1")
 
 #else
