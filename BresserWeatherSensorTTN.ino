@@ -600,11 +600,6 @@ const cMyLoRaWAN::lmic_pinmap myPinMap = {
      .pConfig = NULL
 };
 
-// TODO
-// This will be replaced by using the Preferences library later
-#if defined(ARDUINO_ARCH_RP2040)
-#define RTC_DATA_ATTR static
-#endif
 
 #if !defined(SESSION_IN_PREFERENCES)
     // The following variables are stored in the ESP32's RTC RAM -
@@ -802,7 +797,7 @@ void setup() {
     delay(500);
 
     #if defined(ARDUINO_ARCH_RP2040)
-        log_i("Time saved: %lu", time_saved);
+        log_i("Time saved: %llu", time_saved);
     #endif
     preferences.begin("BWS-TTN", false);
     prefs.ws_timeout = preferences.getUChar("ws_timeout", WEATHERSENSOR_TIMEOUT);
@@ -1349,7 +1344,7 @@ void prepareSleep(void) {
     longSleep = false;
     #ifdef ADC_EN
         // Long sleep interval if battery is weak
-        if (mySensor.getVoltage() < BATTERY_WEAK) {
+        if (mySensor.getVoltage() <= BATTERY_WEAK) {
             sleep_interval = prefs.sleep_interval_long;
             longSleep = true;
         }
@@ -1395,7 +1390,7 @@ void prepareSleep(void) {
         rtc_get_datetime(&dt);
         time_t now = datetime_to_epoch(&dt, NULL);
         watchdog_hw->scratch[0] = now;
-        log_i("Now: %lu", now);
+        log_i("Now: %llu", now);
         
         rp2040.restart();
     #endif
@@ -1593,7 +1588,7 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
             analogReadResolution(12);
         #endif
         
-        if (getVoltage() < BATTERY_LOW) {
+        if (getVoltage() <= BATTERY_LOW) {
           log_i("Battery low!");
           prepareSleep();
         }

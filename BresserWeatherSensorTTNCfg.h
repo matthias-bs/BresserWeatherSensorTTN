@@ -111,7 +111,7 @@
 
 // Battery voltage thresholds for energy saving
 
-// If SLEEP_EN is defined and battery voltage is below BATTERY_WEAK [mV], MCU will sleep for SLEEP_INTERVAL_LONG
+// If SLEEP_EN is defined and battery voltage <= BATTERY_WEAK [mV], MCU will sleep for SLEEP_INTERVAL_LONG
 #if defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
     // External voltage divider required
     #pragma message("External voltage divider required for battery voltage measurement.")
@@ -126,7 +126,7 @@
 #endif
 
 
-// Go to sleep mode immediately after start if battery voltage is below BATTERY_LOW [mV]
+// Go to sleep mode immediately after start if battery voltage <= BATTERY_LOW [mV]
 #if defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) || defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2)
     // External voltage divider required
     #pragma message("Setting BATTERY_LOW 0 (no deep-discharge prevention).")
@@ -144,7 +144,7 @@
 // If SLEEP_EN is defined, MCU will sleep for SLEEP_INTERVAL seconds after succesful transmission
 #define SLEEP_INTERVAL 360
 
-// Long sleep interval, MCU will sleep for SLEEP_INTERVAL_LONG seconds if battery voltage is below BATTERY_WEAK
+// Long sleep interval, MCU will sleep for SLEEP_INTERVAL_LONG seconds if battery voltage <= BATTERY_WEAK
 #define SLEEP_INTERVAL_LONG 900
 
 // RTC to network time sync interval (in minutes)
