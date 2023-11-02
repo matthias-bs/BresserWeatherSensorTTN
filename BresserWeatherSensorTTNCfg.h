@@ -65,6 +65,8 @@
 //          Improved config for Firebeetle Cover LoRa and 
 //          Adafruit Feather ESP32-S2 (default battery voltage thresholds)
 //          Renamed FIREBEETLE_COVER_LORA in FIREBEETLE_ESP32_COVER_LORA
+// 20231102 Added ARDUINO_THINGPULSE_EPULSE_FEATHER for special
+//          VBAT voltage divider
 //
 // ToDo:
 // - 
@@ -90,6 +92,13 @@
 
     // Use pinning for Firebeetle Cover LoRa
     #define FIREBEETLE_ESP32_COVER_LORA
+#endif
+
+#if defined(ARDUINO_FEATHER_ESP32)
+    // The Thingpulse ePulse Feather board has the same pinout as
+    // the Adafruit Feather ESP32 board, but a different VBAT voltage divider!
+    // See https://github.com/matthias-bs/BresserWeatherSensorTTN/issues/55
+    //#define ARDUINO_THINGPULSE_EPULSE_FEATHER
 #endif
 
 //--- Select LoRaWAN Network ---
@@ -291,7 +300,11 @@ const char* TZ_INFO    = "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00";
 
 #ifdef ADC_EN
     // Voltage divider R1 / (R1 + R2) -> V_meas = V(R1 + R2); V_adc = V(R1)
-    const float UBATT_DIV         = 0.5;       
+    #if defined(ARDUINO_THINGPULSE_EPULSE_FEATHER)
+        const float UBATT_DIV         = 0.6812;
+    #else
+        const float UBATT_DIV         = 0.5;
+    #endif
     const uint8_t UBATT_SAMPLES   = 10;
 #endif
 
