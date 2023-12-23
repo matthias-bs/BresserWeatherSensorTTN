@@ -118,9 +118,9 @@
 // 20231006 [RP2040] Added sleep mode and wake-up by RTC
 // 20231008 [RP2040] Added configuration for distance sensor
 // 20231009 Renamed FIREBEETLE_COVER_LORA in FIREBEETLE_ESP32_COVER_LORA
+// 20231223 Updated to BresserWeatherSensorReceiver v0.20.1
 //
 // ToDo:
-// - Implement RTC setting/time-keeping after reset
 // - Split this file
 //
 // Notes:
@@ -1641,8 +1641,8 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
             }
 
             // If weather sensor has be found and rain data is valid, update statistics
-            if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].rain_ok) {
-                rainGauge.update(timeinfo, weatherSensor.sensor[ws].rain_mm, weatherSensor.sensor[ws].startup, rg_overflow);
+            if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].w.rain_ok) {
+                rainGauge.update(timeinfo, weatherSensor.sensor[ws].w.rain_mm, weatherSensor.sensor[ws].startup, rg_overflow);
             }
         }
     #endif
@@ -1657,8 +1657,8 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
             int ls = weatherSensor.findType(SENSOR_TYPE_LIGHTNING);
 
             // If lightning sensor has be found and data is valid, run post-processing
-            if ((ls > -1) && weatherSensor.sensor[ls].valid && weatherSensor.sensor[ls].lightning_ok) {
-                lightningProc.update(tnow, weatherSensor.sensor[ls].lightning_count, weatherSensor.sensor[ls].lightning_distance_km, weatherSensor.sensor[ls].startup);
+            if ((ls > -1) && weatherSensor.sensor[ls].valid) {
+                lightningProc.update(tnow, weatherSensor.sensor[ls].lgt.strike_count, weatherSensor.sensor[ls].lgt.distance_km, weatherSensor.sensor[ls].startup);
             }         
         }
     #endif
@@ -1890,12 +1890,12 @@ cSensor::doUplink(void) {
     
     // Debug output for weather sensor data
     if (ws > -1) {
-      log_i("Air Temperature:    % 3.1f °C",   weatherSensor.sensor[ws].temp_c);
-      log_i("Humidity:            %2d   %%",   weatherSensor.sensor[ws].humidity);
-      log_i("Rain Gauge:       %7.1f mm",      weatherSensor.sensor[ws].rain_mm);
-      log_i("Wind Speed (avg.):    %3.1f m/s", weatherSensor.sensor[ws].wind_avg_meter_sec_fp1/10.0);
-      log_i("Wind Speed (max.):    %3.1f m/s", weatherSensor.sensor[ws].wind_gust_meter_sec_fp1/10.0);
-      log_i("Wind Direction:     %4.1f °",     weatherSensor.sensor[ws].wind_direction_deg_fp1/10.0);
+      log_i("Air Temperature:    % 3.1f °C",   weatherSensor.sensor[ws].w.temp_c);
+      log_i("Humidity:            %2d   %%",   weatherSensor.sensor[ws].w.humidity);
+      log_i("Rain Gauge:       %7.1f mm",      weatherSensor.sensor[ws].w.rain_mm);
+      log_i("Wind Speed (avg.):    %3.1f m/s", weatherSensor.sensor[ws].w.wind_avg_meter_sec_fp1/10.0);
+      log_i("Wind Speed (max.):    %3.1f m/s", weatherSensor.sensor[ws].w.wind_gust_meter_sec_fp1/10.0);
+      log_i("Wind Direction:     %4.1f °",     weatherSensor.sensor[ws].w.wind_direction_deg_fp1/10.0);
     } else {
       log_i("-- Weather Sensor Failure");
     }
@@ -1903,8 +1903,8 @@ cSensor::doUplink(void) {
     // Debug output for soil sensor data
     #ifdef SOILSENSOR_EN
       if (s1 > -1) {
-        log_i("Soil Temperature 1: %3.1f °C",  weatherSensor.sensor[s1].temp_c);
-        log_i("Soil Moisture 1:     %2d   %%",  weatherSensor.sensor[s1].moisture);      
+        log_i("Soil Temperature 1: %3.1f °C",  weatherSensor.sensor[s1].soil.temp_c);
+        log_i("Soil Moisture 1:     %2d   %%",  weatherSensor.sensor[s1].soil.moisture);      
       } else {
         log_i("-- Soil Sensor 1 Failure");
       }
@@ -1913,8 +1913,8 @@ cSensor::doUplink(void) {
     // Debug output for lightning sensor data
     #ifdef LIGHTNINGSENSOR_EN
       if (ls > -1) {
-        log_i("Lightning counter:  %3d",  weatherSensor.sensor[ls].lightning_count);
-        log_i("Lightning distance:  %2d   km",  weatherSensor.sensor[ls].lightning_distance_km);    
+        log_i("Lightning counter:  %3d",  weatherSensor.sensor[ls].lgt.strike_count);
+        log_i("Lightning distance:  %2d   km",  weatherSensor.sensor[ls].lgt.distance_km);    
       } else {
         log_i("-- Lightning Sensor Failure");
       }
@@ -2011,18 +2011,18 @@ cSensor::doUplink(void) {
     // Weather sensor data
     if (ws > -1) {
         // weather sensor data available
-        encoder.writeTemperature(weatherSensor.sensor[ws].temp_c);
-        encoder.writeUint8(weatherSensor.sensor[ws].humidity);
+        encoder.writeTemperature(weatherSensor.sensor[ws].w.temp_c);
+        encoder.writeUint8(weatherSensor.sensor[ws].w.humidity);
         #ifdef ENCODE_AS_FLOAT
-            encoder.writeRawFloat(weatherSensor.sensor[ws].wind_gust_meter_sec);
-            encoder.writeRawFloat(weatherSensor.sensor[ws].wind_avg_meter_sec);
-            encoder.writeRawFloat(weatherSensor.sensor[ws].wind_direction_deg);
+            encoder.writeRawFloat(weatherSensor.sensor[ws].w.wind_gust_meter_sec);
+            encoder.writeRawFloat(weatherSensor.sensor[ws].w.wind_avg_meter_sec);
+            encoder.writeRawFloat(weatherSensor.sensor[ws].w.wind_direction_deg);
         #else
-            encoder.writeUint16(weatherSensor.sensor[ws].wind_gust_meter_sec_fp1);
-            encoder.writeUint16(weatherSensor.sensor[ws].wind_avg_meter_sec_fp1);
-            encoder.writeUint16(weatherSensor.sensor[ws].wind_direction_deg_fp1);
+            encoder.writeUint16(weatherSensor.sensor[ws].w.wind_gust_meter_sec_fp1);
+            encoder.writeUint16(weatherSensor.sensor[ws].w.wind_avg_meter_sec_fp1);
+            encoder.writeUint16(weatherSensor.sensor[ws].w.wind_direction_deg_fp1);
         #endif
-        encoder.writeRawFloat(weatherSensor.sensor[ws].rain_mm);
+        encoder.writeRawFloat(weatherSensor.sensor[ws].w.rain_mm);
     } else {
         // fill with suspicious dummy values
         encoder.writeTemperature(-30);
@@ -2061,8 +2061,8 @@ cSensor::doUplink(void) {
     #ifdef SOILSENSOR_EN
         if (s1 > -1) {
             // soil sensor data available
-            encoder.writeTemperature(weatherSensor.sensor[s1].temp_c);
-            encoder.writeUint8(weatherSensor.sensor[s1].moisture);
+            encoder.writeTemperature(weatherSensor.sensor[s1].soil.temp_c);
+            encoder.writeUint8(weatherSensor.sensor[s1].soil.moisture);
         } else {
             // fill with suspicious dummy values
             encoder.writeTemperature(-30);
@@ -2072,7 +2072,7 @@ cSensor::doUplink(void) {
 
     // Rain data statistics
     #ifdef RAINDATA_EN
-        if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].rain_ok) {
+        if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].w.rain_ok) {
             log_i("Rain past 60min:  %7.1f mm", rainGauge.pastHour());
             log_i("Rain curr. day:   %7.1f mm", rainGauge.currentDay());
             log_i("Rain curr. week:  %7.1f mm", rainGauge.currentWeek());
