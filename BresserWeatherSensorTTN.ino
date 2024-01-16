@@ -119,6 +119,8 @@
 // 20231008 [RP2040] Added configuration for distance sensor
 // 20231009 Renamed FIREBEETLE_COVER_LORA in FIREBEETLE_ESP32_COVER_LORA
 // 20231223 Updated to BresserWeatherSensorReceiver v0.20.1
+// 20240116 Fixed rain counter overflow value for SENSOR_TYPE_WEATHER0
+//          (see https://github.com/matthias-bs/BresserWeatherSensorReceiver/releases/tag/v0.5.1)
 //
 // ToDo:
 // - Split this file
@@ -1632,7 +1634,7 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
             // Try to find SENSOR_TYPE_WEATHER0
             int ws = weatherSensor.findType(SENSOR_TYPE_WEATHER0);
             if (ws > -1) {
-                rg_overflow = 100;
+                rg_overflow = 1000;
             }
             else {
                 // Try to find SENSOR_TYPE_WEATHER1
@@ -1642,7 +1644,7 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
 
             // If weather sensor has be found and rain data is valid, update statistics
             if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].w.rain_ok) {
-                rainGauge.update(timeinfo, weatherSensor.sensor[ws].w.rain_mm, weatherSensor.sensor[ws].startup, rg_overflow);
+                rainGauge.update(tnow, weatherSensor.sensor[ws].w.rain_mm, weatherSensor.sensor[ws].startup, rg_overflow);
             }
         }
     #endif
