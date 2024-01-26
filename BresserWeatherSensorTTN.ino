@@ -1630,21 +1630,20 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
             localtime_r(&tnow, &timeinfo);
 
             // Find weather sensor and determine rain gauge overflow limit
-            uint32_t rg_overflow;
             // Try to find SENSOR_TYPE_WEATHER0
             int ws = weatherSensor.findType(SENSOR_TYPE_WEATHER0);
             if (ws > -1) {
-                rg_overflow = 1000;
+                rainGauge.set_max(1000);
             }
             else {
                 // Try to find SENSOR_TYPE_WEATHER1
                 ws = weatherSensor.findType(SENSOR_TYPE_WEATHER1);
-                rg_overflow = 100000;
+                rainGauge.set_max(100000);
             }
 
             // If weather sensor has be found and rain data is valid, update statistics
             if ((ws > -1) && weatherSensor.sensor[ws].valid && weatherSensor.sensor[ws].w.rain_ok) {
-                rainGauge.update(tnow, weatherSensor.sensor[ws].w.rain_mm, weatherSensor.sensor[ws].startup, rg_overflow);
+                rainGauge.update(tnow, weatherSensor.sensor[ws].w.rain_mm, weatherSensor.sensor[ws].startup);
             }
         }
     #endif
