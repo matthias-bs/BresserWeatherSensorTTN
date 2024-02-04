@@ -652,7 +652,7 @@ const cMyLoRaWAN::lmic_pinmap myPinMap = {
 WeatherSensor weatherSensor;
 
 /// ESP32 preferences (stored in flash memory)
-Preferences preferences;
+static Preferences preferences;
 
 struct sPrefs {
 uint8_t   ws_timeout;           //!< preferences: weather sensor timeout
@@ -1362,7 +1362,7 @@ void prepareSleep(void) {
         sleep_interval = sleep_interval - ((timeinfo.tm_min * 60) % sleep_interval + timeinfo.tm_sec);  
     }
     
-    log_i("Shutdown() - sleeping for %lu s", sleep_interval);
+    log_i("Shutdown() - sleeping for %u s", sleep_interval);
     #if defined(ESP32)
         sleep_interval += 20; // Added extra 20-secs of sleep to allow for slow ESP32 RTC timers
         ESP.deepSleep(sleep_interval * 1000000LL);
@@ -1914,7 +1914,7 @@ cSensor::doUplink(void) {
     // Debug output for lightning sensor data
     #ifdef LIGHTNINGSENSOR_EN
       if (ls > -1) {
-        log_i("Lightning counter:  %3d",  weatherSensor.sensor[ls].lgt.strike_count);
+        log_i("Lightning counter: %4d",  weatherSensor.sensor[ls].lgt.strike_count);
         log_i("Lightning distance:  %2d   km",  weatherSensor.sensor[ls].lgt.distance_km);    
       } else {
         log_i("-- Lightning Sensor Failure");
