@@ -1,13 +1,7 @@
 var searchData=
 [
-  ['raingauge_91',['rainGauge',['../_bresser_weather_sensor_t_t_n_8ino.html#a6965ff1ec8f32647b494bd1a458575f9',1,'BresserWeatherSensorTTN.ino']]],
-  ['rssi_92',['rssi',['../struct_ble_data_s.html#a0eb69624bdc983a6ce9ba9c2e40c2d44',1,'BleDataS']]],
-  ['rtc_93',['rtc',['../_bresser_weather_sensor_t_t_n_8ino.html#a9914c8ecdaedd4bd9c93c344bea096c0',1,'BresserWeatherSensorTTN.ino']]],
-  ['rtclastclocksync_94',['rtcLastClockSync',['../_bresser_weather_sensor_t_t_n_8ino.html#af8215cbee53251f169443553ad8d7d85',1,'BresserWeatherSensorTTN.ino']]],
-  ['rtcsavedextrainfo_95',['rtcSavedExtraInfo',['../_bresser_weather_sensor_t_t_n_8ino.html#a9b7bd5038658fbb5b87d8a9feaedf86f',1,'BresserWeatherSensorTTN.ino']]],
-  ['rtcsavednextrainfo_96',['rtcSavedNExtraInfo',['../_bresser_weather_sensor_t_t_n_8ino.html#ad89f826d843e957e7bc15292183af8de',1,'BresserWeatherSensorTTN.ino']]],
-  ['rtcsavedsessioninfo_97',['rtcSavedSessionInfo',['../_bresser_weather_sensor_t_t_n_8ino.html#a7962cbb55df5c695bafdf9a3ee1552f4',1,'BresserWeatherSensorTTN.ino']]],
-  ['rtcsavedsessionstate_98',['rtcSavedSessionState',['../_bresser_weather_sensor_t_t_n_8ino.html#a6e410fc410377db756bbe398b4636d8d',1,'BresserWeatherSensorTTN.ino']]],
-  ['rtcsyncreq_99',['rtcSyncReq',['../_bresser_weather_sensor_t_t_n_8ino.html#a2525adfaa9bcf416f565b423a40a32a6',1,'BresserWeatherSensorTTN.ino']]],
-  ['runtimeexpired_100',['runtimeExpired',['../_bresser_weather_sensor_t_t_n_8ino.html#ac194a1d95d347c904057f714e1a5d43e',1,'BresserWeatherSensorTTN.ino']]]
+  ['sleep_5finterval_99',['sleep_interval',['../structs_prefs.html#aba8a7872f5c7bbd1cc6caf4bf3efe540',1,'sPrefs']]],
+  ['sleep_5finterval_5flong_100',['sleep_interval_long',['../structs_prefs.html#a837ef5ae3d2ef2cd43e08d2fe885bfb8',1,'sPrefs']]],
+  ['sleepreq_101',['sleepReq',['../_bresser_weather_sensor_t_t_n_8ino.html#af6a553cefc7cf2dddb686b3bd2631bc5',1,'BresserWeatherSensorTTN.ino']]],
+  ['sleeptimeout_102',['sleepTimeout',['../_bresser_weather_sensor_t_t_n_8ino.html#aac96bf5854bc0dc7bf2a09e651cd5bfa',1,'BresserWeatherSensorTTN.ino']]]
 ];

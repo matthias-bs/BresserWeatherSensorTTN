@@ -39,7 +39,6 @@ var _bresser_weather_sensor_t_t_n_8ino =
     [ "mySensor", "_bresser_weather_sensor_t_t_n_8ino.html#a029e01f5b686d0569063faeb77f88091", null ],
     [ "oneWire", "_bresser_weather_sensor_t_t_n_8ino.html#a988a13c4fd0ed4eba1d6dff73d064914", null ],
     [ "PAYLOAD_SIZE", "_bresser_weather_sensor_t_t_n_8ino.html#ab11c1a19f4cab5fae7885a6da09e064a", null ],
-    [ "preferences", "_bresser_weather_sensor_t_t_n_8ino.html#a6ea06cf7b8092a0adaf07614d7ece59d", null ],
     [ "prefs", "_bresser_weather_sensor_t_t_n_8ino.html#a0c6494fefd2776eddd1baf6add6cf6d3", null ],
     [ "rainGauge", "_bresser_weather_sensor_t_t_n_8ino.html#a6965ff1ec8f32647b494bd1a458575f9", null ],
     [ "rtc", "_bresser_weather_sensor_t_t_n_8ino.html#a9914c8ecdaedd4bd9c93c344bea096c0", null ],
