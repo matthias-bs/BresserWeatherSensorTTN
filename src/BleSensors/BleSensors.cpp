@@ -66,7 +66,7 @@ private:
     TheengsDecoder decoder;
     bool device_found = false;
     unsigned idx;
-    StaticJsonDocument<512> doc;
+    JsonDocument doc;
 
     log_v("Advertised Device: %s", advertisedDevice->toString().c_str());
     JsonObject BLEdata = doc.to<JsonObject>();
