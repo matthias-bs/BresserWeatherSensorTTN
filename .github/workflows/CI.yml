@@ -74,7 +74,7 @@ jobs:
           |
           #declare -a required_libs=("https://github.com/matthias-bs/BresserWeatherSensorReceiver.git"
           declare -a required_libs=(
-            "RadioLib@6.4.0"
+            "RadioLib@6.4.2"
             "BresserWeatherSensorReceiver@0.22.0"
             "MCCI LoRaWAN LMIC library@4.1.1"
             "MCCI Arduino LoRaWAN Library@0.10.0"
