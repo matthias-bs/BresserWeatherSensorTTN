@@ -34,7 +34,7 @@
     "Arduino-Temperature-Control-Library": "milesburton/Arduino-Temperature-Control-Library#semver:^3.9.1",
     "NimBLE-Arduino": "h2zero/NimBLE-Arduino#semver:^1.4.1",
     "ATC_MiThermometer": "matthias-bs/ATC_MiThermometer#semver:^0.2.1",
-    "TheengsDecoder": "theengs/decoder#semver:^1.6.8",
+    "TheengsDecoder": "theengs/decoder#semver:^1.7.0",
     "Preferences": "vshymanskyy/Preferences#semver:^2.1.0"
   }
 }
