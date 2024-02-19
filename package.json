@@ -1,7 +1,7 @@
 {
   "name": "BresserWeatherSensorTTN",
   "version": "0.12.0",
-  "description": "Bresser 5-in-1/6-in-1/7-in-1 868 MHz Weather Sensor Radio Receiver; provides data via LoRaWAN to The Things Network",
+  "description": "Bresser 5-in-1/6-in-1/7-in-1 868 MHz Weather Sensor Radio Receiver; provides data via LoRaWAN",
   "main": "BresserWeatherSensorTTN.ino",
   "frameworks": "arduino",
   "platforms": [
