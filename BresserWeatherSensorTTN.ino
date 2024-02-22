@@ -121,6 +121,7 @@
 // 20231223 Updated to BresserWeatherSensorReceiver v0.20.1
 // 20240116 Fixed rain counter overflow value for SENSOR_TYPE_WEATHER0
 //          (see https://github.com/matthias-bs/BresserWeatherSensorReceiver/releases/tag/v0.5.1)
+// 20240222 Added weatherSensor.clearSlots() (part of fix for #82), added workaround for (#81)
 //
 // ToDo:
 // - Split this file
@@ -1342,7 +1343,13 @@ void printDateTime(void) {
 
 /// Determine sleep duration and enter Deep Sleep Mode
 void prepareSleep(void) {
-    uint32_t sleep_interval = prefs.sleep_interval;
+    // FIXME 
+    // Workaround for
+    // https://github.com/matthias-bs/BresserWeatherSensorTTN/issues/81
+    //uint32_t sleep_interval = (uint32_t)prefs.sleep_interval;
+    preferences.begin("BWS-TTN", false);
+    uint32_t sleep_interval = preferences.getUShort("sleep_int", SLEEP_INTERVAL);
+    preferences.end();
     longSleep = false;
     #ifdef ADC_EN
         // Long sleep interval if battery is weak
@@ -1607,6 +1614,7 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
     
     #ifndef LORAWAN_DEBUG
         weatherSensor.begin();
+        weatherSensor.clearSlots();
         //bool decode_ok = weatherSensor.getData(prefs.ws_timeout * 1000, DATA_TYPE | DATA_COMPLETE, SENSOR_TYPE_WEATHER1);
         bool decode_ok = weatherSensor.getData(prefs.ws_timeout * 1000, DATA_ALL_SLOTS);
     #else
