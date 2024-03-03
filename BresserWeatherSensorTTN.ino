@@ -122,6 +122,7 @@
 // 20240116 Fixed rain counter overflow value for SENSOR_TYPE_WEATHER0
 //          (see https://github.com/matthias-bs/BresserWeatherSensorReceiver/releases/tag/v0.5.1)
 // 20240222 Added weatherSensor.clearSlots() (part of fix for #82), added workaround for (#81)
+// 20240303 Added evaluation of temp_ok/humidity_ok/rain_ok (#82)
 //
 // ToDo:
 // - Split this file
@@ -1899,9 +1900,21 @@ cSensor::doUplink(void) {
     
     // Debug output for weather sensor data
     if (ws > -1) {
-      log_i("Air Temperature:    % 3.1f °C",   weatherSensor.sensor[ws].w.temp_c);
-      log_i("Humidity:            %2d   %%",   weatherSensor.sensor[ws].w.humidity);
-      log_i("Rain Gauge:       %7.1f mm",      weatherSensor.sensor[ws].w.rain_mm);
+      if (weatherSensor.sensor[ws].w.temp_ok) {
+        log_i("Air Temperature:    %3.1f °C",   weatherSensor.sensor[ws].w.temp_c);
+      } else {
+        log_i("Air Temperature:     --.- °C");
+      }
+      if (weatherSensor.sensor[ws].w.humidity_ok) {
+        log_i("Humidity:            %2d   %%",   weatherSensor.sensor[ws].w.humidity);
+      } else {
+        log_i("Humidity:            --   %%");
+      }
+      if (weatherSensor.sensor[ws].w.rain_ok) {
+        log_i("Rain Gauge:       %7.1f mm",      weatherSensor.sensor[ws].w.rain_mm);
+      } else {
+        log_i("Rain Gauge:       ---.- mm");
+      }
       log_i("Wind Speed (avg.):    %3.1f m/s", weatherSensor.sensor[ws].w.wind_avg_meter_sec_fp1/10.0);
       log_i("Wind Speed (max.):    %3.1f m/s", weatherSensor.sensor[ws].w.wind_gust_meter_sec_fp1/10.0);
       log_i("Wind Direction:     %4.1f °",     weatherSensor.sensor[ws].w.wind_direction_deg_fp1/10.0);
@@ -2020,8 +2033,16 @@ cSensor::doUplink(void) {
     // Weather sensor data
     if (ws > -1) {
         // weather sensor data available
-        encoder.writeTemperature(weatherSensor.sensor[ws].w.temp_c);
-        encoder.writeUint8(weatherSensor.sensor[ws].w.humidity);
+        if (weatherSensor.sensor[ws].w.temp_ok) {
+            encoder.writeTemperature(weatherSensor.sensor[ws].w.temp_c);
+        } else {
+            encoder.writeTemperature(-30);
+        }
+        if (weatherSensor.sensor[ws].w.humidity_ok) {
+            encoder.writeUint8(weatherSensor.sensor[ws].w.humidity);
+        } else {
+            encoder.writeUint8(0);
+        }
         #ifdef ENCODE_AS_FLOAT
             encoder.writeRawFloat(weatherSensor.sensor[ws].w.wind_gust_meter_sec);
             encoder.writeRawFloat(weatherSensor.sensor[ws].w.wind_avg_meter_sec);
@@ -2031,7 +2052,11 @@ cSensor::doUplink(void) {
             encoder.writeUint16(weatherSensor.sensor[ws].w.wind_avg_meter_sec_fp1);
             encoder.writeUint16(weatherSensor.sensor[ws].w.wind_direction_deg_fp1);
         #endif
-        encoder.writeRawFloat(weatherSensor.sensor[ws].w.rain_mm);
+        if (weatherSensor.sensor[ws].w.rain_ok) {
+            encoder.writeRawFloat(weatherSensor.sensor[ws].w.rain_mm);
+        } else {
+            encoder.writeRawFloat(0);
+        }
     } else {
         // fill with suspicious dummy values
         encoder.writeTemperature(-30);
