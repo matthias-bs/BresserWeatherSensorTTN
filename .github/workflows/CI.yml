@@ -145,7 +145,7 @@ jobs:
                 # hardcoded fqbn, because 'esp32:esp32@1.0.6' did not work
                 arduino-cli compile --libraries /home/runner/work/BresserWeatherSensorReceiver --fqbn esp32:esp32:esp32${{ steps.prep.outputs.options }} $example --warnings=${{ steps.prep.outputs.warnings }}
               else
-                arduino-cli compile --show-properties --libraries /home/runner/work/BresserWeatherSensorReceiver --fqbn ${{ matrix.board }}${{ steps.prep.outputs.options }} $example --warnings=${{ steps.prep.outputs.warnings }}        
+                #arduino-cli compile --show-properties --libraries /home/runner/work/BresserWeatherSensorReceiver --fqbn ${{ matrix.board }}${{ steps.prep.outputs.options }} $example --warnings=${{ steps.prep.outputs.warnings }}        
                 arduino-cli compile --libraries /home/runner/work/BresserWeatherSensorReceiver --fqbn ${{ matrix.board }}${{ steps.prep.outputs.options }} $example --warnings=${{ steps.prep.outputs.warnings }}
               fi
 
