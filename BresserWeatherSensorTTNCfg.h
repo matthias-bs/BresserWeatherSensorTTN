@@ -69,6 +69,11 @@
 //          VBAT voltage divider
 // 20240325 Added configuration for M5Stack Core2 with M5Stack Module LoRa868
 //
+// Note:
+//  Depending on the environment, selecting M5Stack Core2 defines
+//  either ARDUINO_M5STACK_Core2 or ARDUINO_M5STACK_CORE2
+//  so both variants have to be checked!!!
+//
 // ToDo:
 // -
 //
@@ -88,7 +93,7 @@
 #if !defined(ARDUINO_TTGO_LoRa32_V1) && !defined(ARDUINO_TTGO_LoRa32_V2) &&               \
     !defined(ARDUINO_TTGO_LoRa32_v21new) && !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) && \
     !defined(ARDUINO_FEATHER_ESP32) && !defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) &&       \
-    !defined(ARDUINO_M5STACK_Core2)
+    !defined(ARDUINO_M5STACK_Core2) && !defined(ARDUINO_M5STACK_CORE2)
 // Use pinning for LoRaWAN Node
 #define LORAWAN_NODE
 
@@ -132,7 +137,7 @@
 #pragma message("On-board voltage divider must be enabled for battery voltage measurement (see schematic).")
 #pragma message("Setting BATTERY_WEAK 0 (no power-saving).")
 #define BATTERY_WEAK 0
-#elif defined(ARDUINO_M5STACK_Core2)
+#elif defined(ARDUINO_M5STACK_Core2) || defined(ARDUINO_M5STACK_CORE2)
 #pragma message("Setting BATTERY_WEAK 0 (no power-saving).")
 #define BATTERY_WEAK 0
 #else
@@ -144,7 +149,7 @@
 // External voltage divider required
 #pragma message("Setting BATTERY_LOW 0 (no deep-discharge prevention).")
 #define BATTERY_LOW 0
-#elif defined(FIREBEETLE_ESP32_COVER_LORA) || defined(ARDUINO_M5STACK_Core2)
+#elif defined(FIREBEETLE_ESP32_COVER_LORA) || defined(ARDUINO_M5STACK_Core2) || defined(ARDUINO_M5STACK_CORE2)
 #pragma message("Setting BATTERY_LOW 0 (no deep-discharge prevention).")
 #define BATTERY_LOW 0
 #else
@@ -190,7 +195,7 @@
 // Enable rain data statistics
 #define RAINDATA_EN
 
-#if !defined(ARDUINO_M5STACK_Core2)
+#if !defined(ARDUINO_M5STACK_Core2) && !defined(ARDUINO_M5STACK_CORE2)
 // Enable battery / supply voltage measurement
 // Note: For M5Stack Core2 use 'float batVoltage = M5.Axp.GetBatVoltage();'
 #define ADC_EN
