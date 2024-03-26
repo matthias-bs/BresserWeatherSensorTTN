@@ -88,7 +88,7 @@
 #if !defined(ARDUINO_TTGO_LoRa32_V1) && !defined(ARDUINO_TTGO_LoRa32_V2) &&               \
     !defined(ARDUINO_TTGO_LoRa32_v21new) && !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) && \
     !defined(ARDUINO_FEATHER_ESP32) && !defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) &&       \
-    !defined(ARDUINO_M5STACK_CORE2)
+    !defined(ARDUINO_M5STACK_Core2)
 // Use pinning for LoRaWAN Node
 #define LORAWAN_NODE
 
@@ -190,7 +190,7 @@
 // Enable rain data statistics
 #define RAINDATA_EN
 
-#if !defined(ARDUINO_M5STACK_CORE2)
+#if !defined(ARDUINO_M5STACK_Core2)
 // Enable battery / supply voltage measurement
 // Note: For M5Stack Core2 use 'float batVoltage = M5.Axp.GetBatVoltage();'
 #define ADC_EN
