@@ -100,7 +100,6 @@ $(document).ready(function(){initNavTree('_bresser_weather_sensor_t_t_n_8ino.htm
 <code>#include &quot;logging.h&quot;</code><br />
 <code>#include &quot;RainGauge.h&quot;</code><br />
 <code>#include &quot;Lightning.h&quot;</code><br />
-<code>#include &lt;DallasTemperature.h&gt;</code><br />
 <code>#include &quot;WeatherSensorCfg.h&quot;</code><br />
 <code>#include &quot;WeatherSensor.h&quot;</code><br />
 <code>#include &quot;src/BleSensors/BleSensors.h&quot;</code><br />
@@ -121,19 +120,19 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a571157f00cf5e951a8dd09da262c4969"><td class="memItemLeft" align="right" valign="top"><a id="a571157f00cf5e951a8dd09da262c4969"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PIN_LMIC_NSS</b>&#160;&#160;&#160;27</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PIN_LMIC_NSS</b>&#160;&#160;&#160;14</td></tr>
 <tr class="separator:a571157f00cf5e951a8dd09da262c4969"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ceab0eeca5117b34ccf947d5cbde17e"><td class="memItemLeft" align="right" valign="top"><a id="a5ceab0eeca5117b34ccf947d5cbde17e"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PIN_LMIC_RST</b>&#160;&#160;&#160;25</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PIN_LMIC_RST</b>&#160;&#160;&#160;12</td></tr>
 <tr class="separator:a5ceab0eeca5117b34ccf947d5cbde17e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae31c022205467c794cfd95cf00b79f59"><td class="memItemLeft" align="right" valign="top"><a id="ae31c022205467c794cfd95cf00b79f59"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PIN_LMIC_DIO0</b>&#160;&#160;&#160;26</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PIN_LMIC_DIO0</b>&#160;&#160;&#160;4</td></tr>
 <tr class="separator:ae31c022205467c794cfd95cf00b79f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42ca77e85b6281f35ed93f0073b929b0"><td class="memItemLeft" align="right" valign="top"><a id="a42ca77e85b6281f35ed93f0073b929b0"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PIN_LMIC_DIO1</b>&#160;&#160;&#160;9</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PIN_LMIC_DIO1</b>&#160;&#160;&#160;16</td></tr>
 <tr class="separator:a42ca77e85b6281f35ed93f0073b929b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95018e5f518ea1ef6c93a60e4e53f25a"><td class="memItemLeft" align="right" valign="top"><a id="a95018e5f518ea1ef6c93a60e4e53f25a"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>PIN_LMIC_DIO2</b>&#160;&#160;&#160;cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PIN_LMIC_DIO2</b>&#160;&#160;&#160;17</td></tr>
 <tr class="separator:a95018e5f518ea1ef6c93a60e4e53f25a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac77db84cf42ba546550a69ac744c14ff"><td class="memItemLeft" align="right" valign="top"><a id="ac77db84cf42ba546550a69ac744c14ff"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>MAGIC1</b>&#160;&#160;&#160;(('m' &lt;&lt; 24) | ('g' &lt; 16) | ('c' &lt;&lt; 8) | '1')</td></tr>
@@ -178,10 +177,6 @@ Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a884d71ae866f4092712d745266d0ca9a">printDateTime</a> (void)</td></tr>
 <tr class="memdesc:a884d71ae866f4092712d745266d0ca9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print date and time (i.e. local time) <br /></td></tr>
 <tr class="separator:a884d71ae866f4092712d745266d0ca9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1adb9131e79d1a1a94f258bf329e31d6"><td class="memItemLeft" align="right" valign="top"><a id="a1adb9131e79d1a1a94f258bf329e31d6"></a>
-OneWire&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a1adb9131e79d1a1a94f258bf329e31d6">oneWire</a> (PIN_ONEWIRE_BUS)</td></tr>
-<tr class="memdesc:a1adb9131e79d1a1a94f258bf329e31d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">OneWire bus. <br /></td></tr>
-<tr class="separator:a1adb9131e79d1a1a94f258bf329e31d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top"><a id="a4fc01d736fe50cf5b977f755b675f11d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
 <tr class="memdesc:a4fc01d736fe50cf5b977f755b675f11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arduino setup. <br /></td></tr>
@@ -268,10 +263,6 @@ RainGauge&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 Lightning&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a2829a7a314e4e8bb9e316ecdd47dd547">lightningProc</a></td></tr>
 <tr class="memdesc:a2829a7a314e4e8bb9e316ecdd47dd547"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lightning sensor post-processing. <br /></td></tr>
 <tr class="separator:a2829a7a314e4e8bb9e316ecdd47dd547"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a988a13c4fd0ed4eba1d6dff73d064914"><td class="memItemLeft" align="right" valign="top"><a id="a988a13c4fd0ed4eba1d6dff73d064914"></a>
-DallasTemperature temp_sensors &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bresser_weather_sensor_t_t_n_8ino.html#a988a13c4fd0ed4eba1d6dff73d064914">oneWire</a></td></tr>
-<tr class="memdesc:a988a13c4fd0ed4eba1d6dff73d064914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dallas temperature sensors connected to OneWire bus. <br /></td></tr>
-<tr class="separator:a988a13c4fd0ed4eba1d6dff73d064914"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a134e5b815ce8cf8454c451c1f5bfb81d"><td class="memItemLeft" align="right" valign="top"><a id="a134e5b815ce8cf8454c451c1f5bfb81d"></a>
 std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>knownBLEAddresses</b> = KNOWN_BLE_ADDRESSES</td></tr>
 <tr class="separator:a134e5b815ce8cf8454c451c1f5bfb81d"><td class="memSeparator" colspan="2">&#160;</td></tr>
