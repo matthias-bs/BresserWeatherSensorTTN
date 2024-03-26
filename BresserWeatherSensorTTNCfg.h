@@ -132,7 +132,7 @@
 #pragma message("On-board voltage divider must be enabled for battery voltage measurement (see schematic).")
 #pragma message("Setting BATTERY_WEAK 0 (no power-saving).")
 #define BATTERY_WEAK 0
-#elif defined(ARDUINO_M5STACK_CORE2)
+#elif defined(ARDUINO_M5STACK_Core2)
 #pragma message("Setting BATTERY_WEAK 0 (no power-saving).")
 #define BATTERY_WEAK 0
 #else
@@ -144,7 +144,7 @@
 // External voltage divider required
 #pragma message("Setting BATTERY_LOW 0 (no deep-discharge prevention).")
 #define BATTERY_LOW 0
-#elif defined(FIREBEETLE_ESP32_COVER_LORA) || defined(ARDUINO_M5STACK_CORE2)
+#elif defined(FIREBEETLE_ESP32_COVER_LORA) || defined(ARDUINO_M5STACK_Core2)
 #pragma message("Setting BATTERY_LOW 0 (no deep-discharge prevention).")
 #define BATTERY_LOW 0
 #else
