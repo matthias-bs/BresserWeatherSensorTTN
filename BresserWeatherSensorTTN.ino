@@ -123,6 +123,7 @@
 //          (see https://github.com/matthias-bs/BresserWeatherSensorReceiver/releases/tag/v0.5.1)
 // 20240222 Added weatherSensor.clearSlots() (part of fix for #82), added workaround for (#81)
 // 20240303 Added evaluation of temp_ok/humidity_ok/rain_ok (#82)
+// 20240325 Added configuration for M5Stack Core2 with M5Stack Module LoRa868
 //
 // ToDo:
 // - Split this file
@@ -168,6 +169,9 @@
 #ifdef ARDUINO_ARCH_RP2040
     #include "src/pico_rtc/pico_rtc_utils.h"
     #include <hardware/rtc.h>
+#endif
+#if defined(ARDUINO_M5STACK_CORE2)
+#include <M5Unified.h>
 #endif
 
 #ifdef RAINDATA_EN
@@ -279,6 +283,19 @@
     #pragma message("NOT TESTED!!!")
     #pragma message("ARDUINO_ADAFRUIT_FEATHER_ESP32 defined; assuming RFM95W FeatherWing will be used")
     #pragma message("Required wiring: A to RST, B to DIO1, D to DIO0, E to CS")
+
+#elif defined(ARDUINO_M5STACK_Core2) || defined(ARDUINO_M5STACK_CORE2)
+    // Note:
+    //    Depending on the environment, selecting M5Stack Core2 defines
+    //    either ARDUINO_M5STACK_Core2 or ARDUINO_M5STACK_CORE2
+    //    so both variants have to be checked!!!
+    #define PIN_LMIC_NSS      33
+    #define PIN_LMIC_RST      26
+    #define PIN_LMIC_DIO0     36
+    #define PIN_LMIC_DIO1     35
+    #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
+    #pragma message("ARDUINO_M5STACK_CORE2 defined; assuming M5Stack Module LoRa868 will be used")
+    #pragma message("Required wiring: DIO1 to GPIO35")
 
 #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
     // Use pinning for Adafruit Feather RP2040 with RFM95W "FeatherWing" ADA3232
@@ -790,6 +807,16 @@ void setup() {
         runtimeExpired   = ((watchdog_hw->scratch[1] & 1) == 1);
         longSleep        = ((watchdog_hw->scratch[1] & 2) == 2);
         rtcLastClockSync = watchdog_hw->scratch[2];
+    #endif
+    #if defined(ARDUINO_M5STACK_CORE2)
+    auto cfg = M5.config();
+    cfg.clear_display = true;  // default=true. clear the screen when begin.
+    cfg.output_power  = true;  // default=true. use external port 5V output.
+    cfg.internal_imu  = false;  // default=true. use internal IMU.
+    cfg.internal_rtc  = true;  // default=true. use internal RTC.
+    cfg.internal_spk  = false;  // default=true. use internal speaker.
+    cfg.internal_mic  = false;  // default=true. use internal microphone.
+    M5.begin(cfg);
     #endif
 
     // set baud rate
