@@ -284,7 +284,7 @@
     #pragma message("ARDUINO_ADAFRUIT_FEATHER_ESP32 defined; assuming RFM95W FeatherWing will be used")
     #pragma message("Required wiring: A to RST, B to DIO1, D to DIO0, E to CS")
 
-#elif defined(ARDUINO_M5STACK_CORE2)
+#elif defined(ARDUINO_M5STACK_Core2)
     #define PIN_LMIC_NSS      33
     #define PIN_LMIC_RST      26
     #define PIN_LMIC_DIO0     36
