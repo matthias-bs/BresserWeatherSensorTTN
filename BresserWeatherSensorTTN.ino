@@ -1397,7 +1397,7 @@ void prepareSleep(void) {
         sleep_interval = sleep_interval - ((timeinfo.tm_min * 60) % sleep_interval + timeinfo.tm_sec);  
     }
     
-    log_i("Shutdown() - sleeping for %u s", sleep_interval);
+    log_i("Shutdown() - sleeping for %u s", (unsigned int)sleep_interval);
     #if defined(ESP32)
         sleep_interval += 20; // Added extra 20-secs of sleep to allow for slow ESP32 RTC timers
         ESP.deepSleep(sleep_interval * 1000000LL);
