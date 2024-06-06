@@ -102,12 +102,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa9a77de215330062387a7e0d097b9e70"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_sensor.html#aa9a77de215330062387a7e0d097b9e70">getTemperature</a> (void)</td></tr>
 <tr class="memdesc:aa9a77de215330062387a7e0d097b9e70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get temperature from DS18B20 sensor via OneWire bus.  <a href="classc_sensor.html#aa9a77de215330062387a7e0d097b9e70">More...</a><br /></td></tr>
 <tr class="separator:aa9a77de215330062387a7e0d097b9e70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40d2dbd8a699fdbf2f2126593aefb3ca"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_sensor.html#a40d2dbd8a699fdbf2f2126593aefb3ca">getVoltage</a> (void)</td></tr>
-<tr class="memdesc:a40d2dbd8a699fdbf2f2126593aefb3ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get supply voltage (fixed ADC input circuit on FireBeetle ESP32 board)  <a href="classc_sensor.html#a40d2dbd8a699fdbf2f2126593aefb3ca">More...</a><br /></td></tr>
-<tr class="separator:a40d2dbd8a699fdbf2f2126593aefb3ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d74b41a8eebafc742b336d599104a57"><td class="memItemLeft" align="right" valign="top"><a id="a7d74b41a8eebafc742b336d599104a57"></a>
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>getVoltage</b> (pin_size_t pin, uint8_t samples, float divider)</td></tr>
-<tr class="separator:a7d74b41a8eebafc742b336d599104a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3307b368ed01817b8400c76bf0997ca"><td class="memItemLeft" align="right" valign="top"><a id="af3307b368ed01817b8400c76bf0997ca"></a>
+uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>getVoltage</b> (uint8_t pin=PIN_ADC_IN, uint8_t samples=UBATT_SAMPLES, float divider=UBATT_DIV)</td></tr>
+<tr class="separator:af3307b368ed01817b8400c76bf0997ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3338de574b62fe75e146587cbaf67f2f"><td class="memItemLeft" align="right" valign="top"><a id="a3338de574b62fe75e146587cbaf67f2f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_sensor.html#a3338de574b62fe75e146587cbaf67f2f">uplinkRequest</a> (void)</td></tr>
 <tr class="memdesc:a3338de574b62fe75e146587cbaf67f2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request uplink to LoRaWAN. <br /></td></tr>
@@ -143,27 +140,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isBusy</b> (void)</td
 
 <p>Get temperature from DS18B20 sensor via OneWire bus. </p>
 <dl class="section return"><dt>Returns</dt><dd>Temperature [degC] </dd></dl>
-
-</div>
-</div>
-<a id="a40d2dbd8a699fdbf2f2126593aefb3ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a40d2dbd8a699fdbf2f2126593aefb3ca">&#9670;&nbsp;</a></span>getVoltage()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t cSensor::getVoltage </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get supply voltage (fixed ADC input circuit on FireBeetle ESP32 board) </p>
-<dl class="section return"><dt>Returns</dt><dd>Voltage [mV] </dd></dl>
 
 </div>
 </div>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sprefs_60',['sPrefs',['../structs_prefs.html',1,'']]]
+  ['sprefs_59',['sPrefs',['../structs_prefs.html',1,'']]]
 ];
