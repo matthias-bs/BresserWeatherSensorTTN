@@ -32,7 +32,7 @@
 // LoRa_Serialization                   3.2.1
 // ESP32Time                            2.0.6
 // BresserWeatherSensorReceiver         0.28.5
-// OneWireNg                            0.13.1 (optional)
+// OneWireNg                            0.13.3 (optional)
 // DallasTemperature                    3.9.0 (optional)
 // NimBLE-Arduino                       1.4.1 (optional)
 // ATC MiThermometer                    0.4.2 (optional)
