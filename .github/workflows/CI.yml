@@ -88,7 +88,7 @@ jobs:
             "ATC_MiThermometer@0.2.1"
             "TheengsDecoder@1.7.8"
             "Preferences@2.1.0"
-            "M5Unified@0.1.13"
+            "M5Unified@0.1.16"
             "M5Core2@0.1.9")
           for i in "${required_libs[@]}"
           do
