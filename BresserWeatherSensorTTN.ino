@@ -30,7 +30,7 @@
 // MCCI Arduino LoRaWAN Library         0.10.0
 // RadioLib                             6.6.0
 // LoRa_Serialization                   3.2.1
-// ESP32Time                            2.0.4
+// ESP32Time                            2.0.6
 // BresserWeatherSensorReceiver         0.28.5
 // OneWireNg                            0.13.1 (optional)
 // DallasTemperature                    3.9.0 (optional)
