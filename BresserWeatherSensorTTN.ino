@@ -1585,11 +1585,6 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
           prepareSleep();
         }
     #endif
-
-    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
-        // Use ADC3 with PIN_ADC3_IN
-        adc3.attach(PIN_ADC3_IN);
-    #endif
     
     #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
         bleSensors.begin();
