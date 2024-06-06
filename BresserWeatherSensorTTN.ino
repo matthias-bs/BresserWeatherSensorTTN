@@ -19,7 +19,6 @@
 // MCCI Arduino LoRaWAN Library by Terry Moore, MCCI (https://github.com/mcci-catena/arduino-lorawan)
 // Lora-Serialization by Joscha Feth (https://github.com/thesolarnomad/lora-serialization)
 // ESP32Time by Felix Biego (https://github.com/fbiego/ESP32Time)
-// ESP32AnalogRead by Kevin Harrington (madhephaestus) (https://github.com/madhephaestus/ESP32AnalogRead)
 // OneWireNg by Piotr Stolarz (https://github.com/pstolarz/OneWireNg)
 // DallasTemperature / Arduino-Temperature-Control-Library by Miles Burton (https://github.com/milesburton/Arduino-Temperature-Control-Library) 
 //
@@ -29,11 +28,10 @@
 // MCCI Arduino Development Kit ADK     0.2.2
 // MCCI LoRaWAN LMIC library            4.1.1
 // MCCI Arduino LoRaWAN Library         0.10.0
-// RadioLib                             6.1.0
+// RadioLib                             6.6.0
 // LoRa_Serialization                   3.2.1
 // ESP32Time                            2.0.4
 // BresserWeatherSensorReceiver         0.12.1
-// ESP32AnalogRead                      0.2.1 (optional)
 // OneWireNg                            0.13.1 (optional)
 // DallasTemperature                    3.9.0 (optional)
 // NimBLE-Arduino                       1.4.1 (optional)
@@ -124,6 +122,7 @@
 // 20240222 Added weatherSensor.clearSlots() (part of fix for #82), added workaround for (#81)
 // 20240303 Added evaluation of temp_ok/humidity_ok/rain_ok (#82)
 // 20240325 Added configuration for M5Stack Core2 with M5Stack Module LoRa868
+// 20240606 Replaced ESP32AnalogRead by analogReadMilliVolts()
 //
 // ToDo:
 // - Split this file
@@ -200,13 +199,6 @@
 #ifdef DISTANCESENSOR_EN
     // A02YYUW / DFRobot SEN0311 Ultrasonic Distance Sensor
     #include <DistanceSensor_A02YYUW.h>
-#endif
-
-#ifdef ADC_EN
-    #ifdef ESP32
-        // ESP32 calibrated Analog Input Reading
-        #include <ESP32AnalogRead.h>
-    #endif
 #endif
 
 // BresserWeatherSensorReceiver
@@ -521,34 +513,21 @@ public:
      */
     float getTemperature(void);
     
-    #ifdef ADC_EN
-        /*!
-         * \fn getVoltage
-         * 
-         * \brief Get supply voltage (fixed ADC input circuit on FireBeetle ESP32 board)
-         * 
-         * \returns Voltage [mV]
-         */
-        uint16_t getVoltage(void);
-        
-        #if defined(ESP32)
-          /*
-          * \fn getVoltage
-          * 
-          * \brief Get ADC voltage from specified port with averaging and application of divider
-          * 
-          * \param adc ADC port
-          * 
-          * \param samples No. of samples used in averaging
-          * 
-          * \param divider Voltage divider
-          * 
-          * \returns Voltage [mV]
-          */
-          uint16_t getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider);
-        #else
-          uint16_t getVoltage(pin_size_t pin, uint8_t samples, float divider);
-        #endif
+    #ifdef ADC_EN        
+        /*
+        * \fn getVoltage
+        * 
+        * \brief Get ADC voltage from specified pin with averaging and application of divider
+        * 
+        * \param adc ADC pin
+        * 
+        * \param samples No. of samples used in averaging
+        * 
+        * \param divider Voltage divider
+        * 
+        * \returns Voltage [mV]
+        */
+        uint16_t getVoltage(uint8_t pin = PIN_ADC_IN, uint8_t samples = UBATT_SAMPLES, float divider = UBATT_DIV);
     #endif
         
     /*!
@@ -644,27 +623,6 @@ const cMyLoRaWAN::lmic_pinmap myPinMap = {
     bool                    runtimeExpired;           //!< flag indicating if runtime has expired at least once
     bool                    longSleep;                //!< last sleep interval; 0 - normal / 1 - long
     time_t                  rtcLastClockSync;         //!< timestamp of last RTC synchonization to network time
-#endif
-
-#ifdef ESP32
-    #ifdef ADC_EN
-        // ESP32 ADC with calibration
-        ESP32AnalogRead adc; //!< ADC object for supply voltage measurement
-    #endif
-
-    // ESP32 ADC with calibration
-    #if defined(ADC_EN) && defined(PIN_ADC0_IN)
-        ESP32AnalogRead adc0; //!< ADC object
-    #endif
-    #if defined(ADC_EN) && defined(PIN_ADC1_IN)
-        ESP32AnalogRead adc1; //!< ADC object
-    #endif
-    #if defined(ADC_EN) && defined(PIN_ADC2_IN)
-        ESP32AnalogRead adc2; //!< ADC object
-    #endif
-    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
-        ESP32AnalogRead adc3; //!< ADC object
-    #endif
 #endif
 
 /// Bresser Weather Sensor Receiver
@@ -1617,10 +1575,7 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
     #endif
 
     #ifdef ADC_EN
-        #ifdef ESP32
-            // Use ADC with PIN_ADC_IN
-            adc.attach(PIN_ADC_IN);
-        #elif defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
+        #if defined(ARDUINO_ADAFRUIT_FEATHER_RP2040)
             // Set resolution to 12 bits
             analogReadResolution(12);
         #endif
@@ -1629,11 +1584,6 @@ cSensor::setup(std::uint32_t uplinkPeriodMs) {
           log_i("Battery low!");
           prepareSleep();
         }
-    #endif
-
-    #if defined(ADC_EN) && defined(PIN_ADC3_IN)
-        // Use ADC3 with PIN_ADC3_IN
-        adc3.attach(PIN_ADC3_IN);
     #endif
     
     #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN)
@@ -1724,37 +1674,19 @@ cSensor::loop(void) {
 }
 
 #ifdef ADC_EN
-//
-// Get supply / battery voltage
-//
-uint16_t
-cSensor::getVoltage(void)
-{
-    float voltage_raw = 0;
-    for (uint8_t i=0; i < UBATT_SAMPLES; i++) {
-        #ifdef ESP32
-            voltage_raw += float(adc.readMiliVolts());
-        #else
-            voltage_raw += float(analogRead(PIN_ADC_IN)) / 4095.0 * 3300;
-        #endif
-    }
-    uint16_t voltage = int(voltage_raw / UBATT_SAMPLES / UBATT_DIV);
-     
-    log_d("Voltage = %dmV", voltage);
-
-    return voltage;
-}
-
-//
-// Get supply / battery voltage
-//
-  #if defined(ESP32)
+    //
+    // Get supply / battery voltage
+    //
     uint16_t
-    cSensor::getVoltage(ESP32AnalogRead &adc, uint8_t samples, float divider)
+    cSensor::getVoltage(uint8_t pin, uint8_t samples, float divider)
     {
         float voltage_raw = 0;
         for (uint8_t i=0; i < samples; i++) {
-            voltage_raw += float(adc.readMiliVolts());
+            #if defined(ESP32)
+                voltage_raw += float(analogReadMilliVolts(pin));
+            #else
+                voltage_raw += float(analogRead(pin)) / 4095.0 * 3300;
+            #endif
         }
         uint16_t voltage = int(voltage_raw / samples / divider);
         
@@ -1762,21 +1694,6 @@ cSensor::getVoltage(void)
 
         return voltage;
     }
-  #else
-    uint16_t
-    cSensor::getVoltage(pin_size_t pin, uint8_t samples, float divider)
-    {
-        float voltage_raw = 0;
-        for (uint8_t i=0; i < samples; i++) {
-            voltage_raw += float(analogRead(pin)) / 4095.0 * 3.3;
-        }
-        uint16_t voltage = int(voltage_raw / samples / divider);
-        
-        log_d("Voltage = %dmV", voltage);
-
-        return voltage;
-    }
-  #endif
 #endif
 
 #ifdef ONEWIRE_EN
@@ -1881,7 +1798,7 @@ cSensor::doUplink(void) {
         uint16_t  supply_voltage      = getVoltage();
     #endif
     #if defined(ADC_EN) && defined(PIN_ADC3_IN)
-        uint16_t  battery_voltage     = getVoltage(adc3, ADC3_SAMPLES, ADC3_DIV);
+        uint16_t  battery_voltage     = getVoltage(PIN_ADC3_IN, ADC3_SAMPLES, ADC3_DIV);
     #endif
     bool          mithermometer_valid = false;
     #if defined(MITHERMOMETER_EN) || defined(THEENGSDECODER_EN) 

@@ -20,10 +20,10 @@ jobs:
           #- esp32:esp32:ttgo-lora32:Revision=TTGO_LoRa32_V1
           #- esp32:esp32:ttgo-lora32:Revision=TTGO_LoRa32_V2
           - esp32:esp32:ttgo-lora32:Revision=TTGO_LoRa32_v21new
-          - esp32:esp32:heltec_wireless_stick:PSRAM=disabled
+          - esp32:esp32:heltec_wireless_stick
           - esp32:esp32:heltec_wifi_lora_32_V2
           - esp32:esp32:featheresp32
-          - esp32:esp32:m5stack-core2
+          - esp32:esp32:m5stack_core2
           - esp32:esp32:adafruit_feather_esp32s2
           - rp2040:rp2040:adafruit_feather:dbgport=Serial
 
@@ -75,14 +75,13 @@ jobs:
           |
           #declare -a required_libs=("https://github.com/matthias-bs/BresserWeatherSensorReceiver.git"
           declare -a required_libs=(
-            "RadioLib@6.5.0"
+            "RadioLib@6.6.0"
             "BresserWeatherSensorReceiver@0.28.2"
             "MCCI LoRaWAN LMIC library@4.1.1"
             "MCCI Arduino LoRaWAN Library@0.10.0"
             "MCCI Arduino Development Kit ADK@0.2.2"
             "LoRa Serialization@3.2.1"
             "ESP32Time@2.0.6"
-            "ESP32AnalogRead@0.2.2"
             "OneWireNg@0.13.2"
             "DallasTemperature@3.9.0"
             "NimBLE-Arduino@1.4.1"
