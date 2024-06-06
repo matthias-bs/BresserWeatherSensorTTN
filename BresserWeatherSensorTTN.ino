@@ -123,6 +123,8 @@
 // 20240303 Added evaluation of temp_ok/humidity_ok/rain_ok (#82)
 // 20240325 Added configuration for M5Stack Core2 with M5Stack Module LoRa868
 // 20240606 Replaced ESP32AnalogRead by analogReadMilliVolts()
+//          Updated board configurations after changes in 
+//          Arduino ESP32 package v3.0.X
 //
 // ToDo:
 // - Split this file
@@ -247,9 +249,9 @@
     #define PIN_LMIC_DIO1     LORA_D1
     #define PIN_LMIC_DIO2     LORA_D2
 
-#elif defined(ARDUINO_heltec_wireless_stick) || defined(ARDUINO_heltec_wifi_lora_32_V2)
+#elif defined(ARDUINO_HELTEC_WIRELESS_STICK) || defined(ARDUINO_HELTEC_WIFI_LORA_32_V2)
     // https://github.com/espressif/arduino-esp32/blob/master/variants/heltec_wireless_stick/pins_arduino.h
-    // https://github.com/espressif/arduino-esp32/tree/master/variants/heltec_wifi_lora_32_V2/pins_ardiono.h
+    // https://github.com/espressif/arduino-esp32/blob/master/variants/heltec_wifi_lora_32_V2/pins_arduino.h
     #define PIN_LMIC_NSS      SS
     #define PIN_LMIC_RST      RST_LoRa
     #define PIN_LMIC_DIO0     DIO0
@@ -300,7 +302,7 @@
     #pragma message("ARDUINO_ADAFRUIT_FEATHER_RP2040 defined; assuming RFM95W FeatherWing will be used")
     #pragma message("Required wiring: A to RST, B to DIO1, D to DIO0, E to CS")
     
-#elif defined(FIREBEETLE_ESP32_COVER_LORA)
+#elif defined(ARDUINO_DFROBOT_FIREBEETLE_ESP32) && defined(FIREBEETLE_ESP32_COVER_LORA)
     // https://wiki.dfrobot.com/FireBeetle_ESP32_IOT_Microcontroller(V3.0)__Supports_Wi-Fi_&_Bluetooth__SKU__DFR0478
     // https://wiki.dfrobot.com/FireBeetle_Covers_LoRa_Radio_868MHz_SKU_TEL0125
     #define PIN_LMIC_NSS      27 // D4
@@ -308,18 +310,25 @@
     #define PIN_LMIC_DIO0     26 // D3
     #define PIN_LMIC_DIO1      9 // D5
     #define PIN_LMIC_DIO2     cMyLoRaWAN::lmic_pinmap::LMIC_UNUSED_PIN
-    #pragma message("FIREBEETLE_ESP32_COVER_LORA defined; assuming FireBeetle ESP32 with FireBeetle Cover LoRa will be used")
+    #pragma message("ARDUINO_DFROBOT_FIREBEETLE_ESP32 && FIREBEETLE_ESP32_COVER_LORA defined; assuming FireBeetle ESP32 with FireBeetle Cover LoRa will be used")
     #pragma message("Required wiring: D2 to RESET, D3 to DIO0, D4 to CS, D5 to DIO1")
 
-#else
+#elif defined(ARDUINO_DFROBOT_FIREBEETLE_ESP32) && defined(LORAWAN_NODE)
     // LoRaWAN_Node board
     // https://github.com/matthias-bs/LoRaWAN_Node
+    #pragma message("ARDUINO_DFROBOT_FIREBEETLE_ESP32 && LORAWAN_NODE defined; assuming LoRaWAN_Node board will be used")
     #define PIN_LMIC_NSS      14
     #define PIN_LMIC_RST      12
     #define PIN_LMIC_DIO0     4
     #define PIN_LMIC_DIO1     16
     #define PIN_LMIC_DIO2     17
-
+#else
+    #pragma message("Unknown board configuration!")
+    #define PIN_LMIC_NSS      14
+    #define PIN_LMIC_RST      12
+    #define PIN_LMIC_DIO0     4
+    #define PIN_LMIC_DIO1     16
+    #define PIN_LMIC_DIO2     17
 #endif
 
 

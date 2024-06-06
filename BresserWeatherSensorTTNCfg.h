@@ -70,6 +70,8 @@
 // 20240325 Added configuration for M5Stack Core2 with M5Stack Module LoRa868
 // 20240606 Removed workaround for ARDUINO_THINGPULSE_EPULSE_FEATHER
 //          (Now available in arduino-esp32 v3.0.X)
+//          Updated board configurations after changes in 
+//          Arduino ESP32 package v3.0.X
 //
 // Note:
 // Depending on board package file date, either
@@ -93,10 +95,7 @@
 // #define NVS_LOG
 
 //--- Select Board ---
-#if !defined(ARDUINO_TTGO_LoRa32_V1) && !defined(ARDUINO_TTGO_LoRa32_V2) &&               \
-    !defined(ARDUINO_TTGO_LoRa32_v21new) && !defined(ARDUINO_ADAFRUIT_FEATHER_ESP32S2) && \
-    !defined(ARDUINO_FEATHER_ESP32) && !defined(ARDUINO_ADAFRUIT_FEATHER_RP2040) &&       \
-    !defined(ARDUINO_M5STACK_Core2) && !defined(ARDUINO_M5STACK_CORE2)
+#if defined(ARDUINO_DFROBOT_FIREBEETLE_ESP32)
 // Use pinning for LoRaWAN Node
 #define LORAWAN_NODE
 
