@@ -323,7 +323,7 @@
     #define PIN_LMIC_DIO1     16
     #define PIN_LMIC_DIO2     17
 #else
-    #error "Unknown board configuration!"
+    #pragma message("Unknown board configuration!")
     #define PIN_LMIC_NSS      14
     #define PIN_LMIC_RST      12
     #define PIN_LMIC_DIO0     4
