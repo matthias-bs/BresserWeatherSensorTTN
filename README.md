@@ -111,7 +111,6 @@ Mains adapter or Li-Ion battery (with or without solar charger) - depending on d
 | ESP32Time                          | r                            |
 | BresserWeatherSensorReceiver       | r                            |
 | Preferences                        | r (RP2040)                   |
-| ESP32AnalogRead                    | o                            |
 | OneWireNg                          | o                            |
 | DallasTemperature                  | o                            |
 | NimBLE-Arduino + ATC_MiThermometer | o                            |
@@ -434,7 +433,6 @@ Based on
 * [MCCI Arduino LoRaWAN Library](https://github.com/mcci-catena/arduino-lorawan) by Terry Moore, MCCI
 * [Lora-Serialization](https://github.com/thesolarnomad/lora-serialization) by Joscha Feth
 * [ESP32Time](https://github.com/fbiego/ESP32Time) by Felix Biego
-* [ESP32AnalogRead](https://github.com/madhephaestus/ESP32AnalogRead) by Kevin Harrington (madhephaestus)
 * [OneWireNg](https://github.com/pstolarz/OneWireNg) by Piotr Stolarz
 * [DallasTemperature / Arduino-Temperature-Control-Library](https://github.com/milesburton/Arduino-Temperature-Control-Library) by Miles Burton
 * [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino) by h2zero

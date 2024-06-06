@@ -70,9 +70,10 @@
 // 20240325 Added configuration for M5Stack Core2 with M5Stack Module LoRa868
 //
 // Note:
-//  Depending on the environment, selecting M5Stack Core2 defines
-//  either ARDUINO_M5STACK_Core2 or ARDUINO_M5STACK_CORE2
-//  so both variants have to be checked!!!
+// Depending on board package file date, either
+// ARDUINO_M5STACK_Core2 or ARDUINO_M5STACK_CORE2
+// is used - see https://github.com/espressif/arduino-esp32/issues/9423!
+// Consequently both variants have to be checked!!!
 //
 // ToDo:
 // -
@@ -155,6 +156,7 @@
 #else
 #define BATTERY_LOW 3200
 #endif
+
 
 // Enable sleep mode - sleep after successful transmission to TTN (recommended!)
 #define SLEEP_EN
