@@ -68,6 +68,8 @@
 // 20231102 Added ARDUINO_THINGPULSE_EPULSE_FEATHER for special
 //          VBAT voltage divider
 // 20240325 Added configuration for M5Stack Core2 with M5Stack Module LoRa868
+// 20240606 Removed workaround for ARDUINO_THINGPULSE_EPULSE_FEATHER
+//          (Now available in arduino-esp32 v3.0.X)
 //
 // Note:
 // Depending on board package file date, either
@@ -100,13 +102,6 @@
 
 // Use pinning for Firebeetle Cover LoRa
 // #define FIREBEETLE_ESP32_COVER_LORA
-#endif
-
-#if defined(ARDUINO_FEATHER_ESP32)
-// The Thingpulse ePulse Feather board has the same pinout as
-// the Adafruit Feather ESP32 board, but a different VBAT voltage divider!
-// See https://github.com/matthias-bs/BresserWeatherSensorTTN/issues/55
-// #define ARDUINO_THINGPULSE_EPULSE_FEATHER
 #endif
 
 //--- Select LoRaWAN Network ---
