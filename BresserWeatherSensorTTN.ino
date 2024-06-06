@@ -35,7 +35,7 @@
 // OneWireNg                            0.13.1 (optional)
 // DallasTemperature                    3.9.0 (optional)
 // NimBLE-Arduino                       1.4.1 (optional)
-// ATC MiThermometer                    0.2.1 (optional)
+// ATC MiThermometer                    0.4.2 (optional)
 // Theengs Decoder                      1.5.7 (optional)
 //
 // (installed from ZIP file:)
