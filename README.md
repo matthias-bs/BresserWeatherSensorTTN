@@ -4,7 +4,8 @@
 [![GitHub release](https://img.shields.io/github/release/matthias-bs/BresserWeatherSensorTTN?maxAge=3600)](https://github.com/matthias-bs/BresserWeatherSensorTTN/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/LICENSE)
 
-> [!WARNING] This repository is deprecated and maintenance is reduced to a minimum.
+> [!WARNING]
+> This repository is deprecated and maintenance is reduced to a minimum.
 >
 > The recommended alternative is [BresserWeatherSensorLW](https://github.com/matthias-bs/BresserWeatherSensorLW)
 > which provides more features and has a much cleaner architecture.
