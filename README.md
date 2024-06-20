@@ -4,6 +4,12 @@
 [![GitHub release](https://img.shields.io/github/release/matthias-bs/BresserWeatherSensorTTN?maxAge=3600)](https://github.com/matthias-bs/BresserWeatherSensorTTN/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/LICENSE)
 
+> [!Warning] This repository is deprecated and maintenance is reduced to a minimum. 
+> The recommended alternative is [BresserWeatherSensorLW](https://github.com/matthias-bs/BresserWeatherSensorLW)
+> which provides more features and has a much cleaner architecture.
+> Only if you are using the Helium Network, you will have to stick with 
+> [BresserWeatherSensorTTN](https://github.com/matthias-bs/BresserWeatherSensorTTN), because Helium requires LoRaWAN v1.0.X while [BresserWeatherSensorLW](https://github.com/matthias-bs/BresserWeatherSensorLW) implements LoRaWAN v1.1.
+
 Bresser 5-in-1/6-in-1/7-in-1 868 MHz Weather Sensor Radio Receiver based on ESP32 and RFM95W/SX1276 - sends data to a LoRaWAN Network (e.g. The Things Network)
 Support for RP2040 (Arduino-Pico) has been added recently.
 
