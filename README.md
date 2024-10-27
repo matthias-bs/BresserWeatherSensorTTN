@@ -5,15 +5,12 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/matthias-bs/BresserWeatherSensorTTN/blob/main/LICENSE)
 
 > [!WARNING]
-> This repository is deprecated and maintenance is reduced to a minimum.
+> This repository is deprecated and has been archived and set to read-only.
 >
 > The recommended alternative is [BresserWeatherSensorLW](https://github.com/matthias-bs/BresserWeatherSensorLW)
 > which provides more features and has a much cleaner architecture.
 >
-> Furthermore, the underlying LoRaWAN libraries [MCCI LoRaWAN LMIC library](https://github.com/mcci-catena/arduino-lmic)  and [MCCI Arduino LoRaWAN Library](https://github.com/mcci-catena/arduino-lorawan) seem not to be maintained any longer.
-> 
-> Only if you are using the Helium Network, you will have to stick with 
-> [BresserWeatherSensorTTN](https://github.com/matthias-bs/BresserWeatherSensorTTN), because Helium requires LoRaWAN v1.0.X while [BresserWeatherSensorLW](https://github.com/matthias-bs/BresserWeatherSensorLW) is based on [RadioLib](https://github.com/jgromes/RadioLib), which implements LoRaWAN v1.1.
+> The underlying LoRaWAN libraries [MCCI LoRaWAN LMIC library](https://github.com/mcci-catena/arduino-lmic)  and [MCCI Arduino LoRaWAN Library](https://github.com/mcci-catena/arduino-lorawan) seem not to be maintained any longer.
 
 Bresser 5-in-1/6-in-1/7-in-1 868 MHz Weather Sensor Radio Receiver based on ESP32 and RFM95W/SX1276 - sends data to a LoRaWAN Network (e.g. The Things Network)
 Support for RP2040 (Arduino-Pico) has been added recently.
