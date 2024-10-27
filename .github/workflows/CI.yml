@@ -80,7 +80,7 @@ jobs:
             "MCCI LoRaWAN LMIC library@4.1.1"
             "MCCI Arduino LoRaWAN Library@0.10.0"
             "MCCI Arduino Development Kit ADK@0.2.2"
-            "LoRa Serialization@3.3.0"
+            "LoRa Serialization@3.3.1"
             "ESP32Time@2.0.6"
             "OneWireNg@0.13.3"
             "DallasTemperature@3.9.0"
