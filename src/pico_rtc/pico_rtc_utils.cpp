@@ -155,7 +155,6 @@ void pico_sleep(unsigned duration) {
 
     // back from dormant state
     rosc_enable();
-    clocks_init();
     // --8<-----
 }
 #endif
